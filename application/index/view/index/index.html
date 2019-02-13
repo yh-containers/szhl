@@ -1,0 +1,61 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+
+{block name="content"}
+<div class="page">
+        <div class="page_box">
+            <div class="head"><span>选择您的身份</span></div>
+            <div class="page_select">
+                <div class="bd">
+
+                </div>
+                <div class="hd">
+                    <ul class="clearfix">
+                        <li data-src="{:url('index/login')}" data-src2="我要推荐贷款客户，信任创造价值">
+                            <div class="con">
+                                <h5>我是合作商</h5>
+                            </div>
+                        </li>
+                        <li data-src="{:url('index/login',['type'=>1])}" data-src2="找专业认，做专业事">
+                            <div class="con">
+                                <h5>我要贷款</h5>
+                            </div>
+                        </li>
+                        <li data-src="{:url('index/login',['type'=>2])}" data-src2="展业推动管理全掌握">
+                            <div class="con">
+                                <h5>我是代理商</h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a href="javascript:;" class="btn btn-primary disabled">下一步</a>
+        </div>
+    </div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript" src="/static/index/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var windowHeight = $(window).height();
+        $(".page").css('height',windowHeight+'px');
+    });
+
+    $(function() {
+        $(".page_select .hd ul li").on('click',function() {
+            $(this).addClass("on").siblings().removeClass("on");
+            var _src = $(this).data("src");
+            var _txt = $(this).data("src2");
+            console.log(_src);
+            $('.btn-primary').attr('href',_src);
+            $('.btn-primary').removeClass('disabled');
+            console.log(_txt);
+            $('.page_select .bd').html(_txt);
+        })
+
+    })
+
+</script>
+{/block}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>中瀚哲</title>
+    <meta name="keywords" content="中瀚哲">
+    <meta name="description" content="中瀚哲">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css" />  
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css" /> 
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <style>
+        body {background-color: #fff;}
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>手机注册</h4>
+    </div>
+    <div class="main">
+        <form id="register">
+        <div class="login_body">
+            <div class="login_wrap" id="reg">
+                <div class="item">
+                    <div class="label">手机号</div>
+                    <div class="mui-input-row">
+                        <input class="mui-input-clear" type="tel" name="phone" maxlength="11" placeholder="请输入手机号码"　/>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">验证码</div>
+                    <div class="mui-input-row" style="margin-right:100px;">
+                        <input class="phonecode mui-input-clear" type="tel" maxlength="6" placeholder="请输入验证码"　/>
+                    </div>
+                    <a href="javascript:;" class="code_btn">获取验证码</a>
+                </div>
+                <div class="item">
+                    <div class="label">新密码</div>
+                    <div class="mui-input-row">
+                        <input class="mui-input-clear" type="password" name="password" placeholder="请输入（6-16位字母和数字组合）密码"　/>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">确认密码</div>
+                    <div class="mui-input-row">
+                        <input class="mui-input-clear" type="password" name="password" placeholder="请确认（6-16位字母和数字组合）密码"　/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login_footer">
+                <a href="login.html" class="btn btn-primary">确　定</a>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div class="pact_pop">
+        <div class="header">
+            <a class="back close" href="javascript:;"></a>
+            <h4>服务协议</h4>
+        </div>
+        <div class="main">
+            <div class="text">
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/mui.min.js"></script>
+    <script type="text/javascript">
+        $('.on_pop').click(function(){ 
+            $('.pact_pop').show();
+        });
+        $('.close').click(function(){ 
+            $('.pact_pop').hide();
+        });
+    </script>
+</body>
+</html>

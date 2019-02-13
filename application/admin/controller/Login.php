@@ -42,26 +42,31 @@ class Login extends Controller
 
             $captcha = new Captcha();
             if( !$captcha->check($php_input['code'])) { return ['code'=>0,'msg'=>'验证码错误']; }
-            $slat = $model->where(array('account'=>$php_input['account'],'status'=>1) )->field('slat')->select();
-            if($slat->isEmpty()){
-                return ['code'=>0,'msg'=>'账号或密码不存在！'];
-            }else{
-                $slat = $slat->visible(['slat'=>['slat']])->toArray();
-                foreach ($slat as $slat_) {}
-                $pwd = \app\common\model\Manage::entryPwd($php_input['password'],$slat_['slat']);
-                $user = $model->where(array('account'=>$php_input['account'],'password'=>$pwd) )->find();
+            $user = $model->where(array('account'=>$php_input['account']) )->find();
 
-                if(empty($user)){  return ['code'=>0,'msg'=>'账号或密码不存在！']; }
-                if($user['status'] != 1){ return ['code'=>0,'msg'=>'账号不可用！']; }
-                $user_session = array(
-                    'id'=>$user['id'],
-                    'name'=>$user['name'],
-                    'username'=> $user['account'],
+            if(empty($user)){  return ['code'=>0,'msg'=>'账号或密码不正确！']; }
 
-                );
-                session('userInfo', $user_session);
-                return ['code'=>1,'msg'=>'登录成功！','url'=>url('/admin/index/index')];
-            }
+            $pwd = \app\common\model\Manage::entryPwd($php_input['password'],$user['slat']);
+            if($pwd != $user['password']) {  return ['code'=>0,'msg'=>'账号或密码不正确！']; }
+
+//            if($slat->isEmpty()){
+//                return ['code'=>0,'msg'=>'账号或密码不存在！'];
+//            }else{
+//                $slat = $slat->visible(['slat'=>['slat']])->toArray();
+//                foreach ($slat as $slat_) {}
+//                $pwd = \app\common\model\Manage::entryPwd($php_input['password'],$slat_['slat']);
+//                $user = $model->where(array('account'=>$php_input['account'],'password'=>$pwd) )->find();
+
+
+            if($user['status'] != 1){ return ['code'=>0,'msg'=>'账号已被禁用！']; }
+            $user_session = array(
+                'id'=>$user['id'],
+                'name'=>$user['name'],
+                'username'=> $user['account'],
+            );
+            session('userInfo', $user_session);
+            return ['code'=>1,'msg'=>'登录成功！','url'=>url('/admin/index/index')];
+//            }
 
         }
         return view('login');

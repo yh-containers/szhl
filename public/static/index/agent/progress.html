@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>中瀚哲</title>
+    <meta name="keywords" content="中瀚哲">
+    <meta name="description" content="中瀚哲">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css" />  
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css" />    
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mui.min.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>进度查询</h4>
+    </div>
+    <div class="my_nav">
+        <ul class="my_nav_list">
+            <li class="my_nav_list_item active"><a href="progress.html">全部</a></li>
+            <li class="my_nav_list_item"><a href="progress.html">审批中</a></li>
+            <li class="my_nav_list_item"><a href="progress.html">面谈中</a></li>
+            <li class="my_nav_list_item"><a href="progress.html">已放款</a></li>
+            <li class="my_nav_list_item"><a href="progress.html">已拒绝</a></li>
+        </ul>
+    </div>  
+    <div class="main">
+        <div class="my_apply_wrap">
+            <div class="no-data" style="display:none">
+                <div class="ico"><img src="images/no-order.png" alt=""></div>
+                <p>您暂时没有相关的订单哦~</p>
+            </div>
+
+            <div class="apply_inner">
+                <div class="apply_inner_list" id="verify">
+                    <a href="apply-det.html">
+                        <div class="module seller">
+                            <div class="shop-name">
+                                <h4>申请编号：IAC201812281530</h4>
+                            </div>
+                            <div class="status">审批中</div>
+                        </div>
+                        <div class="module row">
+                            <div class="item_name">
+                                <div class="text">
+                                    <h4>中瀚哲产品A</h4>
+                                    <span>申请期限：6个月</span>
+                                </div>
+                            </div>
+                            <div class="item_info">
+                                <div class="info_tag">未放原因</div>
+                                <div class="info_status">
+                                    <span class="text">审批中</span>
+                                </div>
+                                <div class="info_bottom">
+                                    <span class="amount">申请金额：300000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="apply_inner_list" id="discuss">
+                    <a href="apply-det.html">
+                        <div class="module seller">
+                            <div class="shop-name">
+                                <h4>申请编号：IAC201812281530</h4>
+                            </div>
+                            <div class="status">面谈中</div>
+                        </div>
+                        <div class="module row">
+                            <div class="item_name">
+                                <div class="text">
+                                    <h4>中瀚哲产品A</h4>
+                                    <span>申请期限：6个月</span>
+                                </div>
+                            </div>
+                            <div class="item_info">
+                                <div class="info_tag">未放原因</div>
+                                <div class="info_status">
+                                    <span class="text">面谈中</span>
+                                </div>
+                                <div class="info_bottom">
+                                    <span class="amount">申请金额：300000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="apply_inner_list" id="success">
+                    <a href="apply-det.html">
+                        <div class="module seller">
+                            <div class="shop-name">
+                                <h4>申请编号：IAC201812281530</h4>
+                            </div>
+                            <div class="status">已放款</div>
+                        </div>
+                        <div class="module row">
+                            <div class="item_name">
+                                <div class="text">
+                                    <h4>中瀚哲产品A</h4>
+                                    <span>申请期限：6个月</span>
+                                </div>
+                            </div>
+                            <div class="item_info">
+                                <div class="info_tag">贷款金额</div>
+                                <div class="info_status">
+                                    <span class="text">¥30,0000</span>
+                                </div>
+                                <div class="info_bottom">
+                                    <span class="amount">申请金额：300000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="apply_inner_list" id="refuse">
+                    <a href="apply-det.html">
+                        <div class="module seller">
+                            <div class="shop-name">
+                                <h4>申请编号：IAC201812281530</h4>
+                            </div>
+                            <div class="status">已拒绝</div>
+                        </div>
+                        <div class="module row">
+                            <div class="item_name">
+                                <div class="text">
+                                    <h4>中瀚哲产品A</h4>
+                                    <span>申请期限：6个月</span>
+                                </div>
+                            </div>
+                            <div class="item_info">
+                                <div class="info_tag">未放原因</div>
+                                <div class="info_status">
+                                    <span class="text">不满足贷款条件</span>
+                                </div>
+                                <div class="info_bottom">
+                                    <span class="amount">申请金额：300000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer_bar">
+            <div class="item">
+                <a href="home_agent.html">
+                    <div class="icon sy-icon"></div>
+                    <div class="tab-label">首页</div>
+                </a>
+            </div>
+            <div class="item active">
+                <a href="progress.html">
+                    <div class="icon prog-icon"></div>
+                    <div class="tab-label">进度</div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="message.html">
+                    <div class="icon mess-icon"></div>
+                    <div class="tab-label">消息</div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="member.html">
+                    <div class="icon my-icon"></div>
+                    <div class="tab-label">我的</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
