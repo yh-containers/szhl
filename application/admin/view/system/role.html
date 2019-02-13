@@ -1,0 +1,42 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}系统管理,管理员管理,管理员列表{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+    	<a href="javascript:;" onclick="$.common.openUrl('{:url("roleAdd")}','添加角色')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加角色</a>
+	</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+		<tr class="text-c">
+			<th width="80">序号</th>
+			<th width="100">角色名</th>
+			<th width="130">更新时间</th>
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>{$i}</td>
+				<td>{$vo['name']}</td>
+				<td>{$vo['update_time']}</td>
+				<td>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("roleAdd",['id'=>$vo['id']])}','编辑角色')" > 编辑</a>
+					<a href="javascript:;" onclick="$.common.del('{:url("roleDel",['id'=>$vo['id']])}')" 	>删除</a>
+				</td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list|raw}
+</div>
+
+{/block}
