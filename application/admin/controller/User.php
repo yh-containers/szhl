@@ -13,8 +13,23 @@ class User extends Common
 
     }
 
-    public function welcome()
+    public function userDetail()
     {
-        return view('welcome');
+        $id = $this->request->param('id',0);
+        $model = new \app\common\model\Users();
+        $model = $model->get($id);
+
+        return view('userDetail',[
+            'model' => $model
+        ]);
+    }
+
+    //调整用户信息
+    public function modifyInfo()
+    {
+        $php_input = $this->request->param();
+        $model = new \app\common\model\Users();
+        $state = $model->actionAdd($php_input);
+        return ['code'=>(int)$state,'msg'=>$state?'修改成功':'修改异常'];
     }
 }

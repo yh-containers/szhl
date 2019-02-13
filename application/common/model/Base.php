@@ -14,7 +14,7 @@ class Base extends Model
      * */
     public function actionAdd($data,Validate $validate=null)
     {
-        if (!$validate->check($data)) {
+        if ($validate && !$validate->check($data)) {
             return ['code'=>0,'msg'=>$validate->getError()];
         }
         $model = $this;
@@ -48,4 +48,11 @@ class Base extends Model
         }
 
     }
+
+    //调整用户数据
+//    public function modifyInfo($id,$data)
+//    {
+//
+//        return $this->save($data,[$this->getPk()=>$id]);
+//    }
 }

@@ -1,0 +1,52 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}产品管理,产品列表{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+    	<a href="javascript:;" onclick="$.common.openUrl('{:url("productAdd")}','添加产品')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加产品</a>
+	</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+		<tr class="text-c">
+			<th width="80">序号</th>
+			<th width="100">项目名称</th>
+			<th width="100">项目佣金</th>
+			<th width="100">项目利息</th>
+			<th width="100">项目额度</th>
+			<th width="100">项目期限</th>
+			<th width="130">创建时间</th>
+			<th width="70">状态</th>
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>{$i}</td>
+				<td>{$vo['name']}</td>
+				<td>{$vo['commission']}%</td>
+				<td>{:$vo['per'].'('.$vo::$per_unit[$vo['per_unit']].')'}</td>
+				<td>{:$vo['money_start'].($vo['money_end']?'~'.$vo['money_end']:'').'('.$vo::$money_unit[$vo['money_unit']].')'}</td>
+				<td>{:$vo['auth_time_start'].($vo['auth_time_end']?'~'.$vo['auth_time_end']:'').'('.$vo::$auth_unit[$vo['auth_unit']].')'}</td>
+				<td>{$vo['create_time']}</td>
+				<td>{:$vo::$fields_status[$vo['status']]}</td>
+				<td>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("productAdd",['id'=>$vo['id']])}','编辑产品')" class="ml-5"> 编辑</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("productDetail",['id'=>$vo['id']])}','产品详情')" class="ml-5"> 详情</a>
+				</td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list|raw}
+</div>
+
+{/block}Role.php

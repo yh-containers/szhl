@@ -1,0 +1,93 @@
+﻿{extend name="base"/}
+{block name="style"}
+<style>
+
+    .layui-layer-btn .layui-layer-btn1{background: #ff5359;color:#fff}
+</style>
+{/block}
+{block name="content"}
+<div class="pd-20 ">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-header">用户基本信息</div>
+                <div class="panel-body pd-5">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="70">
+                            <col width="100">
+                            <col width="70">
+                            <col width="100">
+                            <col width="70">
+                            <col width="100">
+                            <col>
+                        </colgroup>
+
+                        <tbody>
+                        <tr>
+                            <td>用户名</td>
+                            <td>{$model['name']}</td>
+                            <td>手机号码</td>
+                            <td>{$model['phone']}</td>
+                            <td>用户类型</td>
+                            <td>{$model::$fields_type[$model['type']]}</td>
+                        </tr>
+                        <tr>
+                            <td>账户余额</td>
+                            <td>{$model['money']}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>创建时间</td>
+                            <td>{$model['create_time']}</td>
+                            <td>用户状态</td>
+                            <td>{$model::$fields_status[$model['status']]}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-header">其它操作</div>
+                <div class="panel-body pd-5">
+                    <a href="javascript:;"  class="layui-btn" data-user_id="{$model['id']}" id="change-status">调整用户状态</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    $("#change-status").click(function(){
+        var user_id = $(this).data('user_id')
+        layer.open({
+            title: '调整用户状态'
+            ,content: '更改用户状态'
+            ,btnAlign: 'r'
+            ,btn: ['启用', '禁用', '取消']
+            ,yes: function(index, layero){
+                //按钮【按钮一】的回调
+                $.common.modify("{:url('User/modifyInfo')}",{status:1,id:user_id},'是否启用该用户')
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                $.common.modify("{:url('User/modifyInfo')}",{status:2,id:user_id},'是否禁用该用户')
+                return false //开启该代码可禁止点击该按钮关闭
+            }
+        })
+    })
+
+</script>
+{/block}

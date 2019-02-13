@@ -1,0 +1,177 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="cl  bg-1 bk-gray mb-10 ml-40">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
+				</span>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目图片</label>
+					<div class="layui-input-inline">
+						<input type="hidden" name="img" value="{$model['img']}"/>
+						<button class="layui-btn" id="test1" type="button" lay-data="{ url: '{:url('Upload/upload')}',data:{type:'product'}}" >上传文件</button>
+						<img src="{$model['img']}" alt="项目图片" class="radius" width="80" height="80">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" value="{$model['name']}"  placeholder="项目名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目简介</label>
+					<div class="layui-input-block">
+						<input type="text" name="intro" value="{$model['intro']}"  placeholder="项目名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-block">
+						<input type="radio" name="status" value="1" title="启用" {:$model['status']!=2?'checked':''}>
+						<input type="radio" name="status" value="2" title="禁用"  {:$model['status']==2?'checked':''}>
+					</div>
+				</div>
+
+
+			</div>
+
+			<div class="col-sm-8">
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目佣金</label>
+					<div class="layui-input-inline">
+						<input type="number" name="commission" value="{$model['commission']}"  placeholder="项目佣金" class="layui-input">
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-8">
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目利息</label>
+					<div class="layui-input-inline">
+						<input type="number" name="per" value="{$model['per']}"  placeholder="利息" class="layui-input">
+
+					</div>
+					<div class="layui-input-inline">
+						<select name="per_unit" lay-verify="">
+							<option value="">利息单位{$model['per_unit']}</option>
+							{volist name="per_unit['unit']" id="vo"}
+							<option value="{$key}" {:$model['per_unit']>=0?($key==$model['per_unit']?'selected':''):($key==$per_unit['default']?'selected':'')} >{$vo}</option>
+							{/volist}
+
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目额度</label>
+					<div class="layui-input-inline">
+						<input type="number" name="money_start" value="{$model['money_start']}"  placeholder="起始额度" class="layui-input">
+
+					</div>
+					<div class="layui-input-inline">
+						<input type="number" name="money_end" value="{:$model['money_end']?$model['money_end']:''}"  placeholder="结束额度" class="layui-input">
+					</div>
+
+					<div class="layui-input-inline">
+						<select name="money_unit" lay-verify="">
+							<option value="">额度单位</option>
+							{volist name="money_unit['unit']" id="vo"}
+							<option value="{$key}" {:$model['money_unit']>=0?($key==$model['money_unit']?'selected':''):($key==$money_unit['default']?'selected':'')}>{$vo}</option>
+							{/volist}
+
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目期限</label>
+					<div class="layui-input-inline">
+						<input type="number" name="auth_time_start" value="{$model['auth_time_start']}"  placeholder="开始期限" class="layui-input">
+
+					</div>
+					<div class="layui-input-inline">
+						<input type="number" name="auth_time_end" value="{:$model['auth_time_end']?$model['auth_time_end']:''}"  placeholder="结束期限" class="layui-input">
+					</div>
+
+					<div class="layui-input-inline">
+						<select name="auth_unit" lay-verify="">
+							<option value="">期限单位</option>
+							{volist name="auth_unit['unit']" id="vo"}
+							<option value="{$key}" {:$model['auth_unit']>=0?($key==$model['auth_unit']?'selected':''):($key==$auth_unit['default']?'selected':'')}>{$vo}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="layui-form-item" id="product-condition">
+				<label class="layui-form-label">申请条件</label>
+				<div class="layui-input-block">
+					<a href="javascript:;" class="btn btn-primary-outline radius add-condition">增加条件</a>
+				</div>
+				{volist name="model['condition']" id="vo"  empty="<div class='layui-input-inline product-condition'><textarea name='condition[]' rows='5' cols='12' placeholder='申请条件' class='layui-textarea'></textarea><i class='layui-icon layui-icon-close condition-close'></i></div>"}
+				<div class="layui-input-inline product-condition">
+					<textarea name="condition[]" rows="5" cols="12" placeholder="申请条件" class="layui-textarea">{:$vo['title'].PHP_EOL.$vo['desc']}</textarea>
+					<i class="layui-icon layui-icon-close condition-close"></i>
+				</div>
+				{/volist}
+			</div>
+
+		</div>
+
+
+	</form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', $.common.formSubmit);
+
+		$.common.uploadFile(upload,'#test1')
+	});
+	$(function(){
+		$(".add-condition").click(function(){
+			$(this).parent().parent().append('<div class="layui-input-inline product-condition">\n' +
+					'\t\t\t\t\t<textarea name="condition[]" rows="5" cols="12" placeholder="申请条件" class="layui-textarea"></textarea>\n' +
+					'\t\t\t\t\t<i class="layui-icon layui-icon-close condition-close"></i>\n' +
+					'\t\t\t\t</div>')
+		})
+		//移除
+		$("#product-condition").on('click','.condition-close',function(){
+			$(this).parent().remove()
+		})
+	})
+</script>
+{/block}

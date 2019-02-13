@@ -37,7 +37,7 @@
 				<td>{$vo['create_time']}</td>
 				<td>{:$vo::$fields_status[$vo['status']]}</td>
 				<td>
-					<a href="javascript:;" onclick="$.common.openUrl('{:url("userAdd",['id'=>$vo['id']])}','信息')" class="ml-5"> 查看</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("userDetail",['id'=>$vo['id']])}','信息')" class="ml-5"> 查看</a>
 				</td>
 			</tr>
 		{/volist}
