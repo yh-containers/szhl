@@ -1,0 +1,63 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}系统管理,地域信息{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+    <table class="table table-border table-bordered table-hover table-bg table-sort">
+        <thead>
+        <tr class="text-c">
+            <th width="100">省</th>
+            <th width="100">城市</th>
+            <th width="100">热门城市</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data" id="vo"}
+        <tr class="text-c">
+            <td rowspan="{:count($vo['link_location'])+1}">{$vo['area_name']}</td>
+        </tr>
+        {volist name="vo['link_location']" id="child"}
+        <tr class="text-c">
+            <td>{$child['area_name']}</td>
+
+
+            <td><input  type="checkbox" name="is_hot"  {if condition="$child.is_hot eq '1'"}checked{/if}  data-area-id="{$child['area_id']}" onclick="toHot(this)"/></td>
+        </tr>
+        {/volist}
+        {/volist}
+        </tbody>
+    </table>
+
+</div>
+{/block}
+{block name="script"}
+    <script>
+        function toHot(flag){
+            var is_check = $(flag).is(":checked");
+            var is_checks = 0;
+            if(is_check == true){
+                is_checks = 1
+            }
+            var data = {
+                'is_check':is_checks,
+                'area_id':$(flag).attr('data-area-id')
+            }
+            $.post('locationChoose',data,function(result){
+                layer.msg(result.msg)
+                // if(result.code==1){
+                //
+                //     // console.log(result.url);
+                //     setTimeout(function(){window.location.href=result.url;},1000)
+                // }
+                // $(".reloadverify").click()
+            })
+
+            // 传值
+        }
+
+    </script>
+{/block}

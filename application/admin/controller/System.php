@@ -130,4 +130,33 @@ class System extends Common
 
     }
 
+    //地域信息
+    public function location()
+    {
+
+        $model = new \app\common\model\Location();
+        $locations = $model
+            ->field('*,area_id as id')
+            ->with(['linkLocation'=>function($qeury){
+                return $qeury->field('*,area_id as id');
+            }])
+            ->where('area_type',1)->select();
+
+        return view('location',[
+            'data'=>$locations,
+        ]);
+    }
+    public function locationChoose(){
+        $is_check = $this->request->param('is_check');
+        $area_id = $this->request->param('area_id');
+
+        $model = new \app\common\model\Location();
+        $status = $model->setContent($is_check,$area_id);
+        return ['code'=>1,'msg'=>'操作成功'];
+    }
+
+
+
+
+
 }
