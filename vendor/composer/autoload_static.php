@@ -20,6 +20,10 @@ class ComposerStaticInitcfd8fd51908a80e8913e154e71a69fe3
         array (
             'app\\' => 4,
         ),
+        'O' => 
+        array (
+            'Overtrue\\Pinyin\\' => 16,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -34,6 +38,10 @@ class ComposerStaticInitcfd8fd51908a80e8913e154e71a69fe3
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/application',
+        ),
+        'Overtrue\\Pinyin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
         ),
     );
 

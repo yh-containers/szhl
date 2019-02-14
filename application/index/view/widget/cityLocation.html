@@ -1,0 +1,33 @@
+<div class="city_container">
+    <div class="header">
+        <a class="back city_close" href="javascript:;"></a>
+        <h4>选择城市</h4>
+    </div>
+    <div class="city">
+        <div class="city-list">
+            <span class="city-letter">热门城市</span>
+            <div class="city-hot clearfix">
+                <p data-id="440300">深圳市</p>
+                <p data-id="440100">广州市</p>
+                <p data-id="310100">上海市</p>
+                <p data-id="420100">武汉市</p>
+                <p data-id="441300">惠州市</p>
+            </div>
+        </div>
+        {volist name="city_location" id="vo"}
+        <div class="city-list"><span class="city-letter" id="{$vo['field']}">{$vo['field']}</span>
+            {volist name="vo['data']" id="location"}
+            <p data-id="{$location['area_id']}">{$location['area_name']}</p>
+            {/volist}
+        </div>
+        {/volist}
+
+    </div>
+    <div class="letter">
+        <ul>
+            {volist name="city_location" id="vo"}
+            <li><a href="#{$vo['field']}">{$vo['field']}</a></li>
+            {/volist}
+        </ul>
+    </div>
+</div>

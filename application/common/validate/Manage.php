@@ -20,7 +20,6 @@ class Manage extends Validate
         'account.unique'    => '帐号已存在',
         'rid.require'       => '请选择角色',
         'rid.gt'            => '请选择角色',
-        'password.requireCallback'      => '密码不得为空',
         'password.min'      => '密码不得低于:rule位',
     ];
 
