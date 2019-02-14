@@ -39,7 +39,7 @@ class Sms extends Base
         //获取发送内容
         $content = $object->getContent($verify);
         //发送数据
-        $send_result = \app\common\service\sms\Sms::send($content);
+        $send_result = \app\common\service\sms\Sms::send($content,$phone);
         //保存数据
         $save_data = [
             'type'      =>  $type,
@@ -57,7 +57,7 @@ class Sms extends Base
     {
         !isset(self::$SMS_TYPE[$type]) && abort(4000,'短信类型异常');
         $model = new self();
-        $model = $model->where(['phone'=>$phone,'type'=>$type])->find();
+        $model = $model->where(['phone'=>$phone,'type'=>$type])->order('id','desc')->find();
         ($model['verify'] != $verify || empty($model)) && abort(4000,'请输入正确的验证码');
         $model['status']!=1 && abort(4000, '验证码已使用,请重新获取');
         //修改验证码为使用状态

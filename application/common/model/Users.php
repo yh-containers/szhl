@@ -6,9 +6,15 @@ class Users extends Base
 {
     protected $name='users';
 
-    protected $insert = ['face'=>'/public/uploads/face/toux.png'];
+    protected $insert = ['face'=>'/public/uploads/face/toux.png','type'];
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
+
+    //设置用户类型
+    public function setTypeAttr($value,$data)
+    {
+        return $value?$value:0;
+    }
 
     //设置城市
     public function setCityAttr($value,$data)
@@ -79,7 +85,8 @@ class Users extends Base
     public function handleLoginInfo()
     {
         session('user_info',[
-            'user_id' => $this->id,
+            'user_id' => $this->getData('id'),
+            'type' => $this->getData('type'),
         ]);
     }
 

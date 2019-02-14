@@ -1,0 +1,110 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>产品详情</h4>
+    </div>    
+    <div class="main">        
+        <div class="goods-desc">
+            <div class="goods-info">
+                <div class="goods-name">
+                    <div class="img"><img src="{:$model['img']}" alt="" /></div>
+                    <div class="txt">
+                        <h4>{$model['name']}</h4>
+                        <div class="tag"><span>无抵押</span></div>
+                        <p>累计申请成功放款人数{$model['suc_times']}人次</p>
+                    </div>
+                </div>
+                <div class="goods-desc">
+                    <div class="row">
+                        <div class="item">
+                            <span>{:$model?$model::$per_unit[$model['per_unit']]:''}息</span>
+                            <h4><font><em>{$model['per']}</em>%</font></h4>
+                        </div>
+                        <div class="item">
+                            <span>额度</span>
+                            <h4><em>{:$model['money_start'].($model['money_end']?'-'.$model['money_end']:'')}</em>{:$model?$model::$money_unit[$model['money_unit']]:''}</h4>
+                        </div>
+                        <div class="item">
+                            <span>期限</span>
+                            <h4><em>{:$model['auth_time_start'].($model['auth_time_end']?'-'.$model['auth_time_end']:'')}</em>{:$model?$model::$auth_unit[$model['auth_unit']]:''}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="goods-item goods-text">
+                <h5>佣金规则</h5>
+                <p>代收放款金额高至<font>{$model['commission']}%</font></p>
+            </div>
+            <div class="goods-item goods-claim">
+                <h5>申请条件</h5>
+                <div class="hd">
+                    <ul>
+                        {volist name="model['condition']" id="vo"}
+                            <li>{$vo['title']}</li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div class="bd">
+                    {volist name="model['condition']" id="vo"}
+                    <div class="con">
+                        {$vo['desc']}
+                    </div>
+                    {/volist}
+
+                </div>
+            </div>
+            <div class="goods-item goods-process">
+                <h5>申请流程</h5>
+                <div class="process_row">
+                    <div class="item">
+                        <span>1</span>
+                        <p>选择产品</p>
+                    </div>
+                    <div class="item">
+                        <span>2</span>
+                        <p>填写信息</p>
+                    </div>
+                    <div class="item">
+                        <span>3</span>
+                        <p>放款审批</p>
+                    </div>
+                    <div class="item">
+                        <span>4</span>
+                        <p>贷款发放</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="goods-footer">
+                <div class="goods-btn">
+                    <a href="apply_loan.html" class="btn btn-next">我要贷款</a>
+                    <a href="javascript:;" class="btn btn-share">邀请贷款</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="share_pop"><img src="/static/index/images/share.png" ></div>
+
+
+{/block}
+{block name="script"}
+<script type="text/javascript" src="/static/index/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript">
+    jQuery(".goods-claim").slide({mainCell:".bd",trigger:"click"});
+
+    $(document).ready(function(){
+        $(".btn-share").click(function(){
+            $(".share_pop").show();
+        });
+        $(".share_pop").click(function(){
+            $(this).hide();
+        });
+    });
+
+</script>
+{/block}

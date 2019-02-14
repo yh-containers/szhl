@@ -3,10 +3,27 @@ namespace app\index\controller;
 
 class Index extends Common
 {
+    protected $need_login = true;
+    protected $ignore_login_action = 'login,index,reg,forget,sendSms,changeLocation';
     public function index()
     {
-        return view('index',[
+        //验证当前登录者是那种身份跳转对应页面
+        if($this->user_type==1){
 
+        }elseif($this->user_type==2){
+
+        }else{
+            $page = 'homeMember';
+        }
+
+        //热门商品
+        $model_product = new \app\common\model\Product();
+        $product_list = $model_product->limit(5)->order('is_hot','asc')->select();
+
+
+        return view($page,[
+            'user_type' => $this->user_type,
+            'product_list' => $product_list,
         ]);
     }
 
