@@ -102,4 +102,19 @@ class System extends Common
         $model = new \app\common\model\Role();
         return $model->actionDel($id,$this->proxy_id);
     }
+
+    //服务协议
+    public function protocol()
+    {
+        return view('protocol',[
+
+        ]);
+    }
+
+    //常用缓存保存动作
+    public function settingAction()
+    {
+
+    }
+
 }
