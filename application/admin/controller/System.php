@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\model\Setting;
+
 class System extends Common
 {
     public function index()
@@ -106,8 +108,11 @@ class System extends Common
     //服务协议
     public function protocol()
     {
-        return view('protocol',[
 
+        $model = new \app\common\model\Setting();
+        $list = $model->getContent('protocol');
+        return view('protocol',[
+            'model'=>$list,
         ]);
     }
 
@@ -115,6 +120,12 @@ class System extends Common
     public function settingAction()
     {
 
+        if($this->request->isAjax()){
+            $data = $this->request->param();
+            $model = new \app\common\model\Setting();
+            $list = $model->setContent($data['type'],$data['content']);
+            return ['code'=>1,'msg'=>'操作成功'];
+        }
     }
 
 }

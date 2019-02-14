@@ -12,6 +12,8 @@ class Setting extends Base
     public function getContent($type)
     {
 
+        $where[] = ['type','=',$type];
+        return $this->where($where)->find();
     }
 
 
@@ -20,7 +22,10 @@ class Setting extends Base
      * */
     public function setContent($type,$content)
     {
-        
+        $data['type'] = $type;
+        $data['content'] = $content;
+        $where[] = ['type','=',$type];
+        return $this->where($where)->find()->save($data);
     }
 
 }

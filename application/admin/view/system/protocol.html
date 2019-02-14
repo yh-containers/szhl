@@ -1,13 +1,79 @@
 ﻿{extend name="base"/}
 {block name="title"}管理人员{/block}
 
-{block name="breadcrumb"}产品管理,产品列表{/block}
+{block name="breadcrumb"}系统管理,服务协议,服务协议内容{/block}
 
 {block name="content"}
 
 <div class="pd-20">
+    <form class="layui-form" action="settingAction">
 
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="type" value="{$model['type']}"  placeholder="协议名称" autocomplete="off" maxlength="20" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">协议内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" id="demo" style="display: none;" name="content">{$model['content']}</textarea>
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn"  lay-submit lay-filter="formDemo" data-type="content">立即提交</button>
+            </div>
+        </div>
+    </form>
 
 </div>
 
+
+
+{/block}
+{block name="script"}
+<script>
+    var active = '';
+    var content_data = '';
+    layui.use('layedit', function(){
+        var layedit = layui.layedit;
+        var index = layedit.build('demo'); //建立编辑器
+
+         active = {
+            content: function(){
+                content_data = layedit.getContent(index);
+            }
+
+        };
+
+    });
+    layui.use('form', function(){
+
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function(obj){
+            console.log(obj.field.content);
+            active['content'] ? active['content'].call(this) : '';
+            obj.field.content = content_data;
+            console.log(obj.field.content);
+            $.post($(obj.form).attr('action'),obj.field,function(result){
+                layer.msg(result.msg)
+                if(result.code==1){
+
+                    // console.log(result.url);
+                    // setTimeout(function(){window.location.href=result.url;},1000)
+                }
+
+            })
+            return false;
+        });
+
+    });
+
+</script>
 {/block}
