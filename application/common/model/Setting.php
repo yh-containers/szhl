@@ -13,7 +13,7 @@ class Setting extends Base
     {
 
         $where[] = ['type','=',$type];
-        return $this->where($where)->find();
+        return $this->where($where)->value('content');
     }
 
 

@@ -8,17 +8,12 @@
 <div class="pd-20">
     <form class="layui-form" action="settingAction">
 
+        <input type="hidden" name="type" value="protocol">
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
-            <div class="layui-input-block">
-                <input type="text" name="type" value="{$model['type']}"  placeholder="协议名称" autocomplete="off" maxlength="20" class="layui-input">
-            </div>
-        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">协议内容</label>
             <div class="layui-input-block">
-                <textarea class="layui-textarea" id="demo" style="display: none;" name="content">{$model['content']}</textarea>
+                <textarea class="layui-textarea" id="demo" style="display: none;" name="content">{$content}</textarea>
 
             </div>
         </div>

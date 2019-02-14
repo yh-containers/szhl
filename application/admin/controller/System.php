@@ -110,9 +110,9 @@ class System extends Common
     {
 
         $model = new \app\common\model\Setting();
-        $list = $model->getContent('protocol');
+        $content = $model->getContent('protocol');
         return view('protocol',[
-            'model'=>$list,
+            'content'=>$content,
         ]);
     }
 
@@ -120,12 +120,14 @@ class System extends Common
     public function settingAction()
     {
 
-        if($this->request->isAjax()){
-            $data = $this->request->param();
-            $model = new \app\common\model\Setting();
-            $list = $model->setContent($data['type'],$data['content']);
-            return ['code'=>1,'msg'=>'操作成功'];
-        }
+        $type = $this->request->param('type');
+        $content = $this->request->param('content');
+        $model = new \app\common\model\Setting();
+        $status = $model->setContent($type,$content);
+        return ['code'=>1,'msg'=>'操作成功'];
+
+
+
     }
 
 }
