@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
 <script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
 <script>
-    var url = "{:url('Article/index')}";
+    var url = "{:url('Article/showList')}";
     layui.use('flow', function(){
         var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
         var flow = layui.flow;
@@ -31,7 +31,8 @@
                 //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
                 $.get(url+'?page='+page, function(res){
                     //假设你的列表返回在data集合中
-                    var list=res.data.data
+                    var data = res.data
+                    var list=data.data
                     layui.each(list, function(index, item){
                         lis.push('<div class="item"><a href="'+url+'?id='+item.id+'">'
                             +'<div class="img"><img src="'+item.img+'" alt="" /></div>'
@@ -47,7 +48,7 @@
 
                     //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
                     //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                    next(lis.join(''), page < res.last_page);
+                    next(lis.join(''), page < data.last_page);
                 });
             }
         });
