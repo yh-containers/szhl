@@ -44,6 +44,7 @@ class Message extends Common
     {
         $id = $this->request->param('id');
         $model = new \app\common\model\Article();
-        return $model->articleDelete($id);
+//        return $model->articleDelete($id);
+        return $model->actionDel($id);
     }
 }

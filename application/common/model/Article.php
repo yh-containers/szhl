@@ -13,8 +13,15 @@ class Article extends Base
     public function articleDelete($id)
     {
 
+        $model = $this->where('id',$id)->find($id);
+        $model->delete();
+        if($model){
 
+        }else{
 
+        }
+        dump($model);
+//        $status = $this->where('id',$id)->delete();
 
     }
 

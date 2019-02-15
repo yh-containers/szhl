@@ -33,6 +33,7 @@
 				<td>{:$vo::$fields_status_article[$vo['status']]}</td>
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("articleAdd",['id'=>$vo['id']])}','编辑文章')" class="ml-5"> 编辑</a>
+					<a href="javascript:;" onclick="$.common.del('{:url("articleDel",['id'=>$vo['id']])}','编辑文章')" class="ml-5"> 删除</a>
 				</td>
 			</tr>
 		{/volist}
