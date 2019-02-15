@@ -1,0 +1,112 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+		<div class="cl  bg-1 bk-gray mb-10 ml-40">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
+				</span>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章名称</label>
+			<div class="layui-input-block">
+				<input type="text" name="title" value="{$model['title']}"  placeholder="文章名称" autocomplete="off" maxlength="20" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章作者</label>
+			<div class="layui-input-block">
+				<input type="text" name="author" value="{$model['author']}"  placeholder="文章作者" autocomplete="off" maxlength="20" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章图片</label>
+			<div class="layui-input-inline">
+				<input type="hidden" name="img" value="{$model['img']}"/>
+				<button class="layui-btn" id="test1" type="button" lay-data="{ url: '{:url('Upload/upload')}',data:{type:'product'}}" >上传文件</button>
+				<img src="{$model['img']}" alt="项目图片" class="radius" width="80" height="80">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">查看次数</label>
+			<div class="layui-input-block">
+				<input type="text" name="view" value="{$model['view']}"  placeholder="查看次数" autocomplete="off" maxlength="20" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-block">
+				<input type="text" name="sort" value="{$model['sort']}"  placeholder="排序" autocomplete="off" maxlength="20" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章内容</label>
+			<div class="layui-input-block">
+				<textarea class="layui-textarea" id="demo"  name="content">{$model['content']}</textarea>
+			</div>
+		</div>
+
+
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+				<input type="radio" name="status" value="1" title="发布" {:$model['status']!=2?'checked':''}>
+				<input type="radio" name="status" value="2" title="取消发布"  {:$model['status']==2?'checked':''}>
+			</div>
+		</div>
+
+
+
+
+	</form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	layui.use('layedit', function(){
+		var layedit = layui.layedit;
+		var index = layedit.build('demo'); //建立编辑器
+
+		active = {
+			content: function(){
+				content_data = layedit.getContent(index);
+			}
+
+		};
+
+	});
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		// form.on('submit(formDemo)', $.common.formSubmit);
+		form.on('submit(formDemo)', function(obj){
+			active['content'] ? active['content'].call(this) : '';
+			obj.field.content = content_data;
+			$.post($(obj.form).attr('action'),obj.field,function(result){
+				layer.msg(result.msg)
+				if(result.code==1){
+
+				}
+
+			})
+			return false;
+		});
+		$.common.uploadFile(upload,'#test1')
+	});
+
+
+</script>
+{/block}
