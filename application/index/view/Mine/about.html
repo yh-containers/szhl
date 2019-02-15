@@ -1,0 +1,46 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>关于中瀚哲</h4>
+    </div>
+    <div class="main">
+        <div class="about">
+            <div class="about_text">
+                <p>　　{:widget('PageCrumb/getSettingInfo',['type'=>'company_intro'])}</p>
+            </div>
+            <div class="contact_us">
+                <div class="title">联系我们</div>
+                <ul>
+                    <li>
+                        <i><img src="/static/index/images/contact_icon01.png"></i>
+                        <span class="name">客服电话</span>
+                        <span class="text">{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tel'])}</span>
+                    </li>
+                    <li>
+                        <i><img src="/static/index/images/contact_icon02.png"></i>
+                        <span class="name">客服邮箱</span>
+                        <span class="text">{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'email'])}</span>
+                    </li>
+                    <li>
+                        <i><img src="/static/index/images/contact_icon02.png"></i>
+                        <span class="name">公司邮箱</span>
+                        <span class="text">{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'company_email'])}</span>
+                    </li>
+                    <li>
+                        <i><img src="/static/index/images/contact_icon03.png"></i>
+                        <span class="name">公司地址</span>
+                        <span class="text">{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'company_addr'])}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{/block}

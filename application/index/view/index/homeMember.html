@@ -84,80 +84,32 @@
                 <span>贷款资讯</span>
             </div>
             <div class="title-right">
-                <a href="news.html" class="more">更多</a>
+                <a href="{:url('Article/index')}" class="more">更多</a>
             </div>
         </div>
         <div class="news-floor">
+            {volist name="article_list" id="vo"}
             <div class="item">
-                <a href="news-det.html">
-                    <div class="img"><img src="/static/index/images/news-1.jpg" alt="" /></div>
+                <a href="{:url('Article/detail',['id'=>$vo['id']])}">
+                    <div class="img"><img src="{$vo['img']}" alt="" /></div>
                     <div class="txt">
-                        <h4>什么是贷款用途证明？贷款为何没它不行！</h4>
+                        <h4>{$vo['title']}</h4>
                         <div class="info">
-                            <span class="date">2018-12-19</span>
-                            <span class="view">3452</span>
+                            <span class="date">{:$vo['send_time']?date('Y-m-d',$vo['send_time']):''}</span>
+                            <span class="view">{$vo['view']}</span>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="item">
-                <a href="news-det.html">
-                    <div class="img"><img src="/static/index/images/news-2.jpg" alt="" /></div>
-                    <div class="txt">
-                        <h4>网贷四大指标11年来首次同比下降</h4>
-                        <div class="info">
-                            <span class="date">2018-12-19</span>
-                            <span class="view">3452</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="item">
-                <a href="news-det.html">
-                    <div class="img"><img src="/static/index/images/news-3.jpg" alt="" /></div>
-                    <div class="txt">
-                        <h4>新版征信5大变化揭秘</h4>
-                        <div class="info">
-                            <span class="date">2018-12-19</span>
-                            <span class="view">3452</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            {/volist}
+
         </div>
     </div>
 
 
 </div>
 
-<div class="footer">
-    <div class="footer_bar">
-        <div class="item active">
-            <a href="home_member.html">
-                <div class="icon sy-icon"></div>
-                <div class="tab-label">首页</div>
-            </a>
-        </div>
-        <div class="item">
-            <a href="progress.html">
-                <div class="icon prog-icon"></div>
-                <div class="tab-label">进度</div>
-            </a>
-        </div>
-        <div class="item">
-            <a href="message.html">
-                <div class="icon mess-icon"></div>
-                <div class="tab-label">消息</div>
-            </a>
-        </div>
-        <div class="item">
-            <a href="member.html">
-                <div class="icon my-icon"></div>
-                <div class="tab-label">我的</div>
-            </a>
-        </div>
-    </div>
-</div>
+{:widget('PageCrumb/footer')}
 {/block}
 
 {block name="script"}

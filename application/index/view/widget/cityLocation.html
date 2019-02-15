@@ -7,11 +7,9 @@
         <div class="city-list">
             <span class="city-letter">热门城市</span>
             <div class="city-hot clearfix">
-                <p data-id="440300">深圳市</p>
-                <p data-id="440100">广州市</p>
-                <p data-id="310100">上海市</p>
-                <p data-id="420100">武汉市</p>
-                <p data-id="441300">惠州市</p>
+                {volist name="hot_location" id="vo"}
+                    <p data-id="{$vo['area_id']}">{$vo['area_name']}</p>
+                {/volist}
             </div>
         </div>
         {volist name="city_location" id="vo"}

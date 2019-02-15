@@ -1,0 +1,118 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+{block name="style"}
+<style>
+    #city_inner{padding-right: 10px}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>个人资料</h4>
+    </div>
+    <div class="main">
+        <div class="personal">
+            <div class="personal_avatar">
+                <label>用户头像</label>
+                <div class="modify_avatar">
+                    <img id="test1" src="{$user_model_info['face']}">
+                </div>
+            </div>
+            <ul>
+                <li class="change">
+                    <label>昵称</label>
+                    <input type="text" name="name" value="{$user_model_info['name']}">
+                </li>
+                <li>
+                    <label>身份</label>
+                    <span>{:$user_model::$fields_type[($user_model_info['type']?$user_model_info['type']:0)]}</span>
+                </li>
+                <li>
+                    <label>联系电话</label>
+                    <span>{$user_model_info['phone']}</span>
+                </li>
+                <li class="change">
+                    <label>所在城市</label>
+                    <input type="hidden" name="city" value="{$user_model_info['city']}"/>
+                    <span id="city_inner">{:$user_model_info['city']?$user_model_info['city_name']:'选择所在城市'}</span>
+
+                </li>
+                <li>
+                    <label>成为合作方时间</label>
+                    <span>{:$user_model_info['join_time']?date('Y-m-d',$user_model_info['join_time']):''}</span>
+                </li>
+                {if($direct_req_user_info)}
+                <li>
+                    <label>所属业务员</label>
+                    <span>{$direct_req_user_info['name']}</span>
+                </li>
+                {/if}
+            </ul>
+            <div class="sign_out"><a href="{:url('Index/logout')}">退出登录</a></div>
+            <div class="save"><a id="submit" href="javascript:;">保存修改</a></div>
+        </div>
+    </div>
+    
+    <div id="clipArea">
+        <div class="clipwrap">
+            <button id="clipBtn">完成</button>
+            <button id="clipClose">取消</button>
+        </div>
+    </div>
+<!-- 地区 -->
+{:widget('PageCrumb/cityLocation')}
+
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+<!-- 头像裁剪 -->
+<script>
+    var layer;
+    layui.use(['layer','upload'], function(){
+        layer = layui.layer;
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '{:url("Mine/modInfo")}' //上传接口
+            ,data:{type:'face'}
+            ,acceptMime:'image/*'
+            ,done: function(res){
+                //上传完毕回调
+                var item = this.item;
+                res.path && $(item).parent().find('img').attr('src',res.path)
+            }
+            ,error: function(){
+                //请求异常回调
+                layer.msg('上传异常')
+            }
+        });
+    });
+    //选择城市 start
+    $('#city_inner').click(function(){
+        $('.city_container').show();
+    });
+    $('.city_close').click(function(){
+        $('.city_container').hide();
+    });
+
+    $('.city-list p').click(function() {
+        var type = $('.city_container').data('type');
+        $('#city_inner').html($(this).html()).attr('data-id', $(this).attr('data-id'));
+        $('.city_container').hide();
+        $("input[name='city']").val($(this).attr('data-id'))
+    });
+
+    $("#submit").click(function(){
+        var name=$("input[name='name']").val()
+        var city=$("input[name='city']").val()
+        $.post("{:url('modInfo')}",{name:name,city:city},function(result){
+            layer.msg(result.msg)
+        })
+    })
+
+</script>
+
+{/block}

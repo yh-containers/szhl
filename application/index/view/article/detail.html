@@ -1,0 +1,24 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>{$model['title']}</h4>
+    </div>    
+    <div class="main">
+        <div class="article">
+            <h1>{$model['title']}</h1>
+            <div class="info">
+                <span class="source">发布：{$model['author']}</span>
+                <span class="date">{:$model['send_time']?date('Y-m-d',$model['send_time']):''}</span>
+                <span class="view">3452</span>
+            </div>
+            <div class="article-content">
+                {$model['content']|raw}
+            </div>
+        </div>
+    </div>
+
+{/block}

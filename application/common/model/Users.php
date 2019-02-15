@@ -6,7 +6,8 @@ class Users extends Base
 {
     protected $name='users';
 
-    protected $insert = ['face'=>'/public/uploads/face/toux.png','type'];
+    protected $insert = ['face'=>'/uploads/face/toux.png','type'];
+    protected $auto = ['join_time'];
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
 
@@ -14,6 +15,12 @@ class Users extends Base
     public function setTypeAttr($value,$data)
     {
         return $value?$value:0;
+    }
+
+    //设置加入时间
+    public function setJoinTimeAttr($value,$data)
+    {
+        return $value?$value:time();
     }
 
     //设置城市
@@ -27,7 +34,17 @@ class Users extends Base
         }
         return $value;
     }
-
+    //获取城市名
+    public function getCityNameAttr($value,$data)
+    {
+        $name = '';
+        if(isset($data['city'])){
+            //获取省份
+            $model =new \app\common\model\Location();
+            $name = $model->where('area_id',$data['city'])->value('area_name');
+        }
+        return $name;
+    }
     //设置密码
     public function setPasswordAttr($value)
     {
@@ -82,12 +99,20 @@ class Users extends Base
     /*
      * web端登录成功处理登录信息
      * */
-    public function handleLoginInfo()
+    public function handleLoginInfo($clear=false)
     {
-        session('user_info',[
-            'user_id' => $this->getData('id'),
-            'type' => $this->getData('type'),
-        ]);
+        $session_name = 'user_info';
+        if($clear){
+            //清空缓存
+            session($session_name,null);
+        }else{
+            //保存登录信息
+            session($session_name,[
+                'user_id' => $this->getData('id'),
+                'type' => $this->getData('type'),
+            ]);
+        }
+
     }
 
     /*
@@ -100,6 +125,14 @@ class Users extends Base
         //验证成功
         $model = $this->where('phone',$phone)->find();
         $model->save(['password'=>$pwd],['phone'=>$phone]);
+    }
+
+    /*
+     * 邀请我的人--关联查询
+     * */
+    public function linkDirectFuid()
+    {
+        return $this->belongsTo('Users','fuid1');
     }
 
 }

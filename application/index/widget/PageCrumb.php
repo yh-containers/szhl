@@ -10,16 +10,21 @@ class PageCrumb extends Controller
     {
         $cache_name = 'PageCrumb/cityLocation';
         $data = cache($cache_name);
+        $model = new \app\common\model\Location();
         if(!$data){
-            $model = new \app\common\model\Location();
             $data = $model->field('*,left(area_py_f,1) as `py_index`')->where('area_type',2)->select()->toArray();
             //缓存数据
             $data = arr_field_group($data,'py_index');
             cache($cache_name,$data);
 
         }
+
+        //热门城市
+        $hot_location = $model->where('is_hot',1)->select();
+
         return $this->fetch('/widget/cityLocation',[
             'city_location' => $data,
+            'hot_location' => $hot_location,
         ]);
     }
 
@@ -43,5 +48,12 @@ class PageCrumb extends Controller
             $content = isset($content[$filed])?$content[$filed]:'';
         }
         return $content;
+    }
+
+    //底部数据
+    public function footer()
+    {
+        return $this->fetch('/widget/footer',[
+        ]);
     }
 }

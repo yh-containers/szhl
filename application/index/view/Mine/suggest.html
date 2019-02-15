@@ -1,0 +1,33 @@
+{extend name="base"/}
+
+{block name="title"}中翰哲{/block}
+{block name="style"}
+<style>
+    #city_inner{padding-right: 10px}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>意见反馈</h4>
+    </div>
+    <div class="main">
+        <div class="feedback">
+            <form id="form">
+                <div class="textarea"><textarea name="content" placeholder="感谢您对中瀚哲的支持，中瀚哲产品经理会尽快回复您的问题，感谢您的反馈"></textarea></div>
+                <div class="feedback_btn"><input type="button" id="submit" name="" value="确定"></div>
+            </form>
+        </div>
+    </div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post($("#form").attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+            })
+        })
+    })
+</script>
+{/block}
