@@ -1,0 +1,77 @@
+{extend name="base"/}
+
+{block name="title"}贷款详情{/block}
+
+{block name="content"}
+
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>贷款详情</h4>
+    </div>
+
+    <div class="main">
+        <div class="apply_status">
+            <img src="/static/index/images/apply_status.png">
+            <div class="text">
+                <p>申请已提交，审批中</p>
+            </div>
+        </div>
+        <div class="logistics">
+            <div class="title">申请进度</div>
+            <ul>
+                <li>
+                    <div class="logistics_track">
+                        <div class="track_row">
+                            <span class="track">审批中</span>
+                            <span class="date">2018-12-28 15:55:42</span>
+                        </div>
+                        <p>请耐心等待，工作人员将尽快与您取得联系</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="logistics_track">
+                        <div class="track_row">
+                            <span class="track">申请提交成功</span>
+                            <span class="date">2018-12-28 15:55:42</span>
+                        </div>
+                        <p>申请金额300000.00元，期限6个月</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="apply_det_mode">
+            <div class="title">中瀚哲产品A</div>
+            <div class="row">
+                <div class="item">
+                    <label>申请编号</label>
+                    <span>IAC201812281530</span>
+                </div>
+                <div class="item">
+                    <label>申请时间</label>
+                    <span>2018-12-28 15:55:42</span>
+                </div>
+                <div class="item">
+                    <label>申请额度</label>
+                    <span>300000.00元</span>
+                </div>
+                <div class="item">
+                    <label>贷款期限</label>
+                    <span>6个月</span>
+                </div>
+                <div class="item">
+                    <label>申请人</label>
+                    <span>张三</span>
+                </div>
+                <div class="item">
+                    <label>联系方式</label>
+                    <span>137****0153</span>
+                </div>
+                <div class="item">
+                    <label>身份证号</label>
+                    <span>433***********6321</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{/block}

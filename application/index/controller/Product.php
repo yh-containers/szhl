@@ -3,6 +3,13 @@ namespace app\index\controller;
 
 class Product extends Common
 {
+
+    public function index()
+    {
+        return view('index',[
+        ]);
+    }
+
     /*
      * 详情
      * */
@@ -13,6 +20,17 @@ class Product extends Common
         $model = $model->get($id);
         return view('detail',[
             'model' => $model,
+        ]);
+    }
+
+    /*
+     * 产品搜索
+     * */
+    public function search()
+    {
+        $keyword = $this->request->param('keyword','','trim');
+        return view('search',[
+            'keyword'=>$keyword,
         ]);
     }
 }

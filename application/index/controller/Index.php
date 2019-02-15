@@ -11,6 +11,8 @@ class Index extends Common
         $flow_image = [];
         //文章列表
         $article_list = [];
+        //菜单栏
+        $menu = \app\common\model\Product::$type_label;
         //验证当前登录者是那种身份跳转对应页面
         if($this->user_type==1){
 
@@ -36,6 +38,7 @@ class Index extends Common
             'product_list' => $product_list,
             'flow_image' => $flow_image,
             'article_list' => $article_list,
+            'menu' => $menu,
         ]);
     }
 

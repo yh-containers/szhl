@@ -1,6 +1,6 @@
 {extend name="base"/}
 
-{block name="title"}中翰哲{/block}
+{block name="title"}{$model['title']}{/block}
 
 {block name="content"}
     <div class="header">
@@ -13,7 +13,7 @@
             <div class="info">
                 <span class="source">发布：{$model['author']}</span>
                 <span class="date">{:$model['send_time']?date('Y-m-d',$model['send_time']):''}</span>
-                <span class="view">3452</span>
+                <span class="view">{:$model['view']}</span>
             </div>
             <div class="article-content">
                 {$model['content']|raw}

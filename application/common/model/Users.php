@@ -11,6 +11,7 @@ class Users extends Base
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
 
+
     //设置用户类型
     public function setTypeAttr($value,$data)
     {

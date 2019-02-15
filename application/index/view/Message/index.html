@@ -1,0 +1,52 @@
+{extend name="base"/}
+
+{block name="title"}消息中心{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>消息中心</h4>
+    </div>    
+    <div class="main">
+        <div class="message">
+            <ul class="clearfix">
+                <li>
+                    <a href="information_news.html">
+                        <div class="message_img">
+                          <img src="/static/index/images/message01.png">
+                          <span class="badge">1</span>
+                        </div>
+                        <div class="message_text">
+                            <h2>最新资讯</h2>
+                            <p>贷款资费手续调整，前往一观</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="information_system.html">
+                        <div class="message_img">
+                          <img src="/static/index/images/message02.png">
+                        </div>
+                        <div class="message_text">
+                            <h2>系统消息</h2>
+                            <p>恭喜您成功加入中瀚哲</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="information_system.html">
+                        <div class="message_img">
+                          <img src="/static/index/images/message03.png">
+                        </div>
+                        <div class="message_text">
+                            <h2>产品更新</h2>
+                            <p>平安信任贷款产品最新上线啦</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+{:widget('PageCrumb/footer',['active'=>'message'])}
+{/block}

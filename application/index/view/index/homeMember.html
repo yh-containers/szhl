@@ -1,6 +1,6 @@
 {extend name="base"/}
 
-{block name="title"}中翰哲{/block}
+{block name="title"}首页{/block}
 
 {block name="content"}
 <div class="header">
@@ -22,10 +22,9 @@
     </div>
 
     <div class="nav_col_4">
-        <a href="products.html" class="item"><img src="/static/index/images/nav-1.png"><span>信用贷款</span></a>
-        <a href="products.html" class="item"><img src="/static/index/images/nav-2.png"><span>房产抵押</span></a>
-        <a href="products.html" class="item"><img src="/static/index/images/nav-3.png"><span>车辆抵押</span></a>
-        <a href="products.html" class="item"><img src="/static/index/images/nav-4.png"><span>极速网贷</span></a>
+        {volist name="menu" id="vo"}
+        <a href="{:url('Product/index',['type'=>$vo['type']])}" class="item"><img src="/static/index/images/nav-{$vo['nav']}.png"><span>{$vo['name']}</span></a>
+        {/volist}
     </div>
 
     <div class="headline col-radius aui-margin-b-10 clearfix">

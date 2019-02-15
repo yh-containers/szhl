@@ -17,6 +17,13 @@ class Product extends Base
     //授权期限单位
     public static $auth_unit = ['天','月','年'];
 
+    //产品菜单
+    public static $type_label = [
+        ['name'=>'信用贷款','nav'=>'1','type'=>1],
+        ['name'=>'房产抵押','nav'=>'2','type'=>2],
+        ['name'=>'车辆抵押','nav'=>'3','type'=>3],
+        ['name'=>'急速贷款','nav'=>'4','type'=>4],
+    ];
     //项目条件-设置
     public function setConditionAttr($value)
     {

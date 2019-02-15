@@ -1,0 +1,36 @@
+{extend name="base"/}
+
+{block name="title"}联系客服{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+    .tip {
+        font-size: 0.65rem;
+        color: #777b88;
+        padding-bottom: 10px;
+        line-height: 20px;
+    }
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>联系客服</h4>
+    </div>
+    <div class="main">
+        <div class="contact">
+            <div class="contact_tel">
+                <p><img src="/static/index/images/contact_icon.png"></p>
+                <h3>联系电话：{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tel'])}</h3>
+                <h4>{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'day'])}</h4>
+            </div>
+            <div class="contact_text">
+                <p>小贴士<br />
+                </p>
+                <div class="tip">
+                    <pre>{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tip'])}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

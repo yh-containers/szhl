@@ -51,9 +51,10 @@ class PageCrumb extends Controller
     }
 
     //底部数据
-    public function footer()
+    public function footer($active='index')
     {
         return $this->fetch('/widget/footer',[
+            'active' => $active
         ]);
     }
 }

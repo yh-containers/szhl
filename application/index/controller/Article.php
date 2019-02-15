@@ -23,6 +23,7 @@ class Article extends Common
     {
         $id = $this->request->param('id',0,'intval');
         $model = new \app\common\model\Article();
+        $model->where('id',$id)->setInc('view');
         $model = $model->get($id);
         return view('detail',[
             'model' => $model,
