@@ -207,5 +207,21 @@ class System extends Common
         $model = new \app\common\model\FlowImage();
         return $model->actionDel($id);
     }
+    public function suggestion()
+    {
+        $model = new \app\common\model\Suggest();
+
+        $list = $model
+            ->with(['linkUser'=>function($qeury){
+
+                    return $qeury->field('*');
+            }])
+            ->order('create_time','desc')->paginate();
+
+        return view('suggestion',[
+            'list'=>$list,
+        ]);
+    }
+
 
 }
