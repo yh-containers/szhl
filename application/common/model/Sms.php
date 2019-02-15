@@ -23,7 +23,7 @@ class Sms extends Base
         $sms_type = self::$SMS_TYPE[$type];
         $model = new self();
         //获取该手机最后发送的一条消息
-        $sms_model = $model->where(['phone'=>$phone,'type'=>$type])->find();
+        $sms_model = $model->where(['phone'=>$phone,'type'=>$type])->order('id','desc')->find();
         //实例化类
         $class = '\\app\\common\\service\\sms\\'.$sms_type['class'];
         $object = new $class();

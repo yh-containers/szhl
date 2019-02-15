@@ -13,8 +13,8 @@ class PwdForget implements IVerify
     {
         if(!empty($model)){
             //未达到过期时间且未使用
-            if( $model['create_time'] < time()-self::EXPIRE && $model['status']==1){
-                return '短信已发送，请注意查收';
+            if( strtotime($model['create_time']) > time()-self::EXPIRE && $model['status']==1){
+                return '短信已发送，请注意查收..';
             }
 
         }else{
@@ -31,6 +31,6 @@ class PwdForget implements IVerify
     //获取发送内容
     public function getContent($verify)
     {
-        return '此次验证码:'.$verify.' 请在'.intval(self::EXPIRE/60).'分钟内使用';
+        return '找回密码的验证码:'.$verify.' 请在'.intval(self::EXPIRE/60).'分钟内使用';
     }
 }

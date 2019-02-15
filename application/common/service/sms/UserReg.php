@@ -13,11 +13,9 @@ class UserReg implements IVerify
     {
         if(!empty($model)){
             //未达到过期时间且未使用
-            if( $model['create_time'] < time()-self::EXPIRE && $model['status']==1){
-                return '短信已发送，请注意查收';
+            if( strtotime($model['create_time']) > time()-self::EXPIRE && $model['status']==1){
+                return '短信已发送，请注意查收..';
             }
-
-            //
         }
         return true;
     }

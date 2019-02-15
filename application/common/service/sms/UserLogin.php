@@ -13,8 +13,8 @@ class UserLogin implements IVerify
     {
         if(!empty($model)){
             //未达到过期时间且未使用
-            if( $model['create_time'] < time()-self::EXPIRE && $model['status']==1){
-                return '短信已发送，请注意查收';
+            if( strtotime($model['create_time']) > time()-self::EXPIRE && $model['status']==1){
+                return '短信已发送，请注意查收..';
             }
         }
         return true;
@@ -23,6 +23,7 @@ class UserLogin implements IVerify
     //获取发送内容
     public function getContent($verify)
     {
-        return '此次登录验证码:'.$verify.' 请在'.intval(self::EXPIRE/60).'分钟内使用';
+//        return '尊敬的客户您好，您本次验证码为'.$verify.'【中翰哲】';
+        return '登录验证码:'.$verify.' 请在'.intval(self::EXPIRE/60).'分钟内使用';
     }
 }
