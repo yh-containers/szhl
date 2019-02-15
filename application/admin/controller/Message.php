@@ -18,7 +18,7 @@ class Message extends Common
     public function article()
     {
         $model = new \app\common\model\Article();
-        $list = $model->paginate();
+        $list = $model->order('sort','asc')->paginate();
         return view('index',[
             'list'=>$list,
         ]);
@@ -46,5 +46,12 @@ class Message extends Common
         $model = new \app\common\model\Article();
 //        return $model->articleDelete($id);
         return $model->actionDel($id);
+    }
+    public function articleSort()
+    {
+        $id = $this->request->param('id');
+        $sort = $this->request->param('sort');
+        $model = new \app\common\model\Article();
+        return $model->setSort($id,$sort);
     }
 }

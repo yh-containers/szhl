@@ -217,7 +217,7 @@ class System extends Common
                     return $qeury->field('*');
             }])
             ->order('create_time','desc')->paginate();
-
+        
         return view('suggestion',[
             'list'=>$list,
         ]);

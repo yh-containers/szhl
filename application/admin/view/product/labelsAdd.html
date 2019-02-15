@@ -1,0 +1,71 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="cl  bg-1 bk-gray mb-10 ml-40">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
+				</span>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">标签名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" value="{$model['name']}"  placeholder="项目名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-block">
+						<input type="text" name="sort" value="{$model['sort']}"  placeholder="排序" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-block">
+						<input type="radio" name="status" value="1" title="启用" {:$model['status']!=2?'checked':''}>
+						<input type="radio" name="status" value="2" title="禁用"  {:$model['status']==2?'checked':''}>
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+
+	</form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', $.common.formSubmit);
+
+		$.common.uploadFile(upload,'#test1')
+	});
+
+</script>
+{/block}

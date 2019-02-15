@@ -1,7 +1,7 @@
 ﻿{extend name="base"/}
 {block name="title"}管理人员{/block}
 
-{block name="breadcrumb"}信息管理,文章管理,文章列表{/block}
+{block name="breadcrumb"}产品管理,产品标签列表{/block}
 
 {block name="content"}
 
@@ -9,7 +9,7 @@
 
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
     <span class="l">
-    	<a href="javascript:;" onclick="$.common.openUrl('{:url("articleAdd")}','添加文章')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加文章</a>
+    	<a href="javascript:;" onclick="$.common.openUrl('{:url("labelsAdd")}','添加标签')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加标签</a>
 	</span>
 	</div>
 
@@ -17,9 +17,9 @@
 		<thead>
 		<tr class="text-c">
 			<th width="80">序号</th>
-			<th width="100">项目名称</th>
-
+			<th width="100">标签名</th>
 			<th width="130">创建时间</th>
+
 			<th width="20">排序</th>
 			<th width="70">状态</th>
 			<th width="100">操作</th>
@@ -29,20 +29,19 @@
 		{volist name="list" id="vo"}
 			<tr class="text-c">
 				<td>{$i}</td>
-				<td>{$vo['title']}</td>
+				<td>{$vo['name']}</td>
 				<td>{$vo['create_time']}</td>
 				<td><input type="text"  required  lay-verify="required" value="{$vo['sort']}" autocomplete="off" data-id="{$vo.id}"  class="layui-input" onblur="updateSort(this)"></td>
 
-				<td>{:$vo::$fields_status_article[$vo['status']]}</td>
+				<td>{:$vo::$fields_status[$vo['status']]}</td>
 				<td>
-					<a href="javascript:;" onclick="$.common.openUrl('{:url("articleAdd",['id'=>$vo['id']])}','编辑文章')" class="ml-5"> 编辑</a>
-					<a href="javascript:;" onclick="$.common.del('{:url("articleDel",['id'=>$vo['id']])}','编辑文章')" class="ml-5"> 删除</a>
+					<a href="javascript:;" onclick="$.common.del('{:url("labelsDel",['id'=>$vo['id']])}','删除')" class="ml-5"> 删除</a>
 				</td>
 			</tr>
 		{/volist}
 		</tbody>
 	</table>
-	{$list|raw}
+
 </div>
 
 {/block}
@@ -51,7 +50,7 @@
 	function updateSort(targ){
 
 		data={id:$(targ).attr('data-id'),sort:$(targ).val()};
-		$.post('articleSort',data,function(result){
+		$.post('labelsSort',data,function(result){
 			layer.msg(result.msg)
 			if(result.code == 1){
 

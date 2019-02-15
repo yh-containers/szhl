@@ -59,4 +59,41 @@ class Product extends Common
         $state = $model->actionAdd($php_input);
         return ['code'=>(int)$state,'msg'=>$state?'修改成功':'修改异常'];
     }
+    public function labels()
+    {
+        $model = new \app\common\model\Label();
+        $list = $model->order('sort','asc')->select();
+        return view('lables',[
+            'list'=>$list,
+        ]);
+
+    }
+    public function labelsAdd()
+    {
+        $id = $this->request->param('id');
+        $model = new \app\common\model\Label();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();
+            return $model->actionAdd($php_input);
+        }
+        $model = new \app\common\model\Label();
+        $model = $model->get($id);
+        return view('labelsAdd',[
+            'model' => $model,
+        ]);
+    }
+    public function labelsDel()
+    {
+        $id = $this->request->param('id');
+        $model = new \app\common\model\Label();
+        return $model->actionDel($id);
+    }
+    public function labelsSort()
+    {
+        $id = $this->request->param('id');
+        $sort = $this->request->param('sort');
+        $model = new \app\common\model\Label();
+        return $model->setSort($id,$sort);
+    }
 }
