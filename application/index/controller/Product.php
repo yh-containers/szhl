@@ -6,7 +6,12 @@ class Product extends Common
 
     public function index()
     {
+
+        //产品labels
+        $model_label = new \app\common\model\Label();
+        $label_list = $model_label->select();
         return view('index',[
+            'label_list' => $label_list,
         ]);
     }
 

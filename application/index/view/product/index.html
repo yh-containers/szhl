@@ -13,14 +13,10 @@
     </div>
     <div class="tab_floor">
         <div class="row">
-            <a href="products-list.html">公检法</a>
-            <a href="products-list.html">不上征信</a>
-            <a href="products-list.html">无抵押</a>
-            <a href="products-list.html">负债要求低</a>
-            <a href="products-list.html">不考察</a>
-            <a href="products-list.html">无违约金</a>
-            <a href="products-list.html">只电核本人</a>
-            <a href="products-list.html">不看当前逾期</a>
+            {volist name="$label_list" id="vo"}
+            <a href="{:url('',['lid'=>$vo['id']])}">{$vo['name']}</a>
+            {/volist}
+
         </div>
     </div>
     <div class="container-floor">
