@@ -122,6 +122,7 @@ class System extends Common
 
         $type = $this->request->param('type');
         $content = $this->request->param('content');
+        $content = is_array($content)?json_encode($content):$content;
         $model = new \app\common\model\Setting();
         $status = $model->setContent($type,$content);
         return ['code'=>1,'msg'=>'操作成功'];
@@ -156,7 +157,55 @@ class System extends Common
     }
 
 
+    //系统设置
+    public function setting()
+    {
+        $model = new \app\common\model\Setting();
+        $company_info = $model->getContent('company_info');
+        $company_intro = $model->getContent('company_intro');
+        return view('setting',[
+            'company_info' => json_decode($company_info,true),
+            'company_intro' => $company_intro,
+        ]);
+    }
 
 
+    //轮播图管理
+    public function flowImage()
+    {
+        $model = new \app\common\model\FlowImage();
+
+        $list = $model->order('sort','asc')->paginate();
+        return view('flowImage',[
+            'list'=>$list,
+        ]);
+    }
+
+    //轮播图管理--添加
+    public function flowImageAdd()
+    {
+        $id = $this->request->param('id');
+        $model = new \app\common\model\FlowImage();
+
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();
+
+            $validate = new \app\common\validate\FlowImage();
+            return $model->actionAdd($php_input,$validate);
+        }
+        $model = $model->get($id);
+        return view('flowImageAdd',[
+            'model' => $model,
+        ]);
+    }
+
+    //轮播图管理--删除
+    public function flowImageDel()
+    {
+        $id = $this->request->param('id');
+        $model = new \app\common\model\FlowImage();
+        return $model->actionDel($id);
+    }
 
 }

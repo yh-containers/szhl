@@ -7,12 +7,19 @@ class Index extends Common
     protected $ignore_login_action = 'login,index,reg,forget,sendSms,changeLocation';
     public function index()
     {
+        //轮播图
+        $flow_image = [];
         //验证当前登录者是那种身份跳转对应页面
         if($this->user_type==1){
 
         }elseif($this->user_type==2){
 
         }else{
+
+            //轮播图
+            $model_flow_image = new \app\common\model\FlowImage();
+            $flow_image = $model_flow_image->where('status',1)->order('sort','asc')->select();
+
             $page = 'homeMember';
         }
 
@@ -20,10 +27,10 @@ class Index extends Common
         $model_product = new \app\common\model\Product();
         $product_list = $model_product->limit(5)->order('is_hot','asc')->select();
 
-
         return view($page,[
             'user_type' => $this->user_type,
             'product_list' => $product_list,
+            'flow_image' => $flow_image,
         ]);
     }
 

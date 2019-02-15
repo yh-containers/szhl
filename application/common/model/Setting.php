@@ -13,7 +13,8 @@ class Setting extends Base
     {
 
         $where[] = ['type','=',$type];
-        return $this->where($where)->value('content');
+        //缓存数据
+        return $this->cache($this->name.$type)->where($where)->value('content');
     }
 
 
@@ -22,6 +23,8 @@ class Setting extends Base
      * */
     public function setContent($type,$content)
     {
+        //清空缓存
+        cache($this->name.$type,null);
         $data['content'] = $content;
         $where[] = ['type','=',$type];
         return $this->where($where)->update($data);

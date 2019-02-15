@@ -1,0 +1,71 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">标题</label>
+				<div class="layui-input-block">
+					<input type="text" name="title" value="{$model['title']}"  placeholder="标题" autocomplete="off" maxlength="20" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">封面图</label>
+				<div class="layui-input-inline">
+					<input type="hidden" name="img" value="{$model['img']}"/>
+					<button class="layui-btn" id="test1" type="button" lay-data="{ url: '{:url('Upload/upload')}',data:{type:'article'}}" >上传文件</button>
+					<img src="{$model['img']}" alt="封面图" class="radius" width="80" height="80">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+					<input type="radio" name="status" value="1" title="启用" {:$model['status']!=2?'checked':''}>
+					<input type="radio" name="status" value="2" title="禁用"  {:$model['status']==2?'checked':''}>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-inline">
+					<input type="text" name="sort" value="{:$model['sort']?$model['sort']:100}"  class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button type="button" class="layui-btn"  lay-submit lay-filter="formDemo" data-type="content">立即提交</button>
+				</div>
+			</div>
+
+
+
+	</form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', $.common.formSubmit);
+
+		$.common.uploadFile(upload,'#test1')
+	});
+	$(function(){
+
+		//移除
+		$("#product-condition").on('click','.condition-close',function(){
+			$(this).parent().remove()
+		})
+	})
+</script>
+{/block}

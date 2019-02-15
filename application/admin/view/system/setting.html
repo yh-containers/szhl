@@ -1,0 +1,106 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}系统管理,常规设置{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-header">
+                    其它操作
+                    <button type="button"  class="btn btn-warning  size-S radius f-r submit" >保存</button>
+                </div>
+                <div class="panel-body pd-5">
+                    <form class="layui-form" action="{:url('System/settingAction')}">
+                        <input type="hidden" name="type" value="company_info"/>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客服电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[tel]" value="{$company_info['tel']}"  placeholder="客服电话" autocomplete="off" maxlength="20" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客服邮箱</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[email]" value="{$company_info['email']}"  placeholder="客服邮箱" autocomplete="off" maxlength="20" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">公司邮箱</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[company_email]" value="{$company_info['company_email']}"  placeholder="公司邮箱" autocomplete="off" maxlength="20" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">公司地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[company_addr]" value="{$company_info['company_addr']}"  placeholder="公司地址" autocomplete="off" maxlength="20" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">作息时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[day]" value="{$company_info['day']}"  placeholder="作息时间" autocomplete="off" maxlength="200" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">icp</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="content[icp]" value="{$company_info['icp']}"  placeholder="icp" autocomplete="off" maxlength="200" class="layui-input">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">小贴士</label>
+                            <div class="layui-input-block">
+                                <textarea name="content[tip]" class="layui-textarea">{$company_info['tip']}</textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                    <div class="panel-header">
+                        公司简介
+                        <button type="button"  class="btn btn-warning  size-S radius f-r submit">保存</button>
+                    </div>
+                    <div class="panel-body pd-5">
+                        <form class="layui-form" action="{:url('System/settingAction')}">
+
+                            <input type="hidden" name="type" value="company_intro"/>
+
+                            <div class="layui-form-item">
+                                    <textarea name="content" class="layui-textarea">{$company_intro}</textarea>
+                            </div>
+
+                        </form>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $('.submit').click(function(){
+            var $this=$(this).parent().parent().find('form')
+            $.post($this.attr('action'),$this.serialize(),function(result){
+                layer.msg(result.msg)
+            })
+        })
+    })
+</script>
+{/block}

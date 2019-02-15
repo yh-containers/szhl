@@ -32,4 +32,16 @@ class PageCrumb extends Controller
             'protocol_content' => $content,
         ]);
     }
+
+    //获取系统配置信息
+    public function getSettingInfo($type,$filed='')
+    {
+        $model = new \app\common\model\Setting();
+        $content = $model->getContent($type);
+        if($filed){
+            $content = json_decode($content,true);
+            $content = isset($content[$filed])?$content[$filed]:'';
+        }
+        return $content;
+    }
 }

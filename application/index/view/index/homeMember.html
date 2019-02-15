@@ -5,21 +5,17 @@
 {block name="content"}
 <div class="header">
     <h4>首页</h4>
-    <a class="icon right service" href="tel:400-755-1788"></a>
+    <a class="icon right service" href="tel:{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tel'])}"></a>
 </div>
 <div class="main">
     <div class="banner slider-wrap">
         <div class="swiper-container swiper-container-banner">
             <div class="swiper-wrapper">
+                {volist name="flow_image" id="vo"}
                 <div class="swiper-slide">
-                    <a href="javascript:;"><img src="/static/index/images/banner-1.jpg" /></a>
+                    <a href="javascript:;"><img src="{$vo['img']}" /></a>
                 </div>
-                <div class="swiper-slide">
-                    <a href="javascript:;"><img src="/static/index/images/banner-2.jpg" /></a>
-                </div>
-                <div class="swiper-slide">
-                    <a href="javascript:;"><img src="/static/index/images/banner-1.jpg" /></a>
-                </div>
+                {/volist}
             </div>
             <div class="pagination banner-pagination"></div>
         </div>
