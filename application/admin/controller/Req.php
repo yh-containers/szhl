@@ -43,11 +43,13 @@ class Req extends Common
     //调整用户信息
     public function modifyInfo()
     {
-        $php_input = $this->request->param();
+        $id = $this->request->param('id',0,'intval');
+        $auth_status = $this->request->param('auth_status');
+        $auth_content = $this->request->param('auth_content');
         $model = new \app\common\model\ProductReq();
-        $php_input['auth_uid'] = $this->user_id;    //操作用户
-        $state = $model->actionAdd($php_input);
-        return ['code'=>(int)$state,'msg'=>$state?'修改成功':'修改异常'];
+//        $php_input['auth_uid'] = $this->user_id;    //操作用户
+        $state = $model->authReq($id,$this->user_id,$auth_status,$auth_content);
+        return ['code'=>is_bool($state)?1:0,'msg'=>is_bool($state)?'操作成功':$state];
     }
 
 }

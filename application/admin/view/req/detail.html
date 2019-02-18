@@ -59,11 +59,12 @@
             <div class="panel panel-primary">
                 <div class="panel-header">其它操作</div>
                 <div class="panel-body">
-                    {if($model['face_status']!=1)}
                     <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="face-info">面谈资料</a>
+                    <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="req-auth">申请审核</a>
+
+                    {if($model['face_status']!=1)}
                     {/if}
                     {if(empty($model['auth_status']))}
-                    <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="req-auth">申请审核</a>
                     {/if}
                 </div>
             </div>

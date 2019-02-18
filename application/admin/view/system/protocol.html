@@ -33,42 +33,18 @@
 {/block}
 {block name="script"}
 <script>
-    var active = '';
-    var content_data = '';
-    layui.use('layedit', function(){
+    layui.use(['layedit','form'], function(){
         var layedit = layui.layedit;
-        var index = layedit.build('demo'); //建立编辑器
-
-         active = {
-            content: function(){
-                content_data = layedit.getContent(index);
-            }
-
-        };
-
-    });
-    layui.use('form', function(){
-
         var form = layui.form;
-        //监听提交
-        form.on('submit(formDemo)', function(obj){
-            console.log(obj.field.content);
-            active['content'] ? active['content'].call(this) : '';
-            obj.field.content = content_data;
-            console.log(obj.field.content);
-            $.post($(obj.form).attr('action'),obj.field,function(result){
-                layer.msg(result.msg)
-                if(result.code==1){
 
-                    // console.log(result.url);
-                    // setTimeout(function(){window.location.href=result.url;},1000)
-                }
-
-            })
-            return false;
+        var edit_index = $.common.layerEdit(layedit,'demo')
+        form.on('submit(formDemo)', (obj)=>{
+            obj.field.content=layedit.getContent(edit_index)
+            $.common.formSubmit(obj)
         });
 
     });
+
 
 </script>
 {/block}

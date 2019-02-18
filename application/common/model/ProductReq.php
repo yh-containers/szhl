@@ -156,6 +156,46 @@ class ProductReq extends Base
 
     }
 
+    /*
+     * 申请审核
+     * @param $id int 申请id
+     * @Param $user_id int 用户id
+     * @param $auth_status int 审核状态
+     * @param $auth_content string 审核内容
+     * */
+    public function authReq($id,$user_id,$auth_status,$auth_content)
+    {
+        $model = $this->get($id);
+        empty($model) && abort(4000,'操作对象异常');
+        $model->auth_uid = $user_id;
+        $model->auth_status = $auth_status;
+        $model->auth_content = $auth_content;
+        $state = true;
+        if($auth_status==1){
+            //通过
+            try{
+                $this->startTrans();
+                //保存数据
+                $model->save();
+                //增加分佣操作
+
+                //增加余额动作
+                Users::modMoney(1,-100,'手动增加',['abc'=>'123','bd'=>'fdsf']);
+
+                $this->commit();
+            }catch (\Exception $e) {
+                $state = '操作异常:'.$e->getMessage();
+                $this->rollback();
+
+            }
+        }else{
+            //拒绝
+            $state = $model->save();
+        }
+        return $state;
+
+    }
+
 
     //关联日志
     public function linkLogs()

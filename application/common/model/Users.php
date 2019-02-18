@@ -116,6 +116,38 @@ class Users extends Base
 
     }
 
+    //修改用户余额
+    public static function modMoney($user_id,$money,$intro='',$extra=[])
+    {
+        $model = new self();
+        $model = $model->get($user_id);
+        empty($model) && abort(4000,'用户信息异常');
+        //更新用户余额
+        $model->money	= [$money>0?'inc':'dec', abs($money)];
+        //附加数据
+        $model->setAttr('mod_money',$money); //变动余额
+        $model->setAttr('mod_intro',$intro); //说明
+        $model->setAttr('mod_extra',$extra); //扩展数据
+        $model->save();
+    }
+
+    //记录余额变动日志
+    public static function init()
+    {
+        self::event('after_update', function ($model) {
+            $money = $model->getOrigin('money');
+            if(isset($model['money']) && $money!=$model['money']){
+                $model->linkMoneyLogs()->save([
+                    'origin_money' => $money,
+                    'money'        => $model['mod_money'],
+                    'new_money'    => $money+$model['mod_money'],
+                    'intro'        => $model['mod_intro'],
+                    'extra'        => $model['mod_extra'],
+                ]);
+            }
+        });
+    }
+
     /*
      * 忘记密码
      * */
@@ -134,6 +166,14 @@ class Users extends Base
     public function linkDirectFuid()
     {
         return $this->belongsTo('Users','fuid1');
+    }
+
+    /*
+     * 余额变动日志
+     * */
+    public function linkMoneyLogs()
+    {
+        return $this->hasMany('UserMoneyLogs','uid');
     }
 
 }

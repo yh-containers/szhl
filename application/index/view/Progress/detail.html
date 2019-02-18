@@ -13,7 +13,7 @@
         <div class="apply_status">
             <img src="/static/index/images/apply_status.png">
             <div class="text">
-                <p>{:$model?$model::$fields_status[$model['status']]:'--'}</p>
+                <p>{:$model?$model::$fields_status[$model['status']].','.$model::$fields_face_status[$model['face_status']].','.$model::$fields_auth_status[$model['auth_status']]:''}</p>
             </div>
         </div>
         <div class="logistics">
