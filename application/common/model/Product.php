@@ -24,6 +24,19 @@ class Product extends Base
         ['name'=>'车辆抵押','nav'=>'3','type'=>3],
         ['name'=>'急速贷款','nav'=>'4','type'=>4],
     ];
+
+
+    //设置标签属性
+    public function setLabelsAttr($value,$data)
+    {
+        return $value?implode(',',$value):'';
+    }
+    //设置标签属性
+    public function getLabelsAttr($value,$data)
+    {
+        return $value?explode(',',$value):null;
+    }
+
     //项目条件-设置
     public function setConditionAttr($value)
     {
@@ -85,6 +98,28 @@ class Product extends Base
             }
         });
     }
+
+    /*
+     * 项目申请流程
+     * @param $step int 项目步骤
+     * @param $flow_id int 流程
+     * return array 数据 ，提示信息
+     * */
+    public function reqFlow($step=0,$flow_id=0)
+    {
+        $model = new ProductReq();
+        $data = $model->getStepInfo($step,$this->getData('id'),$flow_id);
+        //提示信息
+        $tip = '';
+        if($step==0){
+            $tip = '资料仅用于产品方客户经理进准入和额度评估。';
+        }
+        return [
+            $data,
+            $tip
+        ];
+    }
+
 
     //关联日志
     public function linkLogs()

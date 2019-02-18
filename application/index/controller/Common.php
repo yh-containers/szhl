@@ -27,7 +27,8 @@ class Common extends Controller
         //验证页面是否需要登录
         if($this->need_login && strpos(strtolower($this->ignore_login_action),$current_action)===false && !$this->user_id) {
             if($this->request->isAjax()){
-                echo json(['code'=>0,'msg'=>'请先登录','url'=>url('Index/login')]);exit;
+                header('content-type:application/json; charset=utf-8');
+                echo json_encode(['code'=>-1,'msg'=>'请先登录','url'=>url('Index/login')]);exit;
             }else{
                 $this->redirect('index/login');
 

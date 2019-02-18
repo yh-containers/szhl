@@ -1,0 +1,78 @@
+{extend name="base"/}
+
+{block name="title"}申请贷款{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>申请贷款</h4>
+</div>
+<div class="main">
+    <form action="{:url('flowAction')}" id="form">
+        <input type="hidden" name="id" value="{$id}"/>
+        <input type="hidden" name="step" value="{$step}"/>
+        <input type="hidden" name="pid" value="{$model['id']}"/>
+        <div class="apply_content">
+            <div class="tips">
+                <div class="text">{$tip}</div>
+                <a class="mui-icon mui-icon-closeempty close"></a>
+            </div>
+            <div class="apply_process">
+                <div class="item active">
+                    <span>1</span>
+                    <p>选择产品</p>
+                </div>
+                <div class="item">
+                    <span>2</span>
+                    <p>填写信息</p>
+                </div>
+                <div class="item">
+                    <span>3</span>
+                    <p>申请成功</p>
+                </div>
+            </div>
+            <div class="apply_list">
+                <div class="item">
+                    <div class="label">贷款产品</div>
+                    <div class="con"><p>{$model['name']}</p></div>
+                </div>
+                <div class="item">
+                    <div class="label">贷款金额</div>
+                    <div class="con" style="display: flex">
+                        <input  style="text-align: right;padding-right: 8px" type="text" name="money" value="" placeholder="{:$model['money_start'].($model['money_end']?'-'.$model['money_end']:'')}">
+                        <span style="width: 40px">{:$model?$model::$money_unit[$model['money_unit']]:''}</span>
+                    </div>
+
+
+                </div>
+                <div class="item">
+                    <div class="label">贷款期限</div>
+                    <div class="con" style="display: flex">
+                        <input  style="text-align: right;padding-right: 8px" type="text" name="auth_time" value="" placeholder="{:$model['auth_time_start'].($model['auth_time_end']?'-'.$model['auth_time_end']:'')} ">
+                        <span style="width: 40px">{:$model?$model::$auth_unit[$model['auth_unit']]:''}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply_btn">
+                <a href="javascript:;" id="submit" class="btn btn-primary">确认无误下一步</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post($("#form").attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+                if(result.hasOwnProperty('url')){
+                    window.location.href=result.url
+                }
+            })
+        })
+    })
+</script>
+{/block}

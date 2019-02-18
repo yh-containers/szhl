@@ -13,62 +13,56 @@
         <div class="apply_status">
             <img src="/static/index/images/apply_status.png">
             <div class="text">
-                <p>申请已提交，审批中</p>
+                <p>{:$model?$model::$fields_status[$model['status']]:'--'}</p>
             </div>
         </div>
         <div class="logistics">
             <div class="title">申请进度</div>
             <ul>
+                {volist name="model['link_logs']" id="vo"}
                 <li>
                     <div class="logistics_track">
                         <div class="track_row">
-                            <span class="track">审批中</span>
-                            <span class="date">2018-12-28 15:55:42</span>
+                            <span class="track">{$vo['title']}</span>
+                            <span class="date">{$vo['create_time']}</span>
                         </div>
-                        <p>请耐心等待，工作人员将尽快与您取得联系</p>
+                        <p>{$vo['intro']}</p>
                     </div>
                 </li>
-                <li>
-                    <div class="logistics_track">
-                        <div class="track_row">
-                            <span class="track">申请提交成功</span>
-                            <span class="date">2018-12-28 15:55:42</span>
-                        </div>
-                        <p>申请金额300000.00元，期限6个月</p>
-                    </div>
-                </li>
+                {/volist}
+
             </ul>
         </div>
         <div class="apply_det_mode">
-            <div class="title">中瀚哲产品A</div>
+            <div class="title">{$model['product_info']['name']}</div>
             <div class="row">
                 <div class="item">
                     <label>申请编号</label>
-                    <span>IAC201812281530</span>
+                    <span>{$model['no']}</span>
                 </div>
                 <div class="item">
                     <label>申请时间</label>
-                    <span>2018-12-28 15:55:42</span>
+                    <span>{$model['create_time']}</span>
                 </div>
                 <div class="item">
                     <label>申请额度</label>
-                    <span>300000.00元</span>
+                    <span>{$model['money']}.{$money_unit[$model['money_unit']]}</span>
                 </div>
                 <div class="item">
                     <label>贷款期限</label>
-                    <span>6个月</span>
+                    <span>{$model['auth_time']}.{$auth_unit[$model['auth_unit']]}</span>
                 </div>
                 <div class="item">
                     <label>申请人</label>
-                    <span>张三</span>
+                    <span>{:$model['name']?$model['name']:''}</span>
                 </div>
                 <div class="item">
                     <label>联系方式</label>
-                    <span>137****0153</span>
+                    <span>{:$model['phone']?substr_replace($model['phone'],'****',3,4):''}</span>
                 </div>
                 <div class="item">
                     <label>身份证号</label>
-                    <span>433***********6321</span>
+                    <span>{:$model['card']?substr_replace($model['card'],'********','3','11'):''}</span>
                 </div>
             </div>
         </div>

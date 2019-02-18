@@ -14,7 +14,7 @@
     <div class="tab_floor">
         <div class="row">
             {volist name="$label_list" id="vo"}
-            <a href="{:url('',['lid'=>$vo['id']])}">{$vo['name']}</a>
+            <a href="{:url('',['type'=>$type,'lid'=>$vo['id']])}">{$vo['name']}</a>
             {/volist}
 
         </div>
@@ -126,7 +126,7 @@
 <link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
 <script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
 <script>
-    var url = "{:url('Product/showList')}";
+    var url = "{:url('Product/showList',['type'=>$type,'lid'=>$lid])}";
     var detail_url = "{:url('Product/detail')}";
     layui.use('flow', function(){
         var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。

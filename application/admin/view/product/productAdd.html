@@ -39,7 +39,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目简介</label>
 					<div class="layui-input-block">
-						<input type="text" name="intro" value="{$model['intro']}"  placeholder="项目名称" autocomplete="off" maxlength="20" class="layui-input">
+						<input type="text" name="intro" value="{$model['intro']}"  placeholder="项目简介" autocomplete="off" maxlength="20" class="layui-input">
 					</div>
 				</div>
 
@@ -58,15 +58,24 @@
 
 			<div class="col-sm-8">
 				<div class="layui-form-item">
+					<label class="layui-form-label">项目类型</label>
+					<div class="layui-input-inline">
+						<select name="type" lay-verify="">
+							<option value="">请选择项目类型</option>
+							{volist name="type_label" id="vo"}
+							<option value="{$vo['type']}" {:$vo['type']==$model['type']?'selected':''} >{$vo['name']}</option>
+							{/volist}
+
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
 					<label class="layui-form-label">项目佣金</label>
 					<div class="layui-input-inline">
 						<input type="number" name="commission" value="{$model['commission']}"  placeholder="项目佣金" class="layui-input">
 
 					</div>
 				</div>
-			</div>
-
-			<div class="col-sm-8">
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目利息</label>
 					<div class="layui-input-inline">
@@ -83,8 +92,6 @@
 						</select>
 					</div>
 				</div>
-			</div>
-			<div class="col-sm-8">
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目额度</label>
 					<div class="layui-input-inline">
@@ -105,8 +112,6 @@
 						</select>
 					</div>
 				</div>
-			</div>
-			<div class="col-sm-8">
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目期限</label>
 					<div class="layui-input-inline">
@@ -126,7 +131,17 @@
 						</select>
 					</div>
 				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目标签</label>
+					<div class="layui-input-block">
+						{volist name="label_list" id="vo"}
+						<input type="checkbox" name="labels[]" value="{$vo['id']}" {:$model['labels']?(in_array($vo['id'],$model['labels'])?'checked':''):''} title="{$vo['name']}">
+						{/volist}
+					</div>
+				</div>
 			</div>
+
+
 		</div>
 		<div class="row">
 			<div class="layui-form-item" id="product-condition">

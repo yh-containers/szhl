@@ -1,0 +1,38 @@
+{extend name="base"/}
+
+{block name="title"}申请贷款{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>申请贷款</h4>
+</div>
+<div class="main">
+    <div class="apply_content">
+        <div class="apply_success">
+            <img src="/static/index/images/tips_true.png" alt="申请成功" />
+            <h4>申请提交成功</h4>
+            <p>您的申请提交成功，我们的客服顾问将会与客户取得联系</p>
+            <div class="btn">
+                <a href="{:url('index/index')}" class="false">返回首页</a>
+                <a href="{:url('progress/detail',['id'=>$id])}" class="true">查看进度</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post($("#form").attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+                if(result.hasOwnProperty('url')){
+                    window.location.href=result.url
+                }
+            })
+        })
+    })
+</script>
+{/block}

@@ -1,0 +1,270 @@
+﻿{extend name="base"/}
+{block name="style"}
+<style>
+
+    /*.layui-layer-btn .layui-layer-btn1{background: #ff5359;color:#fff}*/
+    /*.layui-layer-btn .layui-layer-btn2{background: #ff8c3e;color:#fff}*/
+</style>
+{/block}
+{block name="content"}
+<div class="pd-20 ">
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="panel panel-primary">
+                <div class="panel-header">项目资料</div>
+                <div class="panel-body">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="20">
+                            <col width="100">
+                            <col width="20">
+                            <col width="100">
+                            <col width="20">
+                            <col width="100">
+                            <col>
+                        </colgroup>
+
+                        <tbody>
+                        <tr>
+                            <td>项目名称</td>
+                            <td>{$model['product_info']['name']}</td>
+                            <td></td>
+                            <td></td>
+                            <td>项目期限</td>
+                            <td>{:$model['product_info']['auth_time_start'].($model['product_info']['auth_time_end']?'~'.$model['product_info']['auth_time_end']:'').'('.$auth_unit[$model['product_info']['auth_unit']].')'}</td>
+                        </tr>
+                        <tr>
+                            <td>项目佣金</td>
+                            <td>{$model['product_info']['commission']}%</td>
+                            <td>项目利息</td>
+                            <td>{:$model['product_info']['per'].'('.$per_unit[$model['product_info']['per_unit']].')'}</td>
+                            <td>项目额度</td>
+                            <td>{:$model['product_info']['money_start'].($model['product_info']['money_end']?'~'.$model['product_info']['money_end']:'').'('.$money_unit[$model['product_info']['money_unit']].')'}</td>
+                        </tr>
+                        <tr>
+                            <td>创建日期</td>
+                            <td>{$model['product_info']['create_time']}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-3">
+            <div class="panel panel-primary">
+                <div class="panel-header">其它操作</div>
+                <div class="panel-body">
+                    {if($model['face_status']!=1)}
+                    <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="face-info">面谈资料</a>
+                    {/if}
+                    {if(empty($model['auth_status']))}
+                    <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="req-auth">申请审核</a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-10">
+        <div class="col-sm-9">
+            <div class="panel panel-primary">
+                <div class="panel-header">申请信息</div>
+                <div class="panel-body">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col>
+                        </colgroup>
+
+                        <tbody>
+                        <tr>
+                            <td>申请单号</td>
+                            <td>{$model['no']}</td>
+                            <td></td>
+                            <td></td>
+                            <td>申请状态</td>
+                            <td colspan="3">{:$model?$model::$fields_status[$model['status']].','.$model::$fields_face_status[$model['face_status']].','.$model::$fields_auth_status[$model['auth_status']]:''}</td>
+                        </tr>
+                        <tr>
+                            <td>申请金额</td>
+                            <td>{$model['money']}{:$money_unit[$model['money_unit']]}</td>
+                            <td>申请期限</td>
+                            <td>{$model['auth_time']}{:$auth_unit[$model['auth_unit']]}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>用户名</td>
+                            <td>{$model['name']}</td>
+                            <td>手机号码</td>
+                            <td>{$model['phone']}</td>
+                            <td>身份证</td>
+                            <td>{$model['card']}</td>
+                            <td>地址</td>
+                            <td>{$model['addr']}</td>
+                        </tr>
+                        <tr>
+                            <td>性别</td>
+                            <td>{:$model?$model::$fields_sex[$model['sex']]:'--'}</td>
+                            <td>婚姻状态</td>
+                            <td>{:$model?$model::$fields_marry[$model['is_marry']]:''}</td>
+                            <td>职业类别</td>
+                            <td>{:$model?$model::$fields_vocation_type[$model['vocation_type']]:''}</td>
+                            <td>征信报告</td>
+                            <td>{:$model?$model::$fields_is_cr[$model['is_cr']]:'--'}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">近两月征信查询次数</td>
+                            <td>{$model['cr_times_two']}</td>
+                            <td colspan="2">信用贷款月还款总额度 （元）</td>
+                            <td>{$model['credit_money']}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>是否有房</td>
+                            <td>{:$model?$model::$fields_is_house[$model['is_house']]:''}</td>
+                            <td>是否有车</td>
+                            <td>{:$model?$model::$fields_is_car[$model['is_car']]:''}</td>
+                            <td>是否有保单</td>
+                            <td>{:$model?$model::$fields_is_warranty[$model['is_warranty']]:''}</td>
+                            <td>是否有社保</td>
+                            <td>{:$model?$model::$fields_is_social_security[$model['is_social_security']]:''}</td>
+                        </tr>
+
+                        <tr>
+                            <td>是否有公积金</td>
+                            <td>{:$model?$model::$fields_is_accumulation_fund[$model['is_accumulation_fund']]:''}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>身份证图片</td>
+                            <td colspan="7">
+                                {volist name="$model['card_img']" id="vo"}
+                                <img src="{$vo}" width="80" height="80"/>
+                                {/volist}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="panel panel-primary">
+                <div class="panel-header">申请日志</div>
+                <div class="panel-body pd-5">
+                    <ul class="layui-timeline">
+                        {volist name="model['link_logs']" id="vo"}
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                            <div class="layui-timeline-content layui-text">
+                                <h3 class="layui-timeline-title">{$vo['create_time']}</h3>
+                                <p>
+                                    {$vo['title']}
+                                </p>
+                                <p>
+                                    {$vo['intro']}
+                                </p>
+                            </div>
+                        </li>
+                        {/volist}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pd-20"  id="face-page" style="display: none">
+    <div class="row">
+            <div class="layui-form-item">
+                <textarea  name="content" rows="6"  placeholder="请输入面谈内容" class="layui-textarea"></textarea>
+            </div>
+    </div>
+
+</div>
+<div class="pd-20"  id="auth-page" style="display: none">
+    <div class="row">
+            <div class="layui-form-item">
+                <textarea  name="content" rows="6"  placeholder="请输入审核内容" class="layui-textarea"></textarea>
+            </div>
+    </div>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+
+    });
+    //面谈
+    $("#face-info").click(function(){
+        var id = $(this).data('id')
+        layer.open({
+            title: '面谈信息'
+            ,type: 1
+            ,content: $("#face-page")
+            ,btn: ['确定','取消']
+            ,area: ['500px', '300px']
+            ,yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var content = $("#face-page textarea[name='content']").val()
+                $.common.modify("{:url('Req/faceAction')}",{face_content:content,id:id},'是否提交面谈资料')
+            }
+        })
+    })
+    $("#req-auth").click(function(){
+        var id = $(this).data('id')
+        layer.open({
+            title: '审核项目'
+            ,type: 1
+            ,content: $("#auth-page")
+            ,area: ['500px', '300px']
+            ,btn: ['通过', '拒绝', '取消']
+            ,yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var content = $("#auth-page textarea[name='content']").val()
+                $.common.modify("{:url('Req/modifyInfo')}",{auth_content:content,auth_status:1,id:id},'是否通过审核')
+            }
+            ,btn2: function(index, layero){
+                //按钮【按钮二】的回调
+                var content = $("#auth-page textarea[name='content']").val()
+                $.common.modify("{:url('Req/modifyInfo')}",{auth_content:content,auth_status:2,id:id},'是否拒绝审核')
+                return false //开启该代码可禁止点击该按钮关闭
+            }
+            ,success: function (layero) {
+                var btn0 = layero.find('.layui-layer-btn0');
+                var btn1 = layero.find('.layui-layer-btn1');
+                btn1.css('background', '#ff5359');
+                btn1.css('border', 'none');
+                btn1.css('color', '#fff');
+            }
+        })
+    })
+
+</script>
+{/block}

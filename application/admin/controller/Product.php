@@ -13,7 +13,6 @@ class Product extends Common
 
     }
 
-
     //添加
     public function productAdd()
     {
@@ -30,12 +29,19 @@ class Product extends Common
             $validate = new \app\common\validate\Product();
             return $model->actionAdd($php_input,$validate);
         }
+        //项目详情
         $model = $model->get($id);
+        //项目标签
+        $model_label = new \app\common\model\Label();
+        $label_list = $model_label->where('status',1)->select();
+
         return view('productAdd',[
             'model' => $model,
+            'label_list' => $label_list,
             'money_unit' => \app\common\model\Product::moneyUnit(),
             'auth_unit' => \app\common\model\Product::authUnit(),
             'per_unit' => \app\common\model\Product::perUnit(),
+            'type_label' => \app\common\model\Product::$type_label,
         ]);
     }
 

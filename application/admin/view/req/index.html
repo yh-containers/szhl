@@ -1,0 +1,52 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}产品管理,产品列表{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+	</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+		<tr class="text-c">
+			<th width="80">序号</th>
+			<th width="100">申请编号</th>
+			<th width="100">项目名称</th>
+			<th width="100">申请用户</th>
+			<th width="100">联系方式</th>
+			<th width="100">申请额度</th>
+			<th width="100">贷款期限</th>
+			<th width="130">申请日期</th>
+			<th width="70">状态</th>
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>{$i}</td>
+				<td>{$vo['no']}</td>
+				<td>{$vo['product_info']['name']}</td>
+				<td>{$vo['name']}</td>
+				<td>{$vo['phone']}</td>
+				<td>{$vo['money']}{:$money_unit[$vo['money_unit']]}</td>
+				<td>{$vo['auth_time']}{:$auth_unit[$vo['auth_unit']]}</td>
+				<td>{$vo['create_time']}</td>
+				<td>{:$vo::$fields_status[$vo['status']]}</td>
+				<td>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("detail",['id'=>$vo['id']])}','申请详情')" class="ml-5"> 详情</a>
+				</td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list|raw}
+</div>
+
+{/block}

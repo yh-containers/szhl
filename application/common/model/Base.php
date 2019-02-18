@@ -8,7 +8,8 @@ class Base extends Model
 {
     public static $fields_status= ['','正常','禁用'];
     protected $autoWriteTimestamp = true;
-
+    // 设置JSON数据返回数组
+    protected $jsonAssoc = true;
     /*
      * 数据保存/更新
      * */
@@ -21,6 +22,9 @@ class Base extends Model
         $pk = $this->getPk();
         if(!empty($data[$pk])){  //编辑状态
             $model = $this->find($data[$pk]);
+        }else{
+            //清除主键影响
+            unset($data[$pk]);
         }
         try{
             $model && $model->save($data);
@@ -55,4 +59,6 @@ class Base extends Model
 //
 //        return $this->save($data,[$this->getPk()=>$id]);
 //    }
+
+
 }

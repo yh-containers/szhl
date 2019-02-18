@@ -73,39 +73,46 @@
 {/block}
 {block name="script"}
 <script>
-	layui.use('layedit', function(){
+	layui.use(['layedit','upload','form'], function(){
 		var layedit = layui.layedit;
-		var index = layedit.build('demo'); //建立编辑器
+		var upload = layui.upload;
+		var form = layui.form;
 
-		active = {
-			content: function(){
-				content_data = layedit.getContent(index);
-			}
-
-		};
+		var edit_index = $.common.layerEdit(layedit,'demo')
+		$.common.uploadFile(upload,'#test1')
+		form.on('submit(formDemo)', (obj)=>{
+			obj.field.content=layedit.getContent(edit_index)
+			$.common.formSubmit(obj)
+		});
+		// active = {
+		// 	content: function(){
+		// 		content_data = layedit.getContent(index);
+		// 	}
+		//
+		// };
 
 	});
 	//Demo
-	layui.use(['form','upload'], function(){
-		var form = layui.form;
-		var upload = layui.upload;
-
-		//监听提交
-		// form.on('submit(formDemo)', $.common.formSubmit);
-		form.on('submit(formDemo)', function(obj){
-			active['content'] ? active['content'].call(this) : '';
-			obj.field.content = content_data;
-			$.post($(obj.form).attr('action'),obj.field,function(result){
-				layer.msg(result.msg)
-				if(result.code==1){
-
-				}
-
-			})
-			return false;
-		});
-		$.common.uploadFile(upload,'#test1')
-	});
+	// layui.use(['form','upload'], function(){
+	// 	var form = layui.form;
+	// 	var upload = layui.upload;
+	//
+	// 	//监听提交
+	// 	// form.on('submit(formDemo)', $.common.formSubmit);
+	// 	form.on('submit(formDemo)', function(obj){
+	// 		active['content'] ? active['content'].call(this) : '';
+	// 		obj.field.content = content_data;
+	// 		$.post($(obj.form).attr('action'),obj.field,function(result){
+	// 			layer.msg(result.msg)
+	// 			if(result.code==1){
+	//
+	// 			}
+	//
+	// 		})
+	// 		return false;
+	// 	});
+	// 	$.common.uploadFile(upload,'#test1')
+	// });
 
 
 </script>

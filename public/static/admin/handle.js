@@ -67,6 +67,16 @@ $.common={
                 layer.msg('上传异常')
             }
         });
+    },
+    //富文本
+    layerEdit(layedit,elem){
+        //注意：layedit.set 一定要放在 build 前面，否则配置全局接口将无效。
+        return layedit.build(elem,{
+            uploadImage: {
+                url: '/admin.php/upload/editUpload/type/layerEdit' //接口url
+            }
+        }); //建立编辑器
+
     }
 
 
