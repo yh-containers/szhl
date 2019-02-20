@@ -86,7 +86,9 @@
 						<select name="per_unit" lay-verify="">
 							<option value="">利息单位{$model['per_unit']}</option>
 							{volist name="per_unit['unit']" id="vo"}
-							<option value="{$key}" {:$model['per_unit']>=0?($key==$model['per_unit']?'selected':''):($key==$per_unit['default']?'selected':'')} >{$vo}</option>
+							{if(!in_array($key,$per_unit['hide']))}
+							<option value="{$key}" {:$model?($key==$model['per_unit']?'selected':''):($key==$per_unit['default']?'selected':'')} >{$vo}</option>
+							{/if}
 							{/volist}
 
 						</select>
@@ -106,7 +108,9 @@
 						<select name="money_unit" lay-verify="">
 							<option value="">额度单位</option>
 							{volist name="money_unit['unit']" id="vo"}
-							<option value="{$key}" {:$model['money_unit']>=0?($key==$model['money_unit']?'selected':''):($key==$money_unit['default']?'selected':'')}>{$vo}</option>
+							{if(!in_array($key,$money_unit['hide']))}
+							<option value="{$key}" {:$model?($key==$model['money_unit']?'selected':''):($key==$money_unit['default']?'selected':'')}>{$vo}</option>
+							{/if}
 							{/volist}
 
 						</select>
@@ -126,7 +130,9 @@
 						<select name="auth_unit" lay-verify="">
 							<option value="">期限单位</option>
 							{volist name="auth_unit['unit']" id="vo"}
-							<option value="{$key}" {:$model['auth_unit']>=0?($key==$model['auth_unit']?'selected':''):($key==$auth_unit['default']?'selected':'')}>{$vo}</option>
+							{if(!in_array($key,$auth_unit['hide']))}
+							<option value="{$key}" {:$model?($key==$model['auth_unit']?'selected':''):($key==$auth_unit['default']?'selected':'')}>{$vo}</option>
+							{/if}
 							{/volist}
 						</select>
 					</div>

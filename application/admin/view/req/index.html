@@ -38,7 +38,7 @@
 				<td>{$vo['money']}{:$money_unit[$vo['money_unit']]}</td>
 				<td>{$vo['auth_time']}{:$auth_unit[$vo['auth_unit']]}</td>
 				<td>{$vo['create_time']}</td>
-				<td>{:$vo::$fields_status[$vo['status']]}</td>
+				<td>{:$vo::$fields_status[$vo['status']].','.$vo::$fields_face_status[$vo['face_status']].','.$vo::$fields_auth_status[$vo['auth_status']]}</td>
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("detail",['id'=>$vo['id']])}','申请详情')" class="ml-5"> 详情</a>
 				</td>

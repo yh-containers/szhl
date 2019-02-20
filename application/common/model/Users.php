@@ -149,6 +149,58 @@ class Users extends Base
     }
 
     /*
+     * 获取用户分佣比例情况
+     * */
+    public function getCommissionPer()
+    {
+        $users = array_filter([$this->getData('fuid1'),$this->getData('fuid2')]);
+        $data = [];
+        $per = count($users)>1?[0.5,0.5]:[1];
+        foreach ($users as $key=>$vo){
+            $data[] =[
+                'user_id' => $vo,
+                'per'     => isset($per[$key])?$per[$key]:0,
+            ];
+        }
+        return $data;
+    }
+
+    /*
+     * 执行余额来源发放
+     * */
+    public static function sendMoney()
+    {
+        $time = time();
+        //发放说明类
+        $intro_class = ['','\\app\\common\\model\\Users'];
+        $model = new UserMoneySource();
+        $model->where([
+            ['status','=',1],
+            ['send_time','<=',time()]
+        ])->select()->each(function($item,$index)use($intro_class,$time){
+            try{
+                //处理金额
+                Users::modMoney($item['uid'],$item['money'],$intro_class[$item['type']]::getAwardIntro(),$item['extra']);
+                //修改数据
+                $item->status = 2;
+                $item->send_time = $time;
+                $item->save();
+            }catch (\Exception $e){
+                trace('发放奖金异常'.$e->getMessage(),'sendMoneyError');
+            }
+        });
+    }
+
+    /*
+     * 奖金说明
+     * */
+    public static function getAwardIntro()
+    {
+        return '佣金奖励';
+    }
+
+
+    /*
      * 忘记密码
      * */
     public function forgetPwd($phone,$pwd,$verify)

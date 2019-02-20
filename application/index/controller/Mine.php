@@ -1,6 +1,10 @@
 <?php
 namespace app\index\controller;
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\LabelAlignment;
+use Endroid\QrCode\QrCode;
+
 class Mine extends Common
 {
     protected $need_login = true;
@@ -89,6 +93,194 @@ class Mine extends Common
     {
         return view('about',[
 
+        ]);
+    }
+
+    //我的主页
+    public function myHome()
+    {
+        return view('myHome',[
+            'user_model_info' => $this->user_model_info,
+            'user_model'      => $this->user_model,
+            'req_url' => url('index/login',['req_user_id'=>$this->user_model_info["id"]],false,true),
+        ]);
+    }
+
+    //二维码
+    public function qrcode($path='')
+    {
+        //资源路径
+        $resource_path = str_replace('\\','/',\Env::get('vendor_path').'\\endroid\\qr-code');
+        // Create a basic QR code
+        $qrCode = new QrCode('Life is too short to be generating QR codes');
+        $qrCode->setSize(300);
+
+// Set advanced options
+        $qrCode
+            ->setWriterByName('png')
+            ->setMargin(10)
+            ->setEncoding('UTF-8')
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
+//            ->setLabel('Scan the code', 16, $resource_path.'/assets/noto_sans.otf', LabelAlignment::CENTER)
+//            ->setLogoPath($resource_path.'/assets/symfony.png')
+            ->setLogoWidth(150)
+            ->setValidateResult(false)
+        ;
+        $root_path = str_replace('\\','/',\Env::get('root_path'));
+        //logo
+        if($path){
+            $qrCode->setLogoPath($root_path.'public'.$path);
+        }
+        // Directly output the QR code
+        return response($qrCode->writeString())->header('Content-Type',$qrCode->getContentType());
+//        echo $qrCode->writeString();
+        // Save it to a file
+//        $qrCode->writeFile(__DIR__.'/qrcode.png');
+//
+//        // Create a response object
+//        $response = new QrCodeResponse($qrCode);
+    }
+
+    //我的收益
+    public function myIncome()
+    {
+        return view('myIncome',[
+            'user_model_info' => $this->user_model_info,
+        ]);
+    }
+
+    //我的收益列表
+    public function incomeList()
+    {
+        return view('incomeList',[
+
+        ]);
+    }
+
+    //我的收益列表
+    public function showIncomeList()
+    {
+        $model = new \app\common\model\UserMoneyLogs();
+        $list = $model->where('uid',$this->user_id)->order('id','desc')->paginate()->each(function(&$item, $key){
+            $item= [
+                'id' => $item['id'],
+                'intro' => $item['intro'],
+                'money' => $item['money'],
+                'create_time' => $item['create_time'],
+            ];
+            return $item;
+        });
+
+        return ['code'=>1,'msg'=>'获取成功','data'=>$list];
+    }
+
+    //我的银行卡
+    public function bankCard()
+    {
+        return view('bankCard',[
+
+        ]);
+    }
+    //银行卡列表
+    public function showBankCardList()
+    {
+        $model = new \app\common\model\UserBankCard();
+        $list = $model->where('uid',$this->user_id)->order('id','desc')->paginate()->each(function(&$item, $key){
+            $item= [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'card' => substr_replace($item['card'],'**************',0,-4),
+                'bank_card' => substr_replace($item['bank_card'],'**** **** ****',0,-4),
+                'bank_card_name' => $item['bank_card_name'],
+                'rec_name' => $item['rec_name'],
+            ];
+            return $item;
+        });
+
+        return ['code'=>1,'msg'=>'获取成功','data'=>$list];
+    }
+
+    //添加银行卡
+    public function bankCardAdd()
+    {
+        $id = $this->request->param('id',0,'intval');
+        $model = new \app\common\model\UserBankCard();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();
+            //对应代理商/平台id
+            $php_input['uid'] = $this->user_id;
+
+            $validate = new \app\common\validate\UserBankCard();
+            return $model->actionAdd($php_input,$validate);
+        }
+        $model = $model->get($id);
+        return view('bankCardAdd',[
+            'model'=>$model
+        ]);
+    }
+
+    //提现
+    public function withdraw()
+    {
+        if($this->request->isAjax()){
+            $model = new \app\common\model\UserWithdraw();
+            $php_input = $this->request->param();
+            try{
+                $model->draw($this->user_id,$php_input);
+                return ['code'=>1,'msg'=>'申请成功'];
+            }catch (\Exception $e){
+                return ['code'=>0,'msg'=>'操作异常:'.$e->getMessage()];
+            }
+        }
+        $model_card = new \app\common\model\UserBankCard();
+        $model_card = $model_card->where('uid',$this->user_id)->select();
+        return view('withdraw',[
+            'model_card'      => $model_card,
+            'user_model_info' => $this->user_model_info,
+            'tip'             => \app\common\model\UserWithdraw::getMsg(),
+        ]);
+    }
+
+    //我的借款
+    public function loan()
+    {
+        return view('loan',[
+
+        ]);
+    }
+
+    //我的借款
+    public function showLoanList()
+    {
+        $model = new \app\common\model\ProductReq();
+        $list = $model->where('uid',$this->user_id)->order('id','desc')->paginate()->each(function(&$item, $key){
+            $item= [
+                'id' => $item['id'],
+                'money' => $item['money']*\app\common\model\Product::moneyUnit($item['money_unit']),
+                'auth_time' => $item['auth_time'],
+                'auth_unit' => $item['auth_unit'],
+                'auth_unit_name' => \app\common\model\Product::$auth_unit[$item['auth_unit']],
+                'auth_status'   => $item['auth_status'],
+                'status_name'   => !$item['auth_status']?'待审核':($item['auth_status']==1?'已通过':'已拒绝'),
+                'create_time' => $item['create_time'],
+            ];
+            return $item;
+        });
+
+        return ['code'=>1,'msg'=>'获取成功','data'=>$list];
+    }
+
+    //借款详情
+    public function loanDetail()
+    {
+        $id = $this->request->param('id',0,'intval');
+        $model = new \app\common\model\ProductReq();
+        $info = $model->with(['linkPlan'])->get($id);
+        return view('loanDetail',[
+            'info' => $info
         ]);
     }
 }

@@ -22,7 +22,7 @@ class ProductReq extends Base
     public static $fields_is_accumulation_fund = ['无','有'];
 
     protected $name='product_req';
-    protected $insert = ['no'];
+    protected $insert = ['status'=>1,'no'];
     protected $auto=['status'];
     protected $json = ['product_info'];
     //设置申请单号
@@ -69,6 +69,9 @@ class ProductReq extends Base
             $model = $model->get($value);
             $this->setAttr('money_unit',$model['money_unit']);
             $this->setAttr('auth_unit',$model['auth_unit']);
+            $this->setAttr('commission',$model['commission']);
+            $this->setAttr('per',$model['per']);
+            $this->setAttr('per_unit',$model['per_unit']);
             $this->setAttr('product_info',$model);
             $this->setAttr('p_tid',$model['type']);//项目类型
         }
@@ -134,12 +137,12 @@ class ProductReq extends Base
             }
             //审核
             if(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==1){
-                $title = '审核被拒';
-                $intro = $model['auth_content']?$model['auth_content']:'';
-                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
-            }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
                 $title = '恭喜您通过审核';
                 $intro = $model['auth_content']?$model['auth_content']:'恭喜您通过审核';
+                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+            }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
+                $title = '审核被拒';
+                $intro = $model['auth_content']?$model['auth_content']:'';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
             }
         });
@@ -167,10 +170,18 @@ class ProductReq extends Base
     {
         $model = $this->get($id);
         empty($model) && abort(4000,'操作对象异常');
+        $model['auth_status']!=0 && abort(4000,'操作对象未处于审核状态,无法进行此操作');
+
         $model->auth_uid = $user_id;
         $model->auth_status = $auth_status;
         $model->auth_content = $auth_content;
         $state = true;
+
+        //获取申请者用户信息
+        $model_user = new Users();
+        $model_user = $model_user->get($model['uid']);
+        empty($model_user) && abort(4000,'用户信息异常');
+        $commission_users = $model_user->getCommissionPer();
         if($auth_status==1){
             //通过
             try{
@@ -178,11 +189,31 @@ class ProductReq extends Base
                 //保存数据
                 $model->save();
                 //增加分佣操作
-
-                //增加余额动作
-                Users::modMoney(1,-100,'手动增加',['abc'=>'123','bd'=>'fdsf']);
+                $money_unit_transform = Product::moneyUnit($model['money_unit']); //单位换算
+                $commission_money = $model['money']*$money_unit_transform*$model['commission']; //佣金
+                if($commission_users){
+                    $commission_data = [];
+                    foreach($commission_users as $vo){
+                        $commission_data[] = [
+                            'type'  => 1,
+                            'uid'   => $vo['user_id'],
+                            'o_uid' => $model['uid'],
+                            'money' => $commission_money*$vo['per'],
+                            'extra' => [
+                                'id' => $id,
+                                'pid'=> $model['pid'],
+                            ]
+                        ];
+                    }
+                    $model_money_source = new UserMoneySource();
+                    $model_money_source->saveAll($commission_data);
+                }
+                //按期设置还款计划
+                $model->handlePlan();
 
                 $this->commit();
+                //执行发放奖励
+                Users::sendMoney();
             }catch (\Exception $e) {
                 $state = '操作异常:'.$e->getMessage();
                 $this->rollback();
@@ -196,11 +227,62 @@ class ProductReq extends Base
 
     }
 
+    //处理项目还款计划
+    public function handlePlan()
+    {
+        //当前时间
+        $time = time();
+        //还款金额
+        //增加分佣操作
+        $money_unit_transform = Product::moneyUnit($this->getData('money_unit')); //单位换算
+        $money = $this->getData('money')*$money_unit_transform;
+        //还款利润
+        $per = $this->getData('per')*Product::authUnit($this->getData('per'));
+        //按月处理分期--还款多少次
+        $auth_times = $this->getData('auth_time');
+        //每月还款额度
+        $money_month = $auth_times?intval($money/$auth_times*100)/100:0;
+        //每月还款利息
+        $profit_money_month = $money*$per;
+        //还款期数总额
+        $profit_money = $profit_money_month*$auth_times;
+        //还款总金额
+        $total_money = $money + $profit_money;
+        //余额计数器
+        $register_money = 0;
+        $data = [];
+        for($i=0;$i<$auth_times;$i++){
+            $times_money = ($auth_times-1==$i)?($money-$register_money) :$money_month;
+            $times_total_money = $profit_money_month+$times_money; //每次还款总额度
+            $data[] = [
+                'uid'           => $this->getData('uid'),//还款用户
+                'req_id'        => $this->getKey(),//项目id
+                'total_money'   => $times_total_money,
+                'money'         => $times_money,
+                'profit_money'  => $profit_money_month,//每次利息
+                'date'          => date('Y-m-d',strtotime('+'.($i+1).' month',$time)),
+            ];
+            //记录已处理余额
+            $register_money += $times_money;
+        }
+
+        if($data){
+            $model = new UserProductPlan();
+            return $model->saveAll($data);
+        }
+        return false;
+    }
 
     //关联日志
     public function linkLogs()
     {
         return $this->hasMany('ProductReqLogs','req_id')->order('id','desc');
+    }
+
+    //还款计划
+    public function linkPlan()
+    {
+        return $this->hasMany('UserProductPlan','req_id');
     }
     //关联项目
 //    public function linkProduct()

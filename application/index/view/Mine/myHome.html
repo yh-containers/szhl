@@ -1,0 +1,80 @@
+{extend name="base"/}
+
+{block name="title"}我的主页{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+</style>
+{/block}
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>我的主页</h4>
+    <a class="right">分享</a>
+</div>
+<div class="main">
+    <div class="my_home">
+        <div class="how_share">
+            <a href="javascript:;"><span class="icon iconfont icon-wenhao"></span><span>如何分享我的专属主页</span><span class="icon iconfont icon-jiantou-left-copy"></span></a>
+        </div>
+        <div class="avatar_info">
+            <div class="img"><img src="{$user_model_info['face']}"></div>
+            <div class="text">
+                <h3>{$user_model_info['name']}</h3>
+                <h4>中瀚哲投资管理有限公司居间人</h4>
+                <p><span class="icon iconfont icon-xiangmubianhao"></span><span>编号　{$user_model_info['id']}</span></p>
+                <p><span class="icon iconfont icon-shouji"></span><span>手机号　{$user_model_info['phone']}</span></p>
+            </div>
+        </div>
+        <div class="ewm">
+            <div class="img"><img src="{:url('Mine/qrcode').'?content='.$req_url.'&path='.$user_model_info['face']}"></div>
+            <p>扫一扫识别二维码<br />一键申请</p>
+            <div class="text">
+                <p>{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'share_des'])}</p>
+            </div>
+        </div>
+        <div class="share_btn">
+            <a href="javascript:;">分享给借款用户</a>
+        </div>
+    </div>
+</div>
+
+<div class="share_pop"><img src="/static/index/images/share.png" ></div>
+{/block}
+{block name="script"}
+<!--引入微信jsapi-->
+{:widget('PageCrumb/wechatJssdkConfig',['url'=>request()->url(true),'jsApiList'=>['updateAppMessageShareData','updateTimelineShareData']])}
+<script type="text/javascript">
+
+    wx.ready(function(){
+
+        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        wx.updateAppMessageShareData({
+            title: '个人主页', // 分享标题
+            desc: '{$user_model_info["name"]}邀请您', // 分享描述
+            link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
+            success: function () {
+                // 设置成功
+            }
+        })
+        wx.updateTimelineShareData({
+            title: '个人主页', // 分享标题
+            link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
+            success: function () {
+                // 设置成功
+            }
+        })
+    });
+
+    $(document).ready(function(){
+        $(".share_btn a").click(function(){
+            $(".share_pop").show();
+        });
+        $(".share_pop").click(function(){
+            $(this).hide();
+        });
+    });
+</script>
+{/block}

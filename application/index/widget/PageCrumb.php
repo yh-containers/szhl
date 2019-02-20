@@ -57,4 +57,27 @@ class PageCrumb extends Controller
             'active' => $active
         ]);
     }
+
+
+    //微信数据
+    public function wechatJssdkConfig($url,$jsApiList=[])
+    {
+        try{
+            $data = \app\common\service\wechat\Jssdk::sign($url);
+            return $this->fetch('/widget/wechatJssdkConfig',[
+                'data'      => $data,
+                'jsApiList' => $jsApiList
+            ]);
+        }catch (\Exception $e){
+            echo $e->getMessage();
+        }
+
+    }
+
+    public function wechatJssdk()
+    {
+
+        return $this->fetch('/widget/wechatJssdk',[
+        ]);
+    }
 }

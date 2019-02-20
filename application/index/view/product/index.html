@@ -1,11 +1,11 @@
 {extend name="base"/}
 
-{block name="title"}信用贷款{/block}
+{block name="title"}{:$title_info?$title_info['name']:''}{/block}
 
 {block name="content"}
 <div class="header">
     <a class="back" href="javascript:history.go(-1)"></a>
-    <h4>信用贷款</h4>
+    <h4>{:$title_info?$title_info['name']:''}</h4>
 </div>
 <div class="main">
     <div class="search-wrap clearfix">

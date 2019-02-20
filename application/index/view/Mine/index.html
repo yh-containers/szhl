@@ -16,24 +16,24 @@
                 </a>
             </div>
             <div class="menber_income">
-                <a href="my_income.html">
+                <a href="{:url('Mine/myIncome')}">
                     <span>我的收益(元)</span>
                     <span class="price">{$user_model_info['money']}</span>
                     <span class="tixian">提现</span>
                 </a>
             </div>
             <div class="my_homepage">
-                <a href="my_home.html">
+                <a href="{:url('Mine/myHome')}">
                     <i class="icon iconfont icon-wodekehu"></i>
                     <span>我的主页</span>
                 </a>
             </div>
             <ul>
-                <li><a href="my_loan.html"><i class="icon iconfont icon-daikuan"></i><span>我的借款</span></a></li>
-                <li><a href="{:url('about')}"><i class="icon iconfont icon-guanyu"></i><span>关于中瀚哲</span></a></li>
+                <li><a href="{:url('Mine/loan')}"><i class="icon iconfont icon-daikuan"></i><span>我的借款</span></a></li>
+                <li><a href="{:url('Mine/about')}"><i class="icon iconfont icon-guanyu"></i><span>关于中瀚哲</span></a></li>
                 <li><a href="{:url('article/index')}"><i class="icon iconfont icon-laba"></i><span>媒体报道</span></a></li>
-                <li><a href="{:url('suggest')}"><i class="icon iconfont icon-yijianfankui"></i><span>意见反馈</span></a></li>
-                <li><a href="contact.html"><i class="icon iconfont icon-kefu"></i><span>联系客服</span></a></li>
+                <li><a href="{:url('Mine/suggest')}"><i class="icon iconfont icon-yijianfankui"></i><span>意见反馈</span></a></li>
+                <li><a href="{:url('Mine/contact')}"><i class="icon iconfont icon-kefu"></i><span>联系客服</span></a></li>
             </ul>
             <div class="bottom_info">
                 <p><i class="icon iconfont icon-dianhua"></i>客服电话：{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tel'])}</p>

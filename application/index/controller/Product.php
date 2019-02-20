@@ -18,6 +18,7 @@ class Product extends Common
         return view('index',[
             'label_list' => $label_list,
             'type' => $type,
+            'title_info' => \app\common\model\Product::getTypeInfo(),
             'lid' => $lid,
         ]);
     }

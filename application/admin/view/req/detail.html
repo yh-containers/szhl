@@ -160,7 +160,7 @@
                         </tr>
                         <tr>
                             <td>身份证图片</td>
-                            <td colspan="7">
+                            <td colspan="7" id="layer-photos-demo">
                                 {volist name="$model['card_img']" id="vo"}
                                 <img src="{$vo}" width="80" height="80"/>
                                 {/volist}
@@ -170,7 +170,42 @@
                     </table>
                 </div>
             </div>
+            <div class="panel panel-primary mt-10">
+                <div class="panel-header">还款计划</div>
+                <div class="panel-body">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>还款总额</th>
+                            <th>还款金额</th>
+                            <th>还款利息</th>
+                            <th>还款状态</th>
+                            <th>还款日期</th>
+                            <th>还款说明</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="model['link_plan']" id="vo"}
+                        <tr>
+                            <td>{$vo['date']}</td>
+                            <td>{$vo['total_money']}</td>
+                            <td>{$vo['money']}</td>
+                            <td>{$vo['profit_money']}</td>
+                            <td>{:$vo::$fields_status[$vo['status']]}</td>
+                            <td>{$vo['back_time']}</td>
+                            <td>{$vo['back_intro']}</td>
+                            <td><a href="javascript:;"  class="handle-plan" data-date="{$vo['date']}" data-id="{$vo['id']}">处理</a></td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
+
         <div class="col-sm-3">
             <div class="panel panel-primary">
                 <div class="panel-header">申请日志</div>
@@ -195,6 +230,9 @@
                 </div>
             </div>
         </div>
+
+
+
     </div>
 </div>
 <div class="pd-20"  id="face-page" style="display: none">
@@ -213,15 +251,29 @@
     </div>
 
 </div>
+<div class="pd-20"  id="handle-plan" style="display: none">
+    <div class="row">
+            <div class="layui-form-item">
+                <textarea  name="content" rows="6"  placeholder="请输入还款计划内容" class="layui-textarea"></textarea>
+            </div>
+    </div>
+
+</div>
 {/block}
 
 {block name="script"}
 <script>
-    layui.use(['form'], function(){
+    layui.use(['layer','form'], function(){
         var form = layui.form;
-
+        var layer = layui.layer;
+        //调用示例
+        layer.photos({
+            photos: '#layer-photos-demo'
+            ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+        });
 
     });
+
     //面谈
     $("#face-info").click(function(){
         var id = $(this).data('id')
@@ -238,6 +290,23 @@
             }
         })
     })
+    //处理还款计划
+    $(".handle-plan").click(function(){
+        var id = $(this).data('id')
+        var date = $(this).data('date')
+        layer.open({
+            title: '还款计划-'+date
+            ,type: 1
+            ,content: $("#handle-plan")
+            ,btn: ['已还款','取消']
+            ,area: ['500px', '300px']
+            ,yes: function(index, layero){
+                //按钮【按钮一】的回调
+                var content = $("#handle-plan textarea[name='content']").val()
+                $.common.modify("{:url('Req/handlePlanAction')}",{back_intro:content,id:id},'是否标记该记录为已还款')
+            }
+        })
+    })
     $("#req-auth").click(function(){
         var id = $(this).data('id')
         layer.open({
@@ -249,12 +318,12 @@
             ,yes: function(index, layero){
                 //按钮【按钮一】的回调
                 var content = $("#auth-page textarea[name='content']").val()
-                $.common.modify("{:url('Req/modifyInfo')}",{auth_content:content,auth_status:1,id:id},'是否通过审核')
+                $.common.modify("{:url('Req/handleAuth')}",{auth_content:content,auth_status:1,id:id},'是否通过审核')
             }
             ,btn2: function(index, layero){
                 //按钮【按钮二】的回调
                 var content = $("#auth-page textarea[name='content']").val()
-                $.common.modify("{:url('Req/modifyInfo')}",{auth_content:content,auth_status:2,id:id},'是否拒绝审核')
+                $.common.modify("{:url('Req/handleAuth')}",{auth_content:content,auth_status:2,id:id},'是否拒绝审核')
                 return false //开启该代码可禁止点击该按钮关闭
             }
             ,success: function (layero) {

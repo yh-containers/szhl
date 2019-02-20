@@ -1,0 +1,59 @@
+{extend name="base"/}
+
+{block name="title"}添加银行卡{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>添加银行卡</h4>
+    </div>
+    <div class="main">
+        <form id="form">
+            <input type="hidden" name="id" value="{$model['id']}"/>
+        <div class="add_card">
+            <p>请填写银行卡信息</p>
+            <ul>
+                <li>
+                    <label>真实姓名</label>
+                    <input type="text" name="name" value="{$model['name']}" placeholder="请输入真实名称">
+                </li>
+                <li>
+                    <label>身份证号</label>
+                    <input type="text" name="card" value="{$model['card']}" placeholder="请输入本人身份证号">
+                </li>
+                <li>
+                    <label>银行名称</label>
+                    <input type="text" name="bank_card_name" value="{$model['bank_card_name']}" placeholder="请输入银行名称">
+                </li>
+                <li>
+                    <label>收款户名</label>
+                    <input type="text" name="rec_name" value="{$model['rec_name']}" placeholder="请输入收款户名">
+                </li>
+                <li>
+                    <label>银行卡号</label>
+                    <input type="text" name="bank_card" value="{$model['bank_card']}" placeholder="请输入银行卡号">
+                </li>
+            </ul>
+            <div class="btn_card"><a href="javascript:;" id="submit">确认</a></div>
+        </div>
+        </form>
+    </div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post($("#form").attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+                if(result.code==1){
+                    setTimeout(function(){window.history.back()})
+                }
+            })
+        })
+    })
+</script>
+{/block}

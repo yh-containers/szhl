@@ -8,7 +8,7 @@ class Product extends Validate
     protected $rule = [
         'img'               =>  'require',
         'name'              =>  'require|min:3',
-        'commission'        =>  'require|between:0.01,100',
+        'commission'        =>  'require|between:0.01,1',
         'type'              =>  'require',
         'per'               =>  'require|between:0.01,1',
         'per_unit'          =>  'require',

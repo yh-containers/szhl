@@ -63,22 +63,35 @@ class Product extends Base
 
 
 
-    //额度单位
-    public static function moneyUnit()
+    /*
+     * 额度单位
+     * @param $transform bool|int 转化比例 元
+     * */
+    public static function moneyUnit($transform=false)
     {
-        return ['unit'=>self::$money_unit,'default'=>2];
+        if(is_bool($transform)){
+            return ['unit'=>self::$money_unit,'default'=>2,'hide'=>[]];
+        }
+        $transform_per = [1,1000,10000];
+        return isset($transform_per[$transform])?$transform_per[$transform]:null;
+
     }
 
     //授权期限单位
-    public static function authUnit()
+    public static function authUnit($transform=false)
     {
-        return ['unit'=>self::$auth_unit,'default'=>1];
+        if(is_bool($transform)){
+            return ['unit'=>self::$auth_unit,'default'=>1,'hide'=>[0,2]];
+
+        }
+        //只能按月
+        return 1;
     }
 
     //授权期限单位
     public static function perUnit()
     {
-        return ['unit'=>self::$per_unit,'default'=>1];
+        return ['unit'=>self::$per_unit,'default'=>1,'hide'=>[0,2]];
     }
 
     public static function init()
@@ -99,6 +112,20 @@ class Product extends Base
         });
     }
 
+    /*
+     * 获取项目类型
+     * */
+    public static function getTypeInfo($type=1)
+    {
+        $type_info = [];
+        foreach (self::$type_label as $vo){
+            if($vo['type']==$type){
+                $type_info=$vo;
+                break;
+            }
+        }
+        return $type_info;
+    }
     /*
      * 项目申请流程
      * @param $step int 项目步骤

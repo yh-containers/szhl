@@ -1,0 +1,103 @@
+{extend name="base"/}
+
+{block name="title"}提现{/block}
+{block name="style"}
+<style>
+    #city_inner{padding-right: 10px}
+</style>
+{/block}
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>提现</h4>
+</div>
+<div class="main">
+    <form id="form">
+    <div class="withdraw">
+        <div class="prompt">
+            <i class="icon iconfont icon-laba1"></i>
+            <p>{$tip}</p>
+            <i class="icon iconfont icon-cuo"></i>
+        </div>
+        <div class="current_card">
+            {if($model_card)}
+            <a href="javascript:;" class="pop_list">
+                <input type="hidden" name="cid" value="{$model_card[0]['id']}"/>
+                <h3>{$model_card[0]['bank_card_name']}</h3>
+                <span>尾号{:substr($model_card[0]['bank_card'],-4)}</span>
+            </a>
+            {else/}
+            <a href="{:url('Mine/bankCardAdd')}">
+                <i class="icon iconfont icon-jia"></i>
+                <h3>添加银行卡</h3>
+            </a>
+            {/if}
+
+
+        </div>
+        <div class="amount">
+            <div class="box"><label>￥</label><input type="number" name="money" max="{$user_model_info['money']}" placeholder="请输入提现金额" ></div>
+            <p>本次可提现到卡{$user_model_info['money']}元</p>
+        </div>
+        <div class="confirm"><input type="button" name="" id="submit" value="确认提现"></div>
+    </div>
+    </form>
+</div>
+
+<div class="select_card">
+    <div class="top">
+        <i class="icon iconfont icon-cuo"></i>
+        <h3>选择银行卡</h3>
+    </div>
+    <div class="card_list">
+        <ul>
+            {volist name="model_card" id="vo"}
+                <li><label>{$vo['bank_card_name']}（{:substr($vo['bank_card'],-4)}）</label><input type="radio" name="card" value="{$vo['id']}"></li>
+            {/volist}
+        </ul>
+        <a href="{:url('Mine/bankCardAdd')}"><i class="icon iconfont icon-yinhangqia1"></i><span>添加银行卡</span></a>
+    </div>
+</div>
+<div class="select_bg"></div>
+{/block}
+{block name="script"}
+<script>
+    $(document).ready(function(){
+        $(".select_card .card_list li").click(function(e){
+            $(this).addClass("on").siblings().removeClass("on");
+
+            var $radio = $(this).find("input[type=radio]"),
+                $flag  = $radio.is(":checked");
+            if( !$flag ){
+                $radio.prop("checked",true);
+            }
+
+            $(".select_card").hide();
+            $(".select_bg").hide();
+        });
+
+        /*点击显示隐藏弹窗*/
+        $(".current_card .pop_list").click(function(e){
+            $(".select_card").show();
+            $(".select_bg").show();
+        });
+
+        $(".select_card .top").click(function(e){
+            $(".select_card").hide();
+            $(".select_bg").hide();
+        });
+
+        /*点击关闭提示*/
+        $(".withdraw .prompt i.icon-cuo").click(function(e){
+            $(".withdraw .prompt").hide();
+            $(".withdraw .prompt").hide();
+        });
+
+        $("#submit").click(function(){
+            $.post($('#form').attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+            })
+        })
+    });
+</script>
+{/block}

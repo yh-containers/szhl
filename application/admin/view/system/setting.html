@@ -20,39 +20,39 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">客服电话</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[tel]" value="{$company_info['tel']}"  placeholder="客服电话" autocomplete="off" maxlength="20" class="layui-input">
+                                <input type="text" name="content[tel]" value="{:isset($company_info['tel'])?$company_info['tel']:''}"  placeholder="客服电话" autocomplete="off" maxlength="20" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">客服邮箱</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[email]" value="{$company_info['email']}"  placeholder="客服邮箱" autocomplete="off" maxlength="20" class="layui-input">
+                                <input type="text" name="content[email]" value="{:isset($company_info['email'])?$company_info['email']:''}"  placeholder="客服邮箱" autocomplete="off" maxlength="20" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">公司邮箱</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[company_email]" value="{$company_info['company_email']}"  placeholder="公司邮箱" autocomplete="off" maxlength="20" class="layui-input">
+                                <input type="text" name="content[company_email]" value="{:isset($company_info['company_email'])?$company_info['company_email']:''}"  placeholder="公司邮箱" autocomplete="off" maxlength="20" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">公司地址</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[company_addr]" value="{$company_info['company_addr']}"  placeholder="公司地址" autocomplete="off" maxlength="20" class="layui-input">
+                                <input type="text" name="content[company_addr]" value="{:isset($company_info['company_addr'])?$company_info['company_addr']:''}"  placeholder="公司地址" autocomplete="off" maxlength="20" class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-form-item">
                             <label class="layui-form-label">作息时间</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[day]" value="{$company_info['day']}"  placeholder="作息时间" autocomplete="off" maxlength="200" class="layui-input">
+                                <input type="text" name="content[day]" value="{:isset($company_info['day'])?$company_info['day']:''}"  placeholder="作息时间" autocomplete="off" maxlength="200" class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-form-item">
                             <label class="layui-form-label">icp</label>
                             <div class="layui-input-block">
-                                <input type="text" name="content[icp]" value="{$company_info['icp']}"  placeholder="icp" autocomplete="off" maxlength="200" class="layui-input">
+                                <input type="text" name="content[icp]" value="{:isset($company_info['icp'])?$company_info['icp']:''}"  placeholder="icp" autocomplete="off" maxlength="200" class="layui-input">
                             </div>
                         </div>
 
@@ -60,7 +60,15 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">小贴士</label>
                             <div class="layui-input-block">
-                                <textarea name="content[tip]" class="layui-textarea">{$company_info['tip']}</textarea>
+                                <textarea name="content[tip]" class="layui-textarea">{:isset($company_info['tip'])?$company_info['tip']:''}</textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分享页描述</label>
+                            <div class="layui-input-block">
+                                <textarea name="content[share_des]" class="layui-textarea">{:isset($company_info['share_des'])?$company_info['share_des']:''}</textarea>
                             </div>
                         </div>
 
@@ -81,6 +89,45 @@
 
                             <div class="layui-form-item">
                                     <textarea rows="10" name="content" class="layui-textarea">{$company_intro}</textarea>
+                            </div>
+
+                        </form>
+
+                    </div>
+            </div>
+        </div>
+        <div class="col-sm-6 mt-10">
+            <div class="panel panel-primary">
+                    <div class="panel-header">
+                        提现设置
+                        <button type="button"  class="btn btn-warning  size-S radius f-r submit">保存</button>
+                    </div>
+                    <div class="panel-body pd-5">
+                        <form class="layui-form" action="{:url('System/settingAction')}">
+
+                            <input type="hidden" name="type" value="withdraw"/>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">提现次数</label>
+                                <div class="layui-input-inline">
+                                    <input type="number" name="content[times]" value="{:isset($withdraw['times'])?$withdraw['times']:''}"  placeholder="每日提现次数" autocomplete="off"  class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">每天限制提现次数 0或空则不限制</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最低金额</label>
+                                <div class="layui-input-inline">
+                                    <input type="number" name="content[start_money]" value="{:isset($withdraw['start_money'])?$withdraw['start_money']:''}"  placeholder="每次最低提现金额" autocomplete="off"  class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">每次提现最低金额(元)</div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最高金额</label>
+                                <div class="layui-input-inline">
+                                    <input type="number" name="content[end_money]" value="{:isset($withdraw['end_money'])?$withdraw['end_money']:''}"  placeholder="每次最高提现金额" autocomplete="off"  class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">每次提现最高金额(元)</div>
                             </div>
 
                         </form>

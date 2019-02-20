@@ -1,0 +1,27 @@
+{extend name="base"/}
+
+{block name="title"}我的收益{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>我的收益</h4>
+    </div>
+    <div class="main">
+        <div class="my_income">
+            <div class="top_price">
+                <h4>恭喜你累计已收益</h4>
+                <h3>{$user_model_info['money']}<span>元</span></h3>
+                <a href="withdraw.html">提现</a>
+            </div>
+            <ul>
+                <li><a href="{:url('Mine/incomeList')}"><i class="icon iconfont icon-jiaoyimingxi"></i><span>我的收益明细</span></a></li>
+                <li><a href="{:url('Mine/bankCard')}"><i class="icon iconfont icon-yinhangqia"></i><span>银行卡</span></a></li>
+            </ul>
+        </div>
+    </div>
+{/block}

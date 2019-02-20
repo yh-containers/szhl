@@ -1,0 +1,56 @@
+{extend name="base"/}
+
+{block name="title"}银行卡{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>银行卡</h4>
+    </div>
+    <div class="main">
+        <div class="bank_card">
+            <ul class="show-list">
+
+            </ul>
+            <div class="add_to">
+                <a href="{:url('Mine/bankCardAdd')}"><i class="icon iconfont icon-jia"></i><span>添加银行卡</span></a>
+            </div>
+        </div>
+    </div>
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+<script>
+    var url = "{:url('Mine/showBankCardList')}";
+    var edit = "{:url('Mine/bankCardAdd')}";
+    layui.use('flow', function(){
+        var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '.show-list' //指定列表容器
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(url+'?page='+page, function(res){
+                    //假设你的列表返回在data集合中
+                    var data = res.data
+                    var list=data.data
+                    layui.each(list, function(index, item){
+                        lis.push('<li><a href="'+edit+'?id='+item.id+'">\n' +
+                            '                    <h4>'+item.name+'</h4>\n' +
+                            '                    <h3>'+item.bank_card+'</h3>\n' +
+                            '                </a></li>');
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < data.last_page);
+                });
+            }
+        });
+    });
+
+</script>
+
+{/block}

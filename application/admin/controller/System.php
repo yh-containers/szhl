@@ -163,9 +163,11 @@ class System extends Common
         $model = new \app\common\model\Setting();
         $company_info = $model->getContent('company_info');
         $company_intro = $model->getContent('company_intro');
+        $withdraw = $model->getContent('withdraw');
         return view('setting',[
             'company_info' => json_decode($company_info,true),
             'company_intro' => $company_intro,
+            'withdraw' => json_decode($withdraw,true),
         ]);
     }
 

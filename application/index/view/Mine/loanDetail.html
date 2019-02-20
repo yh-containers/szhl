@@ -1,0 +1,40 @@
+{extend name="base"/}
+
+{block name="title"}我的借款{/block}
+{block name="style"}
+<style>
+    #city_inner{padding-right: 10px}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>还款详情</h4>
+    </div>
+    <div class="main">
+        <div class="loan_det">
+            <div class="loan_title">
+                <span class="fl">分期时间</span>
+                <span class="fr">{:$info['auth_date_time']?date('Y-m-d',$info['auth_date_time']):''}</span>
+            </div>
+            <ul>
+                {volist name="info['link_plan']" id="vo"}
+                <li class="{:$vo['status']==1?'returned':''}">
+                    <div class="num">{:$key+1}</div>
+                    <div class="right">
+                        <div class="periods">
+                            <h3>第{:$key+1}/{:count($info['link_plan'])}期</h3>
+                            <p>还款日 {$vo['date']}</p>
+                        </div>
+                        <div class="return">
+                            <h4>{:$vo::$fields_status[$vo['status']]}</h4>
+                            <p>{$vo['total_money']}（含利息{$vo['profit_money']}）</p>
+                        </div>
+                    </div>
+                </li>
+                {/volist}
+
+            </ul>
+        </div>
+    </div>
+{/block}

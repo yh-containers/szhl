@@ -98,8 +98,7 @@
                 <div class="upload">
                     <div class="z_photo upimg-div clearfix">
                         <section class="z_file fl">
-                            <img src="/static/index/images/file_ico.png" class="add-img">
-                            <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+                            <img src="/static/index/images/file_ico.png" id="test1" class="add-img" >
                         </section>
                     </div>
                 </div>
@@ -223,8 +222,38 @@
 </aside>
 {/block}
 {block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+
 <script type="text/javascript" src="/static/index/js/imgUp.js"></script>
 <script>
+    layui.use(['layer','upload'], function(){
+        layer = layui.layer;
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '{:url("Upload/upload")}' //上传接口
+            ,data:{type:'user_card'}
+            ,acceptMime:'image/*'
+            ,done: function(res){
+                //上传完毕回调
+                var item = this.item;
+                res.path && $(item).parent().parent().append('<section class="up-section fl">' +
+                    '<span class="up-span"></span>' +
+                    '<span id="close-upimg" class="close-upimg"></span>' +
+                    '<img class="up-img" src="'+res.path+'">' +
+                    '<p class="img-name-p">banner-1.jpg</p>' +
+                    '<input id="tags" name="card_img[]" value="'+res.path+'" type="hidden">' +
+                    '</section>'
+                )
+            }
+            ,error: function(){
+                //请求异常回调
+                layer.msg('上传异常')
+            }
+        });
+    });
     $(function(){
         $("#submit").click(function(){
             $.post($("#form").attr('action'),$("#form").serialize(),function(result){

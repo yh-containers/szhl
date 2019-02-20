@@ -1,0 +1,62 @@
+{extend name="base"/}
+
+{block name="title"}我的收益明细{/block}
+{block name="style"}
+<style>
+    body{background: #fff}
+</style>
+{/block}
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>我的收益明细</h4>
+    </div>
+    <div class="main">
+        <div class="income_det">
+            <ul class="show-list">
+
+            </ul>
+        </div>
+    </div>
+{/block}
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+<script>
+    var url = "{:url('Mine/showIncomeList')}";
+    layui.use('flow', function(){
+        var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '.show-list' //指定列表容器
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(url+'?page='+page, function(res){
+                    //假设你的列表返回在data集合中
+                    var data = res.data
+                    var list=data.data
+                    layui.each(list, function(index, item){
+                        lis.push('<li>\n' +
+                            '                    <i class="icon iconfont icon-qiandai"></i>\n' +
+                            '                    <div class="text">\n' +
+                            '                        <div class="left">\n' +
+                            '                            <h4>'+item.intro+'</h4>\n' +
+                            '                            <p>'+item.create_time+'</p>\n' +
+                            '                        </div>\n' +
+                            '                        <div class="right">'+(item.money<0?'':'+')+item.money+'</div>\n' +
+                            '                    </div>\n' +
+                            '                </li>');
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < data.last_page);
+                });
+            }
+        });
+    });
+
+</script>
+
+{/block}

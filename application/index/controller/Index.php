@@ -147,6 +147,5 @@ class Index extends Common
                 'area_py_f'=>strtoupper($first),
             ],['area_id'=>$location['area_id']]);
         }
-
     }
 }
