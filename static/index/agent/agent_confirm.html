@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<title>代理商招募</title>
+	<meta name="keywords" content="中瀚哲">
+	<meta name="description" content="中瀚哲">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css" />  
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css" /> 
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/mui.min.js"></script>
+</head>
+
+<body>
+	<div class="authentication">
+        <div class="tips_text">
+            <img src="images/sfz_img.jpg" alt="" />
+            <h4>亲爱的用户</h4>
+            <p>为了保证账户的安全，请通过实名认证</p>
+            <p>完成身份验证的用户，即可保障您的合法权益</p>
+        </div>
+        <div class="tips_form">
+            <input type="text" class="name" placeholder="请输入您的姓名" />
+
+            <input type="text" class="card" placeholder="请输入您的身份证号" maxlength="18" />
+
+            <a href="javascript:;" class="btn btn-primary">提交申请</a>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $(".btn-primary").on("click",function(){
+                $("body").append('<div class="mui-toast-container"> <div class="mui-toast-message ">提交成功，请等待审核！</div> </div>');                
+                setTimeout(function () {
+                    $(".mui-toast-container").addClass('mui-active');
+                }, 100)
+                setTimeout(function () {
+                    $(".mui-toast-container").removeClass('mui-active');
+                }, 2500)
+                setTimeout(function () {
+                    $(".mui-toast-container").remove();
+                }, 3000)
+            });
+        });
+    </script>
+
+</body>
+</html>

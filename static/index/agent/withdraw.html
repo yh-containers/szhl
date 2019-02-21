@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>中瀚哲</title>
+    <meta name="keywords" content="中瀚哲">
+    <meta name="description" content="中瀚哲">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css" />  
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css" /> 
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mui.min.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>提现</h4>
+    </div>
+    <div class="main">
+        <div class="withdraw">
+            <div class="prompt">
+               <i class="icon iconfont icon-laba1"></i>
+               <p>尊敬的用户！当日提现不能超过3次，提现总额不能超过1万5千元。</p>
+               <i class="icon iconfont icon-cuo"></i>
+            </div>
+            <div class="current_card">
+                <a href="add_card.html" style="display: none;">
+                    <i class="icon iconfont icon-jia"></i>
+                    <h3>添加银行卡</h3>
+                </a>
+                <a href="javascript:;" class="pop_list">
+                    <h3>工商银行</h3>
+                    <span>尾号6262</span>
+                </a>
+            </div>
+            <div class="amount">
+                <div class="box"><label>￥</label><input type="text" name="" placeholder="请输入提现金额" ></div>
+                <p>本次可提现到卡1325元</p>
+            </div>
+            <div class="confirm"><input type="button" name="" value="确认提现"></div>
+        </div>
+    </div>
+
+    <div class="select_card">
+        <div class="top">
+            <i class="icon iconfont icon-cuo"></i>
+            <h3>选择银行卡</h3>
+        </div>
+        <div class="card_list">
+            <ul>
+                <li><label>中国工商银行（6262）</label><input type="radio" name="card"></li>
+                <li><label>中国工商银行（6262）</label><input type="radio" name="card"></li>
+                <li><label>中国工商银行（6262）</label><input type="radio" name="card"></li>
+            </ul>
+            <a href="add_card.html"><i class="icon iconfont icon-yinhangqia1"></i><span>添加银行卡</span></a>
+        </div>
+    </div>
+    <div class="select_bg"></div>
+
+    <script>
+        $(document).ready(function(){
+            $(".select_card .card_list li").click(function(e){
+                $(this).addClass("on").siblings().removeClass("on");
+
+                var $radio = $(this).find("input[type=radio]"),
+                    $flag  = $radio.is(":checked");
+                if( !$flag ){
+                    $radio.prop("checked",true);   
+                }
+
+                $(".select_card").hide();
+                $(".select_bg").hide();
+            });
+
+            /*点击显示隐藏弹窗*/
+            $(".current_card .pop_list").click(function(e){
+                $(".select_card").show();
+                $(".select_bg").show();
+            });
+
+            $(".select_card .top").click(function(e){
+                $(".select_card").hide();
+                $(".select_bg").hide();
+            });
+
+            /*点击关闭提示*/
+            $(".withdraw .prompt i.icon-cuo").click(function(e){
+                $(".withdraw .prompt").hide();
+                $(".withdraw .prompt").hide();
+            });
+
+        });
+    </script>
+</body>
+</html>

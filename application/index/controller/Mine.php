@@ -107,12 +107,12 @@ class Mine extends Common
     }
 
     //二维码
-    public function qrcode($path='')
+    public function qrcode($path='',$content='')
     {
         //资源路径
         $resource_path = str_replace('\\','/',\Env::get('vendor_path').'\\endroid\\qr-code');
         // Create a basic QR code
-        $qrCode = new QrCode('Life is too short to be generating QR codes');
+        $qrCode = new QrCode($content);
         $qrCode->setSize(300);
 
 // Set advanced options
@@ -131,7 +131,7 @@ class Mine extends Common
         $root_path = str_replace('\\','/',\Env::get('root_path'));
         //logo
         if($path){
-            $qrCode->setLogoPath($root_path.'public'.$path);
+            $qrCode->setLogoPath($root_path.$path);
         }
         // Directly output the QR code
         return response($qrCode->writeString())->header('Content-Type',$qrCode->getContentType());
