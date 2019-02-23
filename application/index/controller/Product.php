@@ -9,9 +9,10 @@ class Product extends Common
 
     public function index()
     {
+
         $type = $this->request->param('type',1,'intval');
         //产品labels属性
-        $lid = $this->request->param('lid',0,'intval');
+        $lid = $this->request->param('lid');
         //产品labels
         $model_label = new \app\common\model\Label();
         $label_list = $model_label->select();
@@ -28,15 +29,80 @@ class Product extends Common
      * */
     public function showList()
     {
+
+        $model = new \app\common\model\Product();
+
         $type = $this->request->param('type',1,'intval');
         //产品labels属性
-        $lid = $this->request->param('lid',0,'intval');
-        $model = new \app\common\model\Product();
+        $lid = $this->request->param('lid');
+        $lid = explode(',',$lid);
+        //利率从低到高
+        $order_per = $this->request->param('per','','trim');
+        if($order_per){
+            $order_per = $order_per=='asc'?'asc':'desc';
+            $model = $model->order('per',$order_per);
+        }
+        //奖金从高到低
+        $order_commission = $this->request->param('commission','','trim');
+        if($order_commission){
+            $order_commission = $order_commission=='asc'?'asc':'desc';
+            $model = $model->order('commission',$order_commission);
+        }
+
+        //指定奖金金额
+        $money_start = $this->request->param('money_start',0);
+        if($money_start){
+            $model = $model
+                ->where(function ($query) use($money_start) {
+                    $query->whereOr([
+                        [
+                            ['money_start','elt',$money_start],
+                            ['money_end','egt',$money_start],
+                        ],
+                        [
+                            ['money_start','=',$money_start]
+                        ]
+                    ]);
+                });
+
+        }
+
+        //期限查询
+        $auth_time_start = $this->request->param('auth_time_start');
+        if($auth_time_start) {
+            $prefix_auth_time = substr($auth_time_start,0,1);
+            if($prefix_auth_time=='+'){
+                //多少月以上
+                $model = $model->where('auth_time_start','elt',intval($auth_time_start));
+            }else{
+                $model = $model
+                    ->where(function ($query) use($auth_time_start) {
+                        $query->whereOr([
+                            [
+                                ['auth_time_start','elt',$auth_time_start],
+                                ['auth_time_end','egt',$auth_time_start],
+                            ],
+                            [
+                                ['auth_time_start','=',$auth_time_start]
+                            ]
+                        ]);
+                    });
+            }
+        }
+        //按类型查询
         $where[] = [
             ['type','=',$type],
-
         ];
-        $lid && $where[] =['','EXP',\think\Db::raw("FIND_IN_SET($lid,id)")];
+
+        //关键字
+        $keyword = $this->request->param('keyword','','trim');
+        $keyword && $where[] = ['name','like','%'.$keyword.'%'];
+
+        if($lid){
+            foreach($lid as $vo){
+                is_numeric($vo) && $vo>0 && $where[] =['','EXP',\think\Db::raw("FIND_IN_SET($vo,labels)")];
+            }
+        }
         $list = $model->where($where)->paginate()->each(function(&$item, $key){
             $item= [
                 'id' => $item['id'],
@@ -66,6 +132,7 @@ class Product extends Common
         $id = $this->request->param('id',0,'intval');
         $model = new \app\common\model\Product();
         $model = $model->get($id);
+        $model && $model->setInc('view');
         return view('detail',[
             'model' => $model,
         ]);

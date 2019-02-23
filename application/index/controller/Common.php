@@ -28,12 +28,13 @@ class Common extends Controller
         if($this->need_login && strpos(strtolower($this->ignore_login_action),$current_action)===false && !$this->user_id) {
             if($this->request->isAjax()){
                 header('content-type:application/json; charset=utf-8');
-                echo json_encode(['code'=>-1,'msg'=>'请先登录','url'=>url('Index/login')]);exit;
+                echo json_encode(['code'=>-1,'msg'=>'请先登录','url'=>url('Index/identity')]);exit;
             }else{
-                $this->redirect('index/login');
-
+                $this->redirect('index/identity');
             }
         }
+        //邀请者用户id
+        cookie('req_user_id',$this->request->param('req_user_id',0,'intval'));
 
     }
 }

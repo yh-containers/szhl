@@ -9,7 +9,9 @@
 
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
     <span class="l">
-    	<!--<a href="javascript:;" onclick="$.common.openUrl('{:url("userAdd")}','添加用户')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加用户</a>-->
+		{if($proxy_id)}
+    	<a href="javascript:;" onclick="$.common.openUrl('{:url("add")}','添加用户')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加用户</a>
+		{/if}
 	</span>
 	</div>
 
@@ -38,6 +40,8 @@
 				<td>{:$vo::$fields_status[$vo['status']]}</td>
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("userDetail",['id'=>$vo['id']])}','信息')" class="ml-5"> 查看</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("add",['id'=>$vo['id']])}','编辑')" class="ml-5"> 编辑</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.request()->domain().'/index.php/index/login?req_user_id='.$vo['id'].'&path='.$vo['face']}','二维码')" class="ml-5"> 二维码</a>
 				</td>
 			</tr>
 		{/volist}

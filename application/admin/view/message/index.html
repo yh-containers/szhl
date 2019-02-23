@@ -20,7 +20,6 @@
 			<th width="100">项目名称</th>
 
 			<th width="130">创建时间</th>
-			<th width="20">排序</th>
 			<th width="70">状态</th>
 			<th width="100">操作</th>
 		</tr>
@@ -31,7 +30,6 @@
 				<td>{$i}</td>
 				<td>{$vo['title']}</td>
 				<td>{$vo['create_time']}</td>
-				<td><input type="text"  required  lay-verify="required" value="{$vo['sort']}" autocomplete="off" data-id="{$vo.id}"  class="layui-input" onblur="updateSort(this)"></td>
 
 				<td>{:$vo::$fields_status_article[$vo['status']]}</td>
 				<td>

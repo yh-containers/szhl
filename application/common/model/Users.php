@@ -6,16 +6,30 @@ class Users extends Base
 {
     protected $name='users';
 
-    protected $insert = ['face'=>'/uploads/face/toux.png','type'];
+    protected $insert = ['face'=>'/uploads/face/toux.png','type','fuid1'];
     protected $auto = ['join_time'];
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
 
+    //设置邀请用户
+    public function setFuid1Attr($value,$data)
+    {
+        //判断是否有邀请者
+        if(cookie('?req_user_id')){
+            //查看邀请者的邀请者
+            $model = new self();
+            $value=cookie('req_user_id');
+            $fuid2 = $model->where('id',$value)->value('fuid1',0);
+            $this->setAttr('fuid2',$fuid2);
+        }
+
+        return $value;
+    }
 
     //设置用户类型
     public function setTypeAttr($value,$data)
     {
-        return $value?$value:0;
+        return $value?$value:(cookie('?identity_type')?(cookie('identity_type')!=2?cookie('identity_type'):0):0);
     }
 
     //设置加入时间
@@ -117,13 +131,14 @@ class Users extends Base
     }
 
     //修改用户余额
-    public static function modMoney($user_id,$money,$intro='',$extra=[])
+    public static function modMoney($user_id,$money,$intro='',$extra=[],$is_record_history_money=true)
     {
         $model = new self();
         $model = $model->get($user_id);
         empty($model) && abort(4000,'用户信息异常');
         //更新用户余额
         $model->money	= [$money>0?'inc':'dec', abs($money)];
+        $model>0 && $is_record_history_money && $model->history_money=['inc', $money];
         //附加数据
         $model->setAttr('mod_money',$money); //变动余额
         $model->setAttr('mod_intro',$intro); //说明
@@ -134,6 +149,19 @@ class Users extends Base
     //记录余额变动日志
     public static function init()
     {
+        //保存成功后
+        self::event('after_insert',function($model){
+           if(isset($model['type']) && $model['type']==2){ //代理用户
+               $model->proxy_id=$model['id'];
+               $model->save();
+           }
+           if(!empty($model['fuid1'])){
+               //成功邀请用户
+               //创建提示消息
+               UserMessage::recordMsg(1,'成功邀请一位用户','',$model['fuid1']);
+           }
+        });
+
         self::event('after_update', function ($model) {
             $money = $model->getOrigin('money');
             if(isset($model['money']) && $money!=$model['money']){
@@ -213,6 +241,14 @@ class Users extends Base
     }
 
     /*
+     * 我邀请我的人--关联查询
+     * */
+    public function linkMineReq()
+    {
+        return $this->hasMany('Users','fuid1');
+    }
+
+    /*
      * 邀请我的人--关联查询
      * */
     public function linkDirectFuid()
@@ -226,6 +262,14 @@ class Users extends Base
     public function linkMoneyLogs()
     {
         return $this->hasMany('UserMoneyLogs','uid');
+    }
+
+    /*
+     * 贷款记录
+     * */
+    public function linkReqList()
+    {
+        return $this->hasMany('ProductReq','uid');
     }
 
 }

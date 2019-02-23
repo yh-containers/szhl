@@ -4,12 +4,14 @@
 
 {block name="content"}
     <div class="header">
-        <a class="back" href="javascript:history.go(-1)"></a>
+        <a class="back" href="{:url('Index/index')}"></a>
         <div class="search-wrap search-right clearfix">
+            <form>
             <div class="search">
-                <input class="input-text" type="text" name="name" placeholder="请输入产品姓名" id="newinput" autofocus="autofocus">
+                <input class="input-text" type="text" name="keyword" value="{:request()->param('keyword')}" placeholder="请输入产品姓名" id="newinput" autofocus="autofocus">
             </div>
             <button type="submit" class="btn-submit">搜索</button>
+            </form>
         </div>
     </div>    
     <div class="main">
@@ -26,7 +28,7 @@
 <link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
 <script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
 <script>
-    var url = "{:url('Product/showList')}";
+    var url = "{:url('Product/showList',request()->param())}";
     var detail_url = "{:url('Product/detail')}";
     layui.use('flow', function(){
         var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。

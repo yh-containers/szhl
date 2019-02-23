@@ -43,13 +43,15 @@
             <a href="javascript:;"  id="loginBtn" class="btn btn-primary">登　录</a>
             <div class="info clearfix">
                 <a href="{:url('index/forget')}" class="fl">忘记密码？</a>
+                {if(cookie('identity_type')!=2)}
                 <a href="{:url('index/reg')}" class="fr">快速注册</a>
+                {/if}
             </div>            
         </div>
 
         <div class="agreement clearfix">
             <div class="checkbox">
-                <p><input type="checkbox" name="agree" id="agree"><label>我已认真阅读并同意</label><a href="javascript:;" class="on_pop">《中瀚哲服务协议》</a></p>
+                <p><input type="checkbox" name="agree"  checked id="agree"><label>我已认真阅读并同意</label><a href="javascript:;" class="on_pop">《中瀚哲服务协议》</a></p>
             </div>
         </div>
 
@@ -89,12 +91,18 @@
         })
 
         $("#loginBtn").click(function(){
+            var agree = $("input[name='agree']").prop('checked')
             var phone_verify = $("input[name='phone_verify']").val()
             var verify = $("input[name='verify']").val()
             var phone = $("input[name='phone']").val()
             var password = $("input[name='password']").val()
 
             var mode = $("#mode").data('change')
+            if(!agree){
+                alert('请先同意协议')
+                return false;
+            }
+
             var obj={mode:mode}
             if(mode) {
                 //手机号登录

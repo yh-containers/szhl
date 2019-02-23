@@ -93,6 +93,10 @@ class ProductReq extends Base
     {
         if($value){
             $this->setAttr('auth_date_time',time());
+            if($value==1){
+                //已完成
+                $this->setAttr('status',2);
+            }
         }
         return $value;
     }
@@ -104,6 +108,8 @@ class ProductReq extends Base
             $title = '创建申请请求';
             $intro = '创建申请请求';
             $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+            //创建提示消息
+            UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
         });
         //新增完成后触发
         self::event('after_update', function ($model) {
@@ -118,15 +124,21 @@ class ProductReq extends Base
                     ['title'=>$title,'intro'=>$intro],
                     ['title'=>'审批中','intro'=>'请耐心等待，工作人员将尽快与您取得联系'],
                 ]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
             }elseif(isset($model['status']) && $model['status']!=$status && $model['status']==2){
                 $title = '交易完成';
                 $intro = '交易已结束，感谢您的使用';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
 
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
+
             }elseif(isset($model['status']) && $model['status']==$status){
                 $title = '更新资料';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
+
             }
 
             //面谈
@@ -134,16 +146,26 @@ class ProductReq extends Base
                 $title = '面谈完成';
                 $intro = $model['face_content'];
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
             }
             //审核
             if(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==1){
                 $title = '恭喜您通过审核';
                 $intro = $model['auth_content']?$model['auth_content']:'恭喜您通过审核';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
+                //创建提示消息
+                UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'****',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
+
             }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
                 $title = '审核被拒';
                 $intro = $model['auth_content']?$model['auth_content']:'';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
+
             }
         });
     }
@@ -289,4 +311,9 @@ class ProductReq extends Base
 //    {
 //        return $this->belongsTo('Product','pid');
 //    }
+    //关联用户
+    public function linkUsers()
+    {
+        return $this->belongsTo('Users','uid');
+    }
 }

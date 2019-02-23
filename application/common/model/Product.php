@@ -70,7 +70,7 @@ class Product extends Base
     public static function moneyUnit($transform=false)
     {
         if(is_bool($transform)){
-            return ['unit'=>self::$money_unit,'default'=>2,'hide'=>[]];
+            return ['unit'=>self::$money_unit,'default'=>2,'hide'=>[0,1]];
         }
         $transform_per = [1,1000,10000];
         return isset($transform_per[$transform])?$transform_per[$transform]:null;
@@ -85,7 +85,7 @@ class Product extends Base
 
         }
         //只能按月
-        return 1;
+        return 0.01;
     }
 
     //授权期限单位
@@ -98,16 +98,38 @@ class Product extends Base
     {
         //新增完成后触发
         self::event('after_insert', function ($model) {
-            $model->linkLogs()->save(['intro'=>'创建项目','opt_uid'=>app('auth_user_id')]);
+            $model->linkLogs()->save(['intro'=>'创建项目','opt_uid'=>!empty($model['opt_uid'])?$model['opt_uid']:0]);
+            //创建提示消息
+            UserMessage::recordMsg(2,$model['name'],'',0,0,['id'=>$model['id']]);
         });
         //新增完成后触发
         self::event('after_update', function ($model) {
             $status = $model->getOrigin('status');
+            $proxy_id = $model->getOrigin('proxy_id');
             if(isset($model['status']) && $model['status']!=$status){
                 $intro_status = ['','启动项目','禁用项目','冻结项目'];
-                $model->linkLogs()->save(['intro'=>'更新项目:'.$intro_status[$model['status']],'opt_uid'=>app('auth_user_id')]);
-            }else{
-                $model->linkLogs()->save(['intro'=>'更新项目','opt_uid'=>app('auth_user_id')]);
+                $model->linkLogs()->save([
+                    'proxy_id' => $model['proxy_id'],
+                    'intro'=>'更新项目:'.$intro_status[$model['status']],
+                    'opt_uid'=>!empty($model['opt_uid'])?$model['opt_uid']:0
+                ]);
+
+            }elseif (isset($model['proxy_id']) && $model['proxy_id']!=$proxy_id){
+                //项目委派
+                $model->linkLogs()
+                    ->save([
+                        'proxy_id' => $model['proxy_id'],
+                        'intro'=>'项目委派给代理商:用户名'.$model['opt_proxy_name'].PHP_EOL.'手机号:'.$model['opt_proxy_account'],
+                        'opt_uid'=>isset($model['opt_manage_id'])?$model['opt_manage_id']:0
+                    ]);
+
+            }elseif(!empty($model['opt_uid'])){
+                $model->linkLogs()->save([
+                    'proxy_id' => $model['proxy_id'],
+                    'intro'=>'更新项目',
+                    'opt_uid'=>$model['opt_uid']
+                ]);
+
             }
         });
     }
@@ -145,6 +167,30 @@ class Product extends Base
             $data,
             $tip
         ];
+    }
+
+    /*
+     * 产品委托流程
+     * */
+    public function delegate($id,$proxy_id,$opt_id)
+    {
+        empty($id) && abort(4000,'产品信息异常');
+        empty($proxy_id) && abort(4000,'代理商信息异常');
+        //产品信息
+        $model = $this->get($id);
+        //获取代理商信息
+        $model_proxy = new  Manage();
+        $model_proxy = $model_proxy->get($proxy_id);
+        empty($model_proxy) && abort(4000,'代理商信息异常');
+        $model_proxy['proxy_id']==0 && abort(4000,'只有代理商才能接受产品');
+
+        $model->setAttr('id',$id);//id产品
+        $model->setAttr('proxy_id',$proxy_id);//代理商id
+        $model->setAttr('opt_manage_id',$opt_id);//管理员信息id
+        $model->setAttr('opt_proxy_name',$model_proxy['name']);//代理商名、用于记录日志
+        $model->setAttr('opt_proxy_account',$model_proxy['account']);//代理商名、用于记录日志
+        $model->save();
+
     }
 
 

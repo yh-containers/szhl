@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-sm-9">
             <div class="panel panel-primary">
-                <div class="panel-header">用户基本信息</div>
+                <div class="panel-header">产品信息</div>
                 <div class="panel-body pd-5">
                     <table class="layui-table">
                         <colgroup>
@@ -43,7 +43,7 @@
                         </tr>
                         <tr>
                             <td>浏览次数</td>
-                            <td>{$model['view']}%</td>
+                            <td>{$model['view']}</td>
                             <td>申请次数</td>
                             <td>{$model['req_times']}</td>
                             <td></td>
@@ -69,6 +69,9 @@
                 <div class="panel-header">其它操作</div>
                 <div class="panel-body pd-5">
                     <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="change-status">项目状态切换</a>
+                    {if(!$proxy_id)}
+                    <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="delegate">委派项目</a>
+                    {/if}
 
                 </div>
             </div>
@@ -97,33 +100,76 @@
     </div>
 
 </div>
+
+<div class=""  id="delegate-page" style="display: none;">
+    <form class="layui-form" action="">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择代理商</label>
+            <div class="layui-input-block">
+                <select name="proxy_id">
+                    {volist name="proxy_users" id="vo"}
+                    <option value="{$vo['id']}">{$vo['name']}-{$vo['account']}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+    </form>
+
+</div>
 {/block}
 
 {block name="script"}
 <script>
-    $("#change-status").click(function(){
-        var id = $(this).data('id')
-        layer.open({
-            title: '调整项目状态'
-            ,content: '更改项目状态'
-            ,btnAlign: 'r'
-            ,btn: ['启用', '禁用', '冻结', '取消']
-            ,yes: function(index, layero){
-                //按钮【按钮一】的回调
-                $.common.modify("{:url('Product/modifyInfo')}",{status:1,id:id},'是否启用该项目')
-            }
-            ,btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                $.common.modify("{:url('Product/modifyInfo')}",{status:2,id:id},'是否禁用该项目')
-                return false //开启该代码可禁止点击该按钮关闭
-            }
-            ,btn3: function(index, layero){
-                //按钮【按钮二】的回调
-                $.common.modify("{:url('Product/modifyInfo')}",{status:3,id:id},'是否冻结该项目')
-                return false //开启该代码可禁止点击该按钮关闭
-            }
+    layui.use(['form'], function(){
+        var form = layui.form;
+    });
+    $(function(){
+        //项目委派
+        $("#delegate").click(function(){
+            var id = $(this).data('id')
+            layer.open({
+                type: 1
+                ,title: '项目委派'
+                ,content: $("#delegate-page")
+                ,area: ['500px', '300px']
+                ,btn: ['确定','取消']
+                ,yes: function(index, layero){
+                    var proxy_id = $("#delegate-page select[name='proxy_id']").val()
+                    //按钮【按钮一】的回调
+                    $.common.modify("{:url('Product/delegate')}",{proxy_id:proxy_id,id:id},'是否将该产品委派给该代理商')
+                }
+            })
+        })
+
+        //调整项目
+        $("#change-status").click(function(){
+            var id = $(this).data('id')
+            layer.open({
+                title: '调整项目状态'
+                ,content: '更改项目状态'
+                ,btnAlign: 'r'
+                ,btn: ['启用', '禁用', '冻结', '取消']
+                ,yes: function(index, layero){
+                    //按钮【按钮一】的回调
+                    $.common.modify("{:url('Product/modifyInfo')}",{status:1,id:id},'是否启用该项目')
+                }
+                ,btn2: function(index, layero){
+                    //按钮【按钮二】的回调
+                    $.common.modify("{:url('Product/modifyInfo')}",{status:2,id:id},'是否禁用该项目')
+                    return false //开启该代码可禁止点击该按钮关闭
+                }
+                ,btn3: function(index, layero){
+                    //按钮【按钮二】的回调
+                    $.common.modify("{:url('Product/modifyInfo')}",{status:3,id:id},'是否冻结该项目')
+                    return false //开启该代码可禁止点击该按钮关闭
+                }
+            })
         })
     })
+
 
 </script>
 {/block}

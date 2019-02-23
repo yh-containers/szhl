@@ -1,0 +1,29 @@
+{extend name="base"/}
+
+{block name="title"}业务信息{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="{:url('Mine/index')}"></a>
+    <h4>业务信息</h4>
+</div>
+<div class="main">
+    <div class="business">
+        <div class="adv">
+            <img src="/static/index/images/business_img.jpg" alt="" />
+        </div>
+
+        <div class="btn clearfix">
+            <a href="{:url('Proxy/progress')}">
+                <i class="icon"><img src="/static/index/images/business_icon1.png" alt="" /></i>
+                <span>客户进度</span>
+            </a>
+            <a href="{:url('Proxy/client')}">
+                <i class="icon"><img src="/static/index/images/business_icon2.png" alt="" /></i>
+                <span>我推荐的用户</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+{/block}

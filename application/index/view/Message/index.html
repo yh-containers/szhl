@@ -11,36 +11,56 @@
         <div class="message">
             <ul class="clearfix">
                 <li>
-                    <a href="information_news.html">
+                    <a href="{:url('Message/msgArticleList')}">
                         <div class="message_img">
                           <img src="/static/index/images/message01.png">
-                          <span class="badge">1</span>
+                          {if(isset($data[0]) && !empty($data[0]['num']))}
+                            <span class="badge">{$data[0]['num']}</span>
+                          {/if}
                         </div>
                         <div class="message_text">
                             <h2>最新资讯</h2>
-                            <p>贷款资费手续调整，前往一观</p>
+                            <p>
+                                {if(isset($data[0]))}
+                                {$data[0]['intro']}
+                                {/if}
+                            </p>
                         </div>
                     </a>
                 </li>
                 <li>
-                    <a href="information_system.html">
+                    <a href="{:url('Message/msgList',['type'=>1])}">
                         <div class="message_img">
                           <img src="/static/index/images/message02.png">
+                            {if(isset($data[1]) && !empty($data[1]['num']))}
+                            <span class="badge">{$data[1]['num']}</span>
+                            {/if}
                         </div>
                         <div class="message_text">
                             <h2>系统消息</h2>
-                            <p>恭喜您成功加入中瀚哲</p>
+                            <p>
+                                {if(isset($data[1]))}
+                                {$data[1]['intro']}
+                                {/if}
+                            </p>
                         </div>
                     </a>
                 </li>
                 <li>
-                    <a href="information_system.html">
+                    <a href="{:url('Message/msgList',['type'=>2])}">
                         <div class="message_img">
                           <img src="/static/index/images/message03.png">
+                            {if(isset($data[2]) && !empty($data[2]['num']))}
+                            <span class="badge">{$data[2]['num']}</span>
+                            {/if}
                         </div>
                         <div class="message_text">
                             <h2>产品更新</h2>
-                            <p>平安信任贷款产品最新上线啦</p>
+                            <p>
+                                {if(isset($data[2]))}
+                                {$data[2]['intro']}
+                                {/if}
+                            </p>
                         </div>
                     </a>
                 </li>

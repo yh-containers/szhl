@@ -4,47 +4,73 @@ namespace app\index\controller;
 class Index extends Common
 {
     protected $need_login = true;
-    protected $ignore_login_action = 'login,index,reg,forget,sendSms,changeLocation';
+    protected $ignore_login_action = 'identity,login,reg,forget,sendSms,changeLocation';
+
+    //选择身份
+    public function identity()
+    {
+        return view('identity',[
+
+        ]);
+    }
+
     public function index()
     {
         //轮播图
         $flow_image = [];
         //文章列表
         $article_list = [];
+        //滚动消息
+        $flow_msg = [];
         //菜单栏
         $menu = \app\common\model\Product::$type_label;
         //验证当前登录者是那种身份跳转对应页面
         if($this->user_type==1){
 
+            $page = 'home';
         }elseif($this->user_type==2){
 
+            $page = 'proxy';
         }else{
 
-            //轮播图
-            $model_flow_image = new \app\common\model\FlowImage();
-            $flow_image = $model_flow_image->where('status',1)->order('sort','asc')->select();
-            $model_article = new \app\common\model\Article();
-            $article_list = $model_article->order('sort','asc')->limit(3)->select();
 
             $page = 'homeMember';
         }
+        //轮播图
+        $model_flow_image = new \app\common\model\FlowImage();
+        $flow_image = $model_flow_image->where('status',1)->order('sort','asc')->select();
+        $model_article = new \app\common\model\Article();
+        $article_list = $model_article->order('sort','asc')->limit(3)->select();
 
         //热门产品
         $model_product = new \app\common\model\Product();
         $product_list = $model_product->limit(5)->order('is_hot','asc')->select();
-
+        $model_message = new \app\common\model\UserMessage();
+        $flow_msg = $model_message->where('type',3)->order('id','desc')->limit(10)->select();
         return view($page,[
             'user_type' => $this->user_type,
             'product_list' => $product_list,
             'flow_image' => $flow_image,
             'article_list' => $article_list,
             'menu' => $menu,
+            'flow_msg' => $flow_msg,
         ]);
     }
 
     //用户登录
     public function login()
     {
+        if($this->request->has('type')){
+            //处理选择--身份
+            cookie('identity_type',$this->request->param('type',0,'intval'));
+        }
+
+        if(!cookie('?identity_type')){
+            //身份没有选择跳去选择
+            $this->redirect('index/identity');
+        }
+
+
         if($this->request->ISAJAX()){
             $mode = $this->request->param('mode',0,'intval');
             $php_input = $this->request->param();
@@ -147,5 +173,15 @@ class Index extends Common
                 'area_py_f'=>strtoupper($first),
             ],['area_id'=>$location['area_id']]);
         }
+    }
+
+    //借款攻略
+    public function help()
+    {
+        $model = new \app\common\model\Setting();
+        $content = $model->getContent('borrow_money');
+        return view('help',[
+            'content' => $content
+        ]);
     }
 }

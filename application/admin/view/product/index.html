@@ -9,7 +9,9 @@
 
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
     <span class="l">
+		{if(!$proxy_id)}
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("productAdd")}','添加产品')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加产品</a>
+		{/if}
 	</span>
 	</div>
 
@@ -39,7 +41,9 @@
 				<td>{$vo['create_time']}</td>
 				<td>{:$vo::$fields_status[$vo['status']]}</td>
 				<td>
+					{if(!$proxy_id)}
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("productAdd",['id'=>$vo['id']])}','编辑产品')" class="ml-5"> 编辑</a>
+					{/if}
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("productDetail",['id'=>$vo['id']])}','产品详情')" class="ml-5"> 详情</a>
 				</td>
 			</tr>

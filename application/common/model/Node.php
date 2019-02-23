@@ -7,6 +7,12 @@ class Node extends Base
     //关闭时间
     protected $autoWriteTimestamp = false;
 
+
+    public function getUriAttr($value,$data)
+    {
+        return $value?strtolower($value):'';
+    }
+
     //关联查询--平台
     public function linkNode()
     {

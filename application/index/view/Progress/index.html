@@ -53,7 +53,7 @@
                     console.log(res)
                     if(list.length){
                         layui.each(list, function(index, item){
-                            lis.push('<div class="apply_inner_list" id="'+show_class[item.status]+'">\n' +
+                            lis.push('<div class="apply_inner_list" id="'+show_class[item.status_color]+'">\n' +
                                 '                    <a href="'+detail_url+'?id='+item.id+'">\n' +
                                 '                        <div class="module seller">\n' +
                                 '                            <div class="shop-name">\n' +
@@ -69,9 +69,9 @@
                                 '                                </div>\n' +
                                 '                            </div>\n' +
                                 '                            <div class="item_info">\n' +
-                                '                                <div class="info_tag">未放原因</div>\n' +
+                                '                                <div class="info_tag">'+item.status_name+'</div>\n' +
                                 '                                <div class="info_status">\n' +
-                                '                                    <span class="text">不满足贷款条件</span>\n' +
+                                '                                    <span class="text">'+item.status_intro+'</span>\n' +
                                 '                                </div>\n' +
                                 '                                <div class="info_bottom">\n' +
                                 '                                    <span class="amount">申请金额：'+item.money+item.money_unit_name+'</span>\n' +

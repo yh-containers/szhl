@@ -5,8 +5,11 @@ class Req extends Common
 {
     public function index()
     {
+        $where=[];
+        //绑定代理商用户
+        $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         $model = new \app\common\model\ProductReq();
-        $list = $model->paginate();
+        $list = $model->where($where)->paginate();
         return view('index',[
             'list'=>$list,
             'money_unit' => \app\common\model\Product::$money_unit,
@@ -17,9 +20,12 @@ class Req extends Common
     //详情
     public function detail()
     {
+        $where=[];
+        //绑定代理商用户
+        $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         $id = $this->request->param('id',0,'intval');
         $model = new \app\common\model\ProductReq();
-        $model = $model->with(['linkLogs','linkPlan'])->get($id);
+        $model = $model->where($where)->with(['linkLogs','linkPlan'])->get($id);
         return view('detail',[
             'model' =>$model,
             'money_unit' => \app\common\model\Product::$money_unit,

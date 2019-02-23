@@ -6,6 +6,12 @@
 {block name="content"}
 <div class="pd-20">
 	<form class="layui-form" action="">
+
+		<div class="cl  bg-1 bk-gray mb-10 ml-40">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius" lay-submit="" lay-filter="formDemo"><i class="icon-plus"></i> 保存</button>
+				</span>
+		</div>
 		<input type="hidden" name="id" value="{$model['id']}"/>
 		<div class="layui-form-item">
 			<label class="layui-form-label">角色名</label>
@@ -16,15 +22,31 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">权限管理</label>
 			<div class="layui-input-block">
+				{volist name="node" id="vo"}
+				<dl class="permission-list">
+					<dt>
+						<input type="checkbox" name="" value="" title="{$vo['name']}" lay-skin="primary">
 
+					</dt>
+					<dd>
+						{volist name="vo[$with_fields]" id="child"}
+						<dl class="cl permission-list2">
+							<dt>
+								<input type="checkbox" name="node[]" value="{$child['uri']}" title="{$child['name']}" {:strpos($model['node'],$child['uri'])!==false?'checked':''} lay-skin="primary">
+							</dt>
+							<dd>
+								{volist name="child[$with_fields]" id="ch_child"}
+								<input type="checkbox" name="node[]" value="{$ch_child['uri']}" title="{$ch_child['name']}" {:strpos($model['node'],$ch_child['uri'])!==false?'checked':''}  lay-skin="primary">
+								{/volist}
+							</dd>
+						</dl>
+						{/volist}
+					</dd>
+				</dl>
+				{/volist}
 			</div>
 		</div>
 
-		<div class="layui-form-item">
-			<div class="layui-input-block">
-				<button class="layui-btn"  lay-submit lay-filter="formDemo" >立即提交</button>
-			</div>
-		</div>
 	</form>
 </div>
 
@@ -34,9 +56,23 @@
 	//Demo
 	layui.use('form', function(){
 		var form = layui.form;
-
+		form.on('checkbox', function(obj){
+			//当前元素
+			var data = $(obj.elem);
+			var checked_status = data.prop('checked')
+			if(data.parent().is('dt')){
+				if(checked_status){
+					data.parent().next().find("input").prop('checked',checked_status).next().addClass('layui-form-checked')
+				}else{
+					data.parent().next().find("input").prop('checked',checked_status).next().removeClass('layui-form-checked')
+				}
+			}
+		});
 		//监听提交
 		form.on('submit(formDemo)', $.common.formSubmit);
 	});
+
+
+
 </script>
 {/block}

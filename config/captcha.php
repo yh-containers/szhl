@@ -15,7 +15,7 @@
 
 return [
     //验证码的字符集
-    'codeSet' => '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    'codeSet' => '123456789',
     //设置验证码大小
     'fontSize' => 18,
     //添加混淆曲线

@@ -17,4 +17,12 @@ class Article extends Base
         return ['code'=>1,'msg'=>'更新成功','url'=>'article'];
     }
 
+    public static function init()
+    {
+        //新增完成后触发
+        self::event('after_insert', function ($model) {
+            //创建提示消息
+            UserMessage::recordMsg(0,$model['title'],'',0,0,['id'=>$model['id']],$model['id']);
+        });
+    }
 }

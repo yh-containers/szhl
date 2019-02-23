@@ -47,7 +47,7 @@ class System extends Common
         $model = $model->get($id);
         //角色
         $model_role = new \app\common\model\Role();
-        $model_role = $model_role->where('proxy_id',$this->proxy_id)->select();
+        $model_role = $model_role->where([['proxy_id','=',$this->proxy_id],['id','gt',1]])->select();
         return view('manageAdd',[
             'model' => $model,
             'model_role' => $model_role,
@@ -75,7 +75,7 @@ class System extends Common
 
     }
 
-    //管理员添加
+    //角色添加
     public function roleAdd()
     {
         $id = $this->request->param('id');
@@ -84,16 +84,35 @@ class System extends Common
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
-            if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
-            //对应代理商/平台id
-            $php_input['proxy_id'] = $this->proxy_id;
 
             $validate = new \app\common\validate\Role();
             return $model->actionAdd($php_input,$validate);
         }
         $model = $model->get($id);
+
+        //获取菜单栏
+        $model_node = new \app\common\model\Node();
+        //区分代理还是平台
+        $prefix = $this->proxy_id?'proxy_':'platform_';
+        //关联查询
+        $with = $this->proxy_id?'linkNodeProxy':'linkNode';
+        $with_fields = $this->proxy_id?'link_node_proxy':'link_node';
+        $where = [
+            [$prefix.'pid','=',0],
+            [$prefix.'status','=',1],
+        ];
+        $order_field = $prefix.'sort';
+
+        $node = $model_node
+            ->with([$with=>function($query)use($prefix, $order_field,$with){
+            return $query->with([$with=>function($query)use($prefix, $order_field){
+                return $query->where($prefix.'status',1)->order($order_field, 'asc');
+            }])->where($prefix.'status',1)->order($order_field, 'asc');
+        }])->where($where)->order($order_field, 'asc')->select();
         return view('roleAdd',[
             'model' => $model,
+            'node' => $node,
+            'with_fields' => $with_fields,
         ]);
     }
 
@@ -101,6 +120,9 @@ class System extends Common
     public function roleDel()
     {
         $id = $this->request->param('id');
+        if($id==\app\admin\middleware\CheckAuth::$ignore_role_id){
+            return ['code'=>0,'msg'=>'系统指定角色无法删除'];
+        }
         $model = new \app\common\model\Role();
         return $model->actionDel($id,$this->proxy_id);
     }
@@ -112,6 +134,17 @@ class System extends Common
         $model = new \app\common\model\Setting();
         $content = $model->getContent('protocol');
         return view('protocol',[
+            'content'=>$content,
+        ]);
+    }
+
+    //借款攻略
+    public function borrowMoney()
+    {
+
+        $model = new \app\common\model\Setting();
+        $content = $model->getContent('borrow_money');
+        return view('borrowMoney',[
             'content'=>$content,
         ]);
     }

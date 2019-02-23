@@ -8,12 +8,14 @@
 {block name="content"}
 <div class="pd-20 ">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-9">
             <div class="panel panel-primary">
                 <div class="panel-header">用户基本信息</div>
                 <div class="panel-body pd-5">
                     <table class="layui-table">
                         <colgroup>
+                            <col width="70">
+                            <col width="100">
                             <col width="70">
                             <col width="100">
                             <col width="70">
@@ -31,6 +33,8 @@
                             <td>{$model['phone']}</td>
                             <td>用户类型</td>
                             <td>{$model::$fields_type[$model['type']]}</td>
+                            <td></td>
+                            <td><a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.request()->domain().'/index.php/index/login?req_user_id='.$model['id'].'&path='.$model['face']}','二维码')" class="ml-5">二维码</a></td>
                         </tr>
                         <tr>
                             <td>账户余额</td>
@@ -39,8 +43,12 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
+                            <td>邀请者</td>
+                            <td>{:$model['link_direct_fuid']['name']}</td>
                             <td></td>
                             <td></td>
                             <td>创建时间</td>
@@ -53,9 +61,8 @@
                     </table>
                 </div>
             </div>
-
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <div class="panel panel-primary">
                 <div class="panel-header">其它操作</div>
                 <div class="panel-body pd-5">
@@ -64,7 +71,32 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="panel panel-primary">
+                <div class="panel-header">我发展的用户</div>
+                <div class="panel-body pd-5">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <td>用户名</td>
+                            <td>手机号</td>
+                        </tr>
+                        </thead>
 
+                        <tbody>
+                        {volist name="model['linkMineReq']" id="vo"}
+                        <tr>
+                            <td>{$vo['name']}</td>
+                            <td>{$vo['phone']}</td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {/block}
 

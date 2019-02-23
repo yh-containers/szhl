@@ -1,0 +1,50 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}系统管理,服务协议,借款说明{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+    <form class="layui-form" action="settingAction">
+
+        <input type="hidden" name="type" value="borrow_money">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款说明</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" id="demo" style="display: none;" name="content">{$content}</textarea>
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn"  lay-submit lay-filter="formDemo" data-type="content">立即提交</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+
+{/block}
+{block name="script"}
+<script>
+    layui.use(['layedit','form'], function(){
+        var layedit = layui.layedit;
+        var form = layui.form;
+
+        var edit_index = $.common.layerEdit(layedit,'demo')
+        form.on('submit(formDemo)', (obj)=>{
+            obj.field.content=layedit.getContent(edit_index)
+            $.common.formSubmit(obj)
+        });
+
+    });
+
+
+</script>
+{/block}

@@ -1,0 +1,103 @@
+{extend name="base"/}
+
+{block name="title"}首页{/block}
+
+{block name="content"}
+<div class="header">
+    <h4>首页</h4>
+    <a class="icon right service" href="tel:{:widget('PageCrumb/getSettingInfo',['type'=>'company_info','filed'=>'tel'])}"></a>
+</div>
+<div class="main">
+    <div class="banner slider-wrap">
+        <div class="swiper-container swiper-container-banner">
+            <div class="swiper-wrapper">
+                {volist name="flow_image" id="vo"}
+                <div class="swiper-slide">
+                    <a href="javascript:;"><img src="{$vo['img']}" /></a>
+                </div>
+                {/volist}
+            </div>
+            <div class="pagination banner-pagination"></div>
+        </div>
+    </div>
+
+    <div class="nav_list">
+        <a href="{:url('product/index')}" class="item"><img src="/static/index/images/nav-7.png"><span>贷款产品</span></a>
+        <a href="{:url('Proxy/index')}" class="item"><img src="/static/index/images/nav-8.png"><span>业务进度</span></a>
+        <a href="{:url('Index/help')}" class="item"><img src="/static/index/images/nav-9.png"><span>借款攻略</span></a>
+    </div>
+
+    <div class="headline col-radius aui-margin-b-10 clearfix">
+        <div class="headlines_left"><img src="/static/index/images/headlines.png"></div>
+        <div class="headlines_right">
+            <div class="swiper-container swiper-headlines">
+                <ul class="swiper-wrapper">
+                    {volist name="flow_msg" id="vo"}
+                    <li class="swiper-slide swiper-no-swiping">{$vo['content']}</li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-floor">
+        <div class="title_wrap clearfix">
+            <div class="title-left">
+                <img src="/static/index/images/index_icon_hot.png">
+                <span>热门产品</span>
+            </div>
+        </div>
+        <div class="goods-floor">
+            {volist name="product_list" id="vo"}
+            <div class="row {:$vo['is_hot']?'hot':''}">
+                <a href="{:url('product/detail',['id'=>$vo['id']])}">
+                    <div class="goods-info">
+                        <div class="item">
+                            <h4><font><em>{$vo['per']}</em>%</font></h4>
+                            <span>{:$vo::$per_unit[$vo['per_unit']]}利率低至</span>
+                        </div>
+                        <div class="item">
+                            <h4><em>{:$vo['auth_time_end']?$vo['auth_time_end']:$vo['auth_time_start']}</em>个{:$vo::$auth_unit[$vo['auth_unit']]}</h4>
+                            <span>期限长至</span>
+                        </div>
+                        <div class="item">
+                            <h4><em>{:$vo['money_end']?$vo['money_end']:$vo['money_start']}</em>{:$vo::$money_unit[$vo['money_unit']]}</h4>
+                            <span>额度高至</span>
+                        </div>
+                    </div>
+                    <div class="goods-name">
+                        <span class="name">{$vo['name']}</span>
+                        <span class="desc">{$vo['intro']}</span>
+                    </div>
+                </a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+
+</div>
+
+{:widget('PageCrumb/footer')}
+{/block}
+
+{block name="script"}
+<script type="text/javascript" src="/static/index/js/swiper.min.js"></script>
+<script type="text/javascript">
+    // banner
+    var bannerSwiper = new Swiper('.swiper-container-banner', {
+        pagination: '.banner-pagination',
+        autoplay: 5000,
+        loop: true,
+        spaceBetween: 0
+    });
+    //头条
+    var swiper = new Swiper('.swiper-headlines', {
+        direction: 'vertical',
+        loop: true,
+        autoplay: 5000,
+        speed:500,
+        slidesPerView: 1,
+        noSwiping: true,
+    });
+</script>
+{/block}

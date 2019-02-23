@@ -10,7 +10,6 @@
 <div class="header">
     <a class="back" href="javascript:history.go(-1)"></a>
     <h4>我的主页</h4>
-    <a class="right">分享</a>
 </div>
 <div class="main">
     <div class="my_home">
@@ -34,7 +33,7 @@
             </div>
         </div>
         <div class="share_btn">
-            <a href="javascript:;">分享给借款用户</a>
+            <a href="javascript:;" id="share">分享给借款用户</a>
         </div>
     </div>
 </div>
@@ -43,29 +42,46 @@
 {/block}
 {block name="script"}
 <!--引入微信jsapi-->
-{:widget('PageCrumb/wechatJssdkConfig',['url'=>request()->url(true),'jsApiList'=>['updateAppMessageShareData','updateTimelineShareData']])}
+{:widget('PageCrumb/wechatJssdkConfig',['url'=>request()->url(true),'jsApiList'=>['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareQZone']])}
 <script type="text/javascript">
-
+    var share_obj = {
+        title: '{$user_model_info["name"]}邀请您', // 分享标题
+        desc: '邀请您', // 分享描述
+        link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
+        success: function () {
+            // 用户点击了分享后执行的回调函数
+        },
+        cancel: function () {
+            // 用户取消分享后执行的回调函数
+        }
+    }
     wx.ready(function(){
-
-        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-        wx.updateAppMessageShareData({
-            title: '个人主页', // 分享标题
-            desc: '{$user_model_info["name"]}邀请您', // 分享描述
-            link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
-            success: function () {
-                // 设置成功
-            }
-        })
-        wx.updateTimelineShareData({
-            title: '个人主页', // 分享标题
-            link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
-            success: function () {
-                // 设置成功
-            }
-        })
+        //获取“分享到朋友圈”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareTimeline(share_obj)
+        //获取“分享给朋友”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareAppMessage(share_obj);
+        //获取“分享到QQ”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareQQ(share_obj);
+        wx.onMenuShareQZone(share_obj);
+        // // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        // wx.updateAppMessageShareData({
+        //     title: '发起邀请', // 分享标题
+        //     desc: '{$user_model_info["name"]}邀请您', // 分享描述
+        //     link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        //     imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
+        //     success: function () {
+        //         // 设置成功
+        //     }
+        // })
+        // wx.updateTimelineShareData({
+        //     title: '发起邀请', // 分享标题
+        //     link: '{:$req_url}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        //     imgUrl: '{:request()->domain().$user_model_info["face"]}', // 分享图标
+        //     success: function () {
+        //         // 设置成功
+        //     }
+        // })
     });
 
     $(document).ready(function(){

@@ -51,7 +51,7 @@
                 <div class="bd">
                     {volist name="model['condition']" id="vo"}
                     <div class="con">
-                        {$vo['desc']}
+                            {$vo['desc']}
                     </div>
                     {/volist}
 
@@ -93,8 +93,33 @@
 
 {/block}
 {block name="script"}
+<!--引入微信jsapi-->
+{:widget('PageCrumb/wechatJssdkConfig',['url'=>request()->url(true),'jsApiList'=>['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareQZone']])}
 <script type="text/javascript" src="/static/index/js/jquery.SuperSlide.2.1.1.js"></script>
 <script type="text/javascript">
+
+    var share_obj = {
+        title: '{$model["name"]}', // 分享标题
+        desc: '{$model["intro"]}', // 分享描述
+        link: '{:url("",["id"=>$model["id"]],false,true)}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: '{:request()->domain().$model["img"]}', // 分享图标
+        success: function () {
+            // 用户点击了分享后执行的回调函数
+        },
+        cancel: function () {
+            // 用户取消分享后执行的回调函数
+        }
+    }
+    wx.ready(function(){
+        //获取“分享到朋友圈”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareTimeline(share_obj)
+        //获取“分享给朋友”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareAppMessage(share_obj);
+        //获取“分享到QQ”按钮点击状态及自定义分享内容接口（即将废弃）
+        wx.onMenuShareQQ(share_obj);
+        wx.onMenuShareQZone(share_obj);
+    });
+
     jQuery(".goods-claim").slide({mainCell:".bd",trigger:"click"});
 
     $(document).ready(function(){

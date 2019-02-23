@@ -1,0 +1,80 @@
+{extend name="base"/}
+
+{block name="title"}客户进度{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="{:url('proxy/index')}"></a>
+    <h4>客户进度</h4>
+</div>
+<div class="main">
+    <div class="my_progress">
+        <div class="search-wrap search-right clearfix">
+            <form>
+            <div class="search">
+                <input class="input-text" type="text" name="keyword" value="{$keyword}" placeholder="请输入客户姓名" id="newinput" autofocus="autofocus">
+            </div>
+            <button type="submit" class="btn-submit">搜索</button>
+            </form>
+        </div>
+        <div class="client_filters">
+            <ul class="clearfix">
+                <li class="filter">
+                    <span><em>状态</em></span>
+                </li>
+                <li class="client">
+                    <span><em>客户</em></span>
+                </li>
+                <li class="amount">
+                    <span><em>金额（万）</em></span>
+                </li>
+                <li class="date" onclick="window.location.href='{:url("",["order"=>$order])}'">
+                    <span><em>贷款日期</em></span>
+                </li>
+            </ul>
+        </div>
+        <div class="client_inner">
+
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+<script>
+    var url = "{:url('proxy/showProgressList',['keyword'=>$keyword,'order'=>$order])}";
+    layui.use('flow', function(){
+        var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        var show_class = ['verify','success','refuse','discuss']
+        flow.load({
+            elem: '.client_inner' //指定列表容器
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(url+'?page='+page, function(res){
+                    //假设你的列表返回在data集合中
+                    var data = res.data
+                    var list=data.data
+
+                    layui.each(list, function(index, item){
+                        lis.push('<div class="item">\n' +
+                            '                <div class="col-4 status"><span class="tag '+show_class[item.status_color]+'">'+item.status_name+'</span></div>\n' +
+                            '                <div class="col-4 name"><span>'+item.name+'</span></div>\n' +
+                            '                <div class="col-4 amount"><span>'+item.money+'</span></div>\n' +
+                            '                <div class="col-4 date"><span>'+item.create_time+'</span></div>\n' +
+                            '            </div>');
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < data.last_page);
+                });
+            }
+        });
+    });
+</script>
+{/block}

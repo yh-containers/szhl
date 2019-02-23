@@ -19,7 +19,41 @@ class Progress extends Common
         $model = new \app\common\model\ProductReq();
         $where = [];
         !is_null($status) && $where[] = ['status','=',$status];
+        if($status==1){
+            //审批中
+            $where[] = ['status','=',1];
+        }elseif($status==2){
+            //面谈中
+            $where[] =  ['status','=',1];
+            $where[] =  ['face_status','=',1];
+        }elseif($status==3){
+            //已放款
+            $where[] =  ['auth_status','=',1];
+        }elseif($status==4){
+            //已被拒
+            $where[] =  ['auth_status','=',2];
+        }
+        $where[] =['uid','=',$this->user_id];
         $list = $model->where($where)->paginate()->each(function(&$item, $key)use(&$arr){
+            $status_name = '审批中';
+            $status_color = '0';
+            $status_intro = '审核中';
+            if($item['auth_status']==1){
+                $status_name='已通过';
+                $status_color = '1';
+                $status_intro = $item['auth_content']?$item['auth_content']:'已通过';
+
+            }elseif($item['auth_status']==2){
+                $status_name='已拒绝';
+                $status_color = '2';
+                $status_intro = $item['auth_content']?$item['auth_content']:'已拒绝';
+
+            }elseif($item['face_status']==1){
+                $status_name='已面谈';
+                $status_color = '3';
+                $status_intro = $item['face_content']?$item['face_content']:'待审核';
+
+            }
             $item= [
                 'id'        => $item['id'],
                 'no'        => $item['no'],
@@ -31,7 +65,11 @@ class Progress extends Common
                 'money_unit'=>  $item['money_unit'],
                 'money_unit_name'=>  \app\common\model\Product::$money_unit[$item['money_unit']],
                 'status'    => $item['status'],
-                'status_name'=> \app\common\model\ProductReq::$fields_status[$item['status']],
+                'face_status'    => $item['face_status'],
+                'auth_status'    => $item['auth_status'],
+                'status_name'=> $status_name,
+                'status_color'=> $status_color,
+                'status_intro'=> $status_intro,
 
             ];
             return $item;

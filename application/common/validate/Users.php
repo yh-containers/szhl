@@ -21,6 +21,7 @@ class Users extends Validate
         'phone.mobile'      => '请输入正确的手机号码',
         'phone.unique'      => '手机号已被注册',
         'password.require'  => '密码必须输入',
+        'password.requireCallback'  => '密码必须输入',
         'password.min'      => '密码不得低于6位',
         'qr_password.require'=> '请输入确认密码',
         'qr_password.confirm'=> '两次密码不一致',
@@ -39,6 +40,25 @@ class Users extends Validate
             ->append('is_protocol','eq:1')
             ->append('verify','checkVerify:0')
             ;
+    }
+
+
+    public function sceneAdmin_add()
+    {
+        return $this->only(['name','phone','password'])
+            ->remove('password','require')
+            ->append('password','requireCallback:checkPassword')
+            ;
+    }
+
+    /*
+     * 检测用户密码
+     * */
+    public function checkPassword($value, $data)
+    {
+        if(empty($data['id'])){
+            return true;
+        }
     }
 
     /*

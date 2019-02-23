@@ -1,0 +1,95 @@
+{extend name="base"/}
+
+{block name="title"}我推荐的用户{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>我推荐的用户</h4>
+</div>
+<div class="main">
+    <div class="my_progress">
+        <div class="client_count clearfix">
+            <div class="head">
+                <h4>统计数据</h4>
+                <span>推荐总数：<font>{$total_up_number}</font>人</span>
+            </div>
+            <div class="row clearfix">
+                <div class="item">
+                    <div class="text">
+                        <p class="num">{$current_month_up_number}</p>
+                        <span>本月累计</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="text">
+                        <p class="num">{$current_day_up_number}</p>
+                        <span>今日推荐</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="text">
+                        <p class="num">{$req_success_number}</p>
+                        <span>成交数量</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="client_filters">
+            <ul class="clearfix">
+                <li class="">
+                    <span><em>用户姓名</em></span>
+                </li>
+                <li class="">
+                    <span><em>招募时间</em></span>
+                </li>
+                <li class="">
+                    <span><em>放款金额<font>（万）</font></em></span>
+                </li>
+            </ul>
+        </div>
+        <div class="client_inner client_row">
+
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="/static/admin/lib/layui-v2.4.5/css/layui.css">
+<script type="text/javascript" src="/static/admin/lib/layui-v2.4.5/layui.js"></script>
+<script>
+    var url = "{:url('proxy/showClientList')}";
+    layui.use('flow', function(){
+        var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '.client_inner' //指定列表容器
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(url+'?page='+page, function(res){
+                    //假设你的列表返回在data集合中
+                    var data = res.data
+                    var list=data.data
+
+                    layui.each(list, function(index, item){
+                        lis.push('<div class="item">\n' +
+                            '                <div class="col-4 name"><span>'+item.name+'</span></div>\n' +
+                            '                <div class="col-4 date"><span>'+item.create_time+'</span></div>\n' +
+                            '                <div class="col-4 amount"><span>'+item.amount+'</span></div>\n' +
+                            '            </div>');
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < data.last_page);
+                });
+            }
+        });
+    });
+
+</script>
+{/block}
