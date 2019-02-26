@@ -11,6 +11,7 @@
     <div class="search-wrap clearfix">
         <a class="search" href="{:url('Product/search')}" title="搜索放款机构或产品">搜索放款机构或产品</a>
     </div>
+    {if(!request()->param('lid'))}
     <div class="tab_floor">
         <div class="row">
             {volist name="$label_list" id="vo"}
@@ -19,6 +20,7 @@
 
         </div>
     </div>
+    {/if}
     <div class="container-floor">
         <div class="filters-nav-wrap">
             <div class="filters filter">
@@ -128,7 +130,7 @@
 
                     layui.each(list, function(index, item){
                         lis.push('<div class="row '+(item.is_hot?'hot':'')+'">\n' +
-                            '                <a href="'+detail_url+'?id='+item.id+'">\n' +
+                            '                <a href="'+detail_url+'?id='+item.id+'&proxy_pro_id="'+item.proxy_pro_id+'>\n' +
                             '                    <div class="goods-info">\n' +
                             '                        <div class="item">\n' +
                             '                            <h4><font><em>'+item.per+'</em>%</font></h4>\n' +

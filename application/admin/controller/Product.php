@@ -8,8 +8,14 @@ class Product extends Common
         $model = new \app\common\model\Product();
         $where=[];
         //绑定代理商用户
-        $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
-        $list = $model->where($where)->paginate();
+        if($this->proxy_id) {
+            $list = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id)->paginate();
+        }else{
+            $list = $model->where($where)->paginate();
+        }
+
+//        $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
+//        $list = $model->where($where)->paginate();
         return view('index',[
             'list'=>$list,
             'proxy_id'=>$this->proxy_id,
@@ -62,14 +68,18 @@ class Product extends Common
         $proxy_id = $this->proxy_id;
         $where=[];
         //绑定代理商用户
-        $proxy_id && $where[] =['proxy_id','=',$proxy_id];
+        if($proxy_id){
+            $proxy_id && $where[] =['linkProxy.proxy_id','=',$proxy_id];
+            $model = $model->withJoin(['linkProxy'],'left')->where($where);
+        }else{
+            $model = $model->where($where);
+        }
 
-        $model = $model->where($where)->with(['linkLogs'=>function($query)use($proxy_id){
+        $model = $model->with(['linkLogs'=>function($query)use($proxy_id){
             $where=[];
             $proxy_id && $where[] = ['proxy_id','=',$proxy_id];
             return $query->where($where);
         }])->get($id);
-
         //获取所有代理商
         $model_proxy = new \app\common\model\Manage();
         $proxy_users = $model_proxy->where([
@@ -83,13 +93,38 @@ class Product extends Common
         ]);
     }
 
-    //调整用户信息
+    //调整信息
     public function modifyInfo()
     {
         $php_input = $this->request->param();
-        $model = new \app\common\model\Product();
-        $php_input['opt_uid'] = $this->user_id;
-        $state = $model->actionAdd($php_input);
+        $id = $this->request->param('id',0,'intval');
+        $status = $this->request->param('status',1,'intval');
+        if($this->proxy_id){
+            $model = new \app\common\model\ProxyProduct();
+            //查看数据
+            $model = $model->where([
+                ['pid','=',$id],
+                ['proxy_id','=',$this->proxy_id]
+            ])->find();
+            if(empty($model)){
+                return ['code'=>0,'msg'=>'操作信息异常:'];
+            }
+            $state = $model->save(
+                [
+                    'status'=>$status,
+                    'opt_uid'=>$this->user_id
+                ],
+                [
+                    ['pid','=',$id],
+                    ['proxy_id','=',$this->proxy_id]
+                ]
+            );
+        }else{
+            $model = new \app\common\model\Product();
+            $php_input['opt_uid'] = $this->user_id;
+            $state = $model->actionAdd($php_input);
+        }
+
         return ['code'=>(int)$state,'msg'=>$state?'修改成功':'修改异常'];
     }
     public function labels()
@@ -136,10 +171,10 @@ class Product extends Common
     public function delegate()
     {
         $id = $this->request->param('id',0,'intval');
-        $proxy_id = $this->request->param('proxy_id',0,'intval');
+        $proxy = $this->request->param('proxy',0,'intval');
         try{
             $model = new \app\common\model\Product();
-            $model->delegate($id,$proxy_id,$this->user_id);
+            $model->delegate($id,$proxy,$this->user_id);
             return ['code'=>1,'msg'=>'操作成功'];
         }catch (\Exception $e){
             return ['code'=>0,'msg'=>'操作信息'.$e->getMessage()];

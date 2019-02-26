@@ -13,6 +13,7 @@ class Sms extends Base
         ['name'=>'用户注册','class'=>'UserReg','need_verify'=>true],
         ['name'=>'验证码登录','class'=>'UserLogin','need_verify'=>true],
         ['name'=>'忘记密码','class'=>'PwdForget','need_verify'=>true],
+        ['name'=>'申请代理','class'=>'ProxyReq','need_verify'=>true],
     ];
 
     //发送短信验证码

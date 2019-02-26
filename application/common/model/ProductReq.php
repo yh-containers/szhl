@@ -10,6 +10,7 @@ class ProductReq extends Base
     public static $fields_status=['创建请求','创建申请','已完成'];
     public static $fields_face_status=['未面谈','已面谈'];
     public static $fields_auth_status=['未审核','已审核','拒绝'];
+    public static $fields_send_award_status=['未发放','已发放'];
 
     public static $fields_sex = ['未知','男','女'];
     public static $fields_marry = ['未婚','已婚'];
@@ -25,6 +26,7 @@ class ProductReq extends Base
     protected $insert = ['status'=>1,'no'];
     protected $auto=['status'];
     protected $json = ['product_info'];
+
     //设置申请单号
     public function setNoAttr($value)
     {
@@ -74,6 +76,17 @@ class ProductReq extends Base
             $this->setAttr('per_unit',$model['per_unit']);
             $this->setAttr('product_info',$model);
             $this->setAttr('p_tid',$model['type']);//项目类型
+
+            //代理商的产品
+            if(session('?proxy_pro_info')){
+                //邀请代理产品数据
+                $proxy_pro_info = session('proxy_pro_info');
+                $proxy_pro_info_flip = array_flip($proxy_pro_info);
+                if(in_array($value,$proxy_pro_info_flip)){
+                    $this->setAttr('proxy_id',$proxy_pro_info_flip[$value]);
+                }
+            }
+
         }
         return $value;
     }
@@ -89,14 +102,11 @@ class ProductReq extends Base
     }
 
     //面谈属性
-    public function setAuthStatusAttr($value,$data)
+    public function setSendAwardStatusAttr($value,$data)
     {
         if($value){
-            $this->setAttr('auth_date_time',time());
-            if($value==1){
-                //已完成
-                $this->setAttr('status',2);
-            }
+            //已完成
+            $this->setAttr('status',2);
         }
         return $value;
     }
@@ -116,6 +126,7 @@ class ProductReq extends Base
             $status = $model->getOrigin('status');
             $face_status = $model->getOrigin('face_status');
             $auth_status = $model->getOrigin('auth_status');
+            $send_award_status = $model->getOrigin('send_award_status');
             //申请状态更改
             if(isset($model['status']) && $model['status']!=$status && $model['status']==1){
                 $title = '提交申请成功';
@@ -135,10 +146,6 @@ class ProductReq extends Base
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
-            }elseif(isset($model['status']) && $model['status']==$status){
-                $title = '更新资料';
-                $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
-
             }
 
             //面谈
@@ -156,8 +163,6 @@ class ProductReq extends Base
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
-                //创建提示消息
-                UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'****',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
 
             }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
                 $title = '审核被拒';
@@ -165,6 +170,25 @@ class ProductReq extends Base
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
+            }elseif(isset($model['send_award_status']) && $model['send_award_status']!=$send_award_status && $model['send_award_status']==1){
+                $title = '申请额度已发放';
+                $intro = $model['auth_content']?$model['auth_content']:'恭喜您申请额度已发放';
+                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
+                //创建提示消息
+                UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'****',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
+
+            }elseif(isset($model['p_auth_mid']) && $model['p_auth_mid']!=$send_award_status && $model['p_auth_mid']>0){
+                $model_manage = new Manage();
+                $model_manage = $model_manage->get($model['p_auth_mid']);
+                $title = '指派审核员';
+                $intro = '指派审核员:用户名'.$model_manage['name'].'帐号:'.$model_manage['account'];
+                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+
+            }elseif(isset($model['status']) && $model['status']==$status){
+                $title = '更新资料';
+                $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
 
             }
         });
@@ -197,6 +221,28 @@ class ProductReq extends Base
         $model->auth_uid = $user_id;
         $model->auth_status = $auth_status;
         $model->auth_content = $auth_content;
+        $model->auth_time = time();
+
+        $state = $model->save();
+        return $state;
+
+    }
+
+    /*
+     * 发放奖金
+     * @param $id int 申请id
+     * @Param $user_id int 用户id
+     * */
+    public function sendAward($id,$user_id)
+    {
+        $model = $this->get($id);
+        empty($model) && abort(4000,'操作对象异常');
+        $model['auth_status']!=1 && abort(4000,'该申请未通过审核，无法发放奖金');
+        $model['send_award_status']!=0 && abort(4000,'操作对象未处于发放奖励状态,无法进行此操作');
+
+        $model->auth_uid = $user_id;
+        $model->send_award_status = 1;
+        $model->send_award_time = time();
         $state = true;
 
         //获取申请者用户信息
@@ -204,47 +250,43 @@ class ProductReq extends Base
         $model_user = $model_user->get($model['uid']);
         empty($model_user) && abort(4000,'用户信息异常');
         $commission_users = $model_user->getCommissionPer();
-        if($auth_status==1){
-            //通过
-            try{
-                $this->startTrans();
-                //保存数据
-                $model->save();
-                //增加分佣操作
-                $money_unit_transform = Product::moneyUnit($model['money_unit']); //单位换算
-                $commission_money = $model['money']*$money_unit_transform*$model['commission']; //佣金
-                if($commission_users){
-                    $commission_data = [];
-                    foreach($commission_users as $vo){
-                        $commission_data[] = [
-                            'type'  => 1,
-                            'uid'   => $vo['user_id'],
-                            'o_uid' => $model['uid'],
-                            'money' => $commission_money*$vo['per'],
-                            'extra' => [
-                                'id' => $id,
-                                'pid'=> $model['pid'],
-                            ]
-                        ];
-                    }
-                    $model_money_source = new UserMoneySource();
-                    $model_money_source->saveAll($commission_data);
+        //通过
+        try{
+            $this->startTrans();
+            //保存数据
+            $model->save();
+            //增加分佣操作
+            $money_unit_transform = Product::moneyUnit($model['money_unit']); //单位换算
+            $commission_money = $model['money']*$money_unit_transform*$model['commission']; //佣金
+            if($commission_users){
+                $commission_data = [];
+                foreach($commission_users as $vo){
+                    $commission_data[] = [
+                        'type'  => 1,
+                        'uid'   => $vo['user_id'],
+                        'o_uid' => $model['uid'],
+                        'money' => $commission_money*$vo['per'],
+                        'extra' => [
+                            'id' => $id,
+                            'pid'=> $model['pid'],
+                        ]
+                    ];
                 }
-                //按期设置还款计划
-                $model->handlePlan();
-
-                $this->commit();
-                //执行发放奖励
-                Users::sendMoney();
-            }catch (\Exception $e) {
-                $state = '操作异常:'.$e->getMessage();
-                $this->rollback();
-
+                $model_money_source = new UserMoneySource();
+                $model_money_source->saveAll($commission_data);
             }
-        }else{
-            //拒绝
-            $state = $model->save();
+            //按期设置还款计划
+            $model->handlePlan();
+
+            $this->commit();
+            //执行发放奖励
+            Users::sendMoney();
+        }catch (\Exception $e) {
+            $state = '操作异常:'.$e->getMessage();
+            $this->rollback();
+
         }
+
         return $state;
 
     }

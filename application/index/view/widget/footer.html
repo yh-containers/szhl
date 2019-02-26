@@ -6,12 +6,22 @@
                 <div class="tab-label">首页</div>
             </a>
         </div>
+        <!--禁用代理商按钮-->
+        {if(session('user_info.type')==2)}
+        <div class="item {$active=='progress'?'active':''}">
+            <a href="{:url('proxy/progress')}">
+                <div class="icon prog-icon"></div>
+                <div class="tab-label">进度</div>
+            </a>
+        </div>
+        {else/}
         <div class="item {$active=='progress'?'active':''}">
             <a href="{:url('Progress/index')}">
                 <div class="icon prog-icon"></div>
                 <div class="tab-label">进度</div>
             </a>
         </div>
+        {/if}
         <div class="item {$active=='message'?'active':''}">
             <a href="{:url('Message/index')}">
                 <div class="icon mess-icon"></div>

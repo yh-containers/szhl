@@ -81,8 +81,12 @@
 
             <div class="goods-footer">
                 <div class="goods-btn">
+                    {if(session('user_info.type')!=2)}
                     <a href="{:url('Product/flow',['pid'=>$model['id']])}" class="btn btn-next">我要贷款</a>
+                    {/if}
+                    {if(session('user_info.type'))}
                     <a href="javascript:;" class="btn btn-share">邀请贷款</a>
+                    {/if}
                 </div>
             </div>
 
@@ -101,7 +105,7 @@
     var share_obj = {
         title: '{$model["name"]}', // 分享标题
         desc: '{$model["intro"]}', // 分享描述
-        link: '{:url("",["id"=>$model["id"]],false,true)}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        link: '{:url("",["id"=>$model["id"],"req_user_id"=>session("user_info.user_id"),"proxy_pro_id"=>isset($model["link_proxy"])?$model["link_proxy"]["id"]:""],false,true)}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: '{:request()->domain().$model["img"]}', // 分享图标
         success: function () {
             // 用户点击了分享后执行的回调函数

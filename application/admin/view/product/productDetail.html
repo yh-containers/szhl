@@ -4,6 +4,9 @@
 
     .layui-layer-btn .layui-layer-btn1{background: #ff5359;color:#fff}
     .layui-layer-btn .layui-layer-btn2{background: #ff8c3e;color:#fff}
+    .choose-proxy{display: inline-block;font-size: 14px;font-weight: 600;margin: 3px 6px 0 0}
+    .choose-proxy span{display: inline-block;background: #ffba9b;color:#fff;padding: 6px}
+    .choose-proxy i{display: inline-block;background: #ff5359;padding: 6px;color: #fff;float:right}
 </style>
 {/block}
 {block name="content"}
@@ -31,15 +34,15 @@
                             <td></td>
                             <td></td>
                             <td>项目期限</td>
-                            <td>{:$model['auth_time_start'].($model['auth_time_end']?'~'.$model['auth_time_end']:'').'('.$model::$auth_unit[$model['auth_unit']].')'}</td>
+                            <td>{:empty($model)?'':$model['auth_time_start'].($model['auth_time_end']?'~'.$model['auth_time_end']:'').'('.$model::$auth_unit[$model['auth_unit']].')'}</td>
                         </tr>
                         <tr>
                             <td>项目佣金</td>
                             <td>{$model['commission']}%</td>
                             <td>项目利息</td>
-                            <td>{:$model['per'].'('.$model::$per_unit[$model['per_unit']].')'}</td>
+                            <td>{:empty($model)?'':$model['per'].'('.$model::$per_unit[$model['per_unit']].')'}</td>
                             <td>项目额度</td>
-                            <td>{:$model['money_start'].($model['money_end']?'~'.$model['money_end']:'').'('.$model::$money_unit[$model['money_unit']].')'}</td>
+                            <td>{:empty($model)?'':$model['money_start'].($model['money_end']?'~'.$model['money_end']:'').'('.$model::$money_unit[$model['money_unit']].')'}</td>
                         </tr>
                         <tr>
                             <td>浏览次数</td>
@@ -55,7 +58,7 @@
                             <td>更新日期</td>
                             <td>{$model['update_time']}</td>
                             <td>项目状态</td>
-                            <td>{:$model::$fields_status[$model['status']]}</td>
+                            <td>{:empty($model['link_proxy'])?'':$model['link_proxy']::$fields_status[$model['link_proxy']['status']]}</td>
                         </tr>
 
                         </tbody>
@@ -107,12 +110,26 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">选择代理商</label>
-            <div class="layui-input-block">
-                <select name="proxy_id">
+            <div class="layui-input-inline">
+                <select>
                     {volist name="proxy_users" id="vo"}
                     <option value="{$vo['id']}">{$vo['name']}-{$vo['account']}</option>
                     {/volist}
                 </select>
+            </div>
+            <div class="layui-input-inline">
+                <a href="javascript:;" class="layui-btn layui-btn-normal layui-btn-sm" id="choose-proxy">确定选择</a>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">已选代理</label>
+            <div class="layui-input-block" id="proxy-list">
+                <div class="choose-proxy">
+                    <input type="hidden" name="proxy_id[]"/>
+                    <span>xxxxxxxx</span>
+                    <i class="layui-icon layui-icon-close del-proxy"></i>
+                </div>
             </div>
         </div>
 
@@ -134,12 +151,22 @@
                 type: 1
                 ,title: '项目委派'
                 ,content: $("#delegate-page")
-                ,area: ['500px', '300px']
+                ,area: ['600px', '300px']
                 ,btn: ['确定','取消']
                 ,yes: function(index, layero){
-                    var proxy_id = $("#delegate-page select[name='proxy_id']").val()
+                    var proxy = []
+                    $("#delegate-page input[name='proxy_id[]']").each(function(){
+                        proxy.push( $(this).val())
+                    })
+                    // console.log(proxy)
+
+                    if(!proxy.length){
+                        layer.msg('请选择代理商');
+                        return false;
+                    }
+
                     //按钮【按钮一】的回调
-                    $.common.modify("{:url('Product/delegate')}",{proxy_id:proxy_id,id:id},'是否将该产品委派给该代理商')
+                    $.common.modify("{:url('Product/delegate')}",{proxy:proxy,id:id},'是否将该产品委派给代理商')
                 }
             })
         })
@@ -151,7 +178,7 @@
                 title: '调整项目状态'
                 ,content: '更改项目状态'
                 ,btnAlign: 'r'
-                ,btn: ['启用', '禁用', '冻结', '取消']
+                ,btn: ['启用', '禁用',  '取消']
                 ,yes: function(index, layero){
                     //按钮【按钮一】的回调
                     $.common.modify("{:url('Product/modifyInfo')}",{status:1,id:id},'是否启用该项目')
@@ -161,12 +188,27 @@
                     $.common.modify("{:url('Product/modifyInfo')}",{status:2,id:id},'是否禁用该项目')
                     return false //开启该代码可禁止点击该按钮关闭
                 }
-                ,btn3: function(index, layero){
-                    //按钮【按钮二】的回调
-                    $.common.modify("{:url('Product/modifyInfo')}",{status:3,id:id},'是否冻结该项目')
-                    return false //开启该代码可禁止点击该按钮关闭
-                }
+
             })
+        })
+
+        $("#choose-proxy").click(function(){
+            var $this = $(this).parent().parent().find("select");
+            var proxy_id = $this.val()
+            var text = $this.find("option[value='"+proxy_id+"']").text()
+
+            $("#proxy-list").append('<div class="choose-proxy">\n' +
+                '                    <input type="hidden" name="proxy_id[]" value="'+proxy_id+'"/>\n' +
+                '                    <span>'+text+'</span>\n' +
+                '                    <i class="layui-icon layui-icon-close del-proxy"></i>\n' +
+                '                </div>')
+
+
+
+        })
+        //删除代理商
+        $("#delegate-page").on('click','.del-proxy',function(){
+            $(this).parent().remove()
         })
     })
 

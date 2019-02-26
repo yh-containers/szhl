@@ -6,48 +6,72 @@
             <span class="name">短信验证码登录</span>
         </div>
 
-        <div class="login_wrap" id="codelogin">
-            <div class="item">
-                <div class="icon icon1"></div>
-                <div class="mui-input-row">
-                    <input class="phone mui-input-clear" type="tel" name="phone_verify" maxlength="11" placeholder="请输入手机号码"　/>
+        {if(cookie('identity_type')!=2)}
+            <div class="login_wrap" id="codelogin">
+                <div class="item">
+                    <div class="icon icon1"></div>
+                    <div class="mui-input-row">
+                        <input class="phone mui-input-clear" type="tel" name="phone_verify" maxlength="11" placeholder="请输入手机号码"　/>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon2"></div>
+                    <div class="mui-input-row" style="margin-right:100px;">
+                        <input class="phonecode mui-input-clear" type="tel" name="verify" maxlength="6"  placeholder="验证码"　/>
+                    </div>
+                    <button type="button" id="get-verify"  onclick="$.common.sendVerify(this)" data-phone="" data-type="1" class="code">获取验证码</button>
                 </div>
             </div>
-            <div class="item">
-                <div class="icon icon2"></div>
-                <div class="mui-input-row" style="margin-right:100px;">
-                    <input class="phonecode mui-input-clear" type="tel" name="verify" maxlength="6"  placeholder="验证码"　/>
+            <div class="login_wrap" id="namelogin">
+                <div class="item">
+                    <div class="icon icon1"></div>
+                    <div class="mui-input-row">
+                        <input class="username mui-input-clear" type="text" name="phone" maxlength="11" placeholder="请输入手机号码"　/>
+                    </div>
                 </div>
-                <button type="button" id="get-verify"  onclick="$.common.sendVerify(this)" data-phone="" data-type="1" class="code">获取验证码</button>
-            </div>
-        </div>
-        <div class="login_wrap" id="namelogin">
-            <div class="item">
-                <div class="icon icon1"></div>
-                <div class="mui-input-row">
-                    <input class="username mui-input-clear" type="text" name="phone" maxlength="11" placeholder="请输入手机号码"　/>
-                </div>
-            </div>
-            <div class="item">
-                <div class="icon icon2"></div>
-                <div class="mui-input-row">
-                    <input class="password mui-input-clear" type="password" name="password" placeholder="请输入密码"　/>
+                <div class="item">
+                    <div class="icon icon2"></div>
+                    <div class="mui-input-row">
+                        <input class="password mui-input-clear" type="password" name="password" placeholder="请输入密码"　/>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="login_tab">
-            <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="1">账号密码登录</a>
-        </div>
-        
-        <div class="login_footer">
-            <a href="javascript:;"  id="loginBtn" class="btn btn-primary">登　录</a>
-            <div class="info clearfix">
-                <a href="{:url('index/forget')}" class="fl">忘记密码？</a>
-                {if(cookie('identity_type')!=2)}
-                <a href="{:url('index/reg')}" class="fr">快速注册</a>
-                {/if}
-            </div>            
-        </div>
+            <div class="login_tab">
+                <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="1">账号密码登录</a>
+            </div>
+
+            <div class="login_footer">
+                <a href="javascript:;"  id="loginBtn" class="btn btn-primary">登　录</a>
+                <div class="info clearfix">
+                    <a href="{:url('index/forget')}" class="fl">忘记密码？</a>
+                    <a href="{:url('index/reg')}" class="fr">快速注册</a>
+                </div>
+            </div>
+        {else/}
+            <div class="login_wrap">
+                <div class="item">
+                    <div class="icon icon1"></div>
+                    <div class="mui-input-row">
+                        <input class="username mui-input-clear" type="text" name="phone" maxlength="11" placeholder="请输入手机号码"　/>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon2"></div>
+                    <div class="mui-input-row">
+                        <input class="password mui-input-clear" type="password" name="password" placeholder="请输入密码"　/>
+                    </div>
+                </div>
+            </div>
+            <div class="login_tab" style="display:none">
+                <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="0">账号密码登录</a>
+            </div>
+
+            <div class="login_footer">
+                <a href="javascript:;"  id="loginBtn" class="btn btn-primary">登　录</a>
+
+            </div>
+        {/if}
+
 
         <div class="agreement clearfix">
             <div class="checkbox">
@@ -64,22 +88,22 @@
 {block name="script"}
     <script type="text/javascript">
         function changeState(e) {
-            var state = $(e).attr("data-change");
+            var state = $(e).data("change");
             if (state == 1) {
                 $(e).html("短信验证码登录");
-                $(e).attr("data-change", 0);
+                $(e).data("change", 0);
                 $("#namelogin").css("display", "block");
                 $("#codelogin").css("display", "none");
                 $('.name').html("账号密码登录");
             } else {
                 $(e).html("账号密码登录");
-                $(e).attr("data-change", 1);
+                $(e).data("change", 1);
                 $("#namelogin").css("display", "none");
                 $("#codelogin").css("display", "block");
                 $('.name').html("短信验证码登录");
             }
         };
-        $('.on_pop').click(function(){ 
+        $('.on_pop').click(function(){
             $('.pact_pop').show();
         });
         $('.close').click(function(){ 

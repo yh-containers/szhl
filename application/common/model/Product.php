@@ -114,16 +114,18 @@ class Product extends Base
                     'opt_uid'=>!empty($model['opt_uid'])?$model['opt_uid']:0
                 ]);
 
-            }elseif (isset($model['proxy_id']) && $model['proxy_id']!=$proxy_id){
-                //项目委派
-                $model->linkLogs()
-                    ->save([
-                        'proxy_id' => $model['proxy_id'],
-                        'intro'=>'项目委派给代理商:用户名'.$model['opt_proxy_name'].PHP_EOL.'手机号:'.$model['opt_proxy_account'],
-                        'opt_uid'=>isset($model['opt_manage_id'])?$model['opt_manage_id']:0
-                    ]);
-
-            }elseif(!empty($model['opt_uid'])){
+            }
+//            elseif (isset($model['proxy_id']) && $model['proxy_id']!=$proxy_id){
+//                //项目委派
+//                $model->linkLogs()
+//                    ->save([
+//                        'proxy_id' => $model['proxy_id'],
+//                        'intro'=>'项目委派给代理商:用户名'.$model['opt_proxy_name'].PHP_EOL.'手机号:'.$model['opt_proxy_account'],
+//                        'opt_uid'=>isset($model['opt_manage_id'])?$model['opt_manage_id']:0
+//                    ]);
+//
+//            }
+            elseif(!empty($model['opt_uid'])){
                 $model->linkLogs()->save([
                     'proxy_id' => $model['proxy_id'],
                     'intro'=>'更新项目',
@@ -172,25 +174,45 @@ class Product extends Base
     /*
      * 产品委托流程
      * */
-    public function delegate($id,$proxy_id,$opt_id)
+    public function delegate($id,$proxy,$opt_id)
     {
         empty($id) && abort(4000,'产品信息异常');
-        empty($proxy_id) && abort(4000,'代理商信息异常');
+        empty($proxy) && abort(4000,'代理商信息异常');
         //产品信息
         $model = $this->get($id);
-        //获取代理商信息
-        $model_proxy = new  Manage();
-        $model_proxy = $model_proxy->get($proxy_id);
-        empty($model_proxy) && abort(4000,'代理商信息异常');
-        $model_proxy['proxy_id']==0 && abort(4000,'只有代理商才能接受产品');
+        empty($model) && abort(4000,'产品信息异常');
 
-        $model->setAttr('id',$id);//id产品
-        $model->setAttr('proxy_id',$proxy_id);//代理商id
-        $model->setAttr('opt_manage_id',$opt_id);//管理员信息id
-        $model->setAttr('opt_proxy_name',$model_proxy['name']);//代理商名、用于记录日志
-        $model->setAttr('opt_proxy_account',$model_proxy['account']);//代理商名、用于记录日志
-        $model->save();
+        $model_proxy_pro = new ProxyProduct();
+        //已存在的代理商
+        $exist_proxy = $model_proxy_pro->where('pid',$id)->column('proxy_id');
+        $opt_proxy = [];
+        //排除已存在的代理
+        if(is_array($proxy)){
+            $opt_proxy = array_diff($proxy,$exist_proxy);
+        }elseif(!in_array($proxy,$exist_proxy)){
+            $opt_proxy = [$proxy];
+        }
+        $opt_proxy = array_unique($opt_proxy);
 
+        $opt_data = [];
+        foreach($opt_proxy as $vo){
+            $opt_data[] = [
+                'proxy_id'  =>  $vo,
+                'pid'       =>  $id,
+            ];
+        }
+        //保存所有数据
+        $model_proxy_pro->saveAll($opt_data);
+
+        //项目委派-增加日志
+        $model->linkLogs()
+            ->save([
+                'proxy_id' => $model['proxy_id'],
+                'intro'=>'项目委派给代理商',
+                'opt_uid'=>$opt_id
+            ]);
+
+        return true;
     }
 
 
@@ -198,5 +220,11 @@ class Product extends Base
     public function linkLogs()
     {
         return $this->hasMany('ProductLogs','pid')->order('id','desc');
+    }
+
+    //关联代理商--一条数据
+    public function linkProxy()
+    {
+        return $this->hasOne('ProxyProduct','pid');
     }
 }

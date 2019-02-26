@@ -103,9 +103,16 @@ class Product extends Common
                 is_numeric($vo) && $vo>0 && $where[] =['','EXP',\think\Db::raw("FIND_IN_SET($vo,labels)")];
             }
         }
+        //代理
+        if($this->user_type==2){
+            $model = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
+        }
+
+
         $list = $model->where($where)->paginate()->each(function(&$item, $key){
             $item= [
                 'id' => $item['id'],
+                'proxy_pro_id' => isset($item['link_proxy'])?$item['link_proxy']['id']:0,//代理产品id
                 'name' => $item['name'],
                 'per' => $item['per'],
                 'per_unit' => \app\common\model\Product::$per_unit[$item['per_unit']],
@@ -131,8 +138,13 @@ class Product extends Common
     {
         $id = $this->request->param('id',0,'intval');
         $model = new \app\common\model\Product();
+        //代理
+        if($this->user_type==2){
+            $model = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
+        }
+
         $model = $model->get($id);
-        $model && $model->setInc('view');
+        $model && $model->setInc('view');//新增浏览次数
         return view('detail',[
             'model' => $model,
         ]);

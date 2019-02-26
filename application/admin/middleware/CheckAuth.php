@@ -23,7 +23,6 @@ class CheckAuth
 //        dump($this->user_id);
 //        dump($this->role_id);
 //        exit;
-        $response = $next($request);
         if(!$this->proxy_id && $this->user_id && !in_array($this->role_id,self::$ignore_role_id)){
             $controller = $request->controller();
             $action = $request->action();
@@ -32,15 +31,15 @@ class CheckAuth
                 //验证权限问题
                 $nodes = $this->_getNode();
                 if(strpos($nodes,$current_action)===false){
-                    if($request->isAJAX){
-                        return json(['code'=>0,'msg'=>'你无权操作']);
+                    if($request->isAJAX()){
+                        return response(['code'=>0,'msg'=>'你无权操作'],200,[],'json');
                     }else{
                         return response('你无权访问');
                     }
                 }
             }
         }
-        return $response;
+        return $next($request);
     }
 
     //获取当前登录权限节点

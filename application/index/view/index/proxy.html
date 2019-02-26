@@ -50,7 +50,7 @@
         <div class="goods-floor">
             {volist name="product_list" id="vo"}
             <div class="row {:$vo['is_hot']?'hot':''}">
-                <a href="{:url('product/detail',['id'=>$vo['id']])}">
+                <a href="{:url('product/detail',['id'=>$vo['id'],'proxy_pro_id'=>isset($vo['link_proxy'])?$vo['link_proxy']['id']:0])}">
                     <div class="goods-info">
                         <div class="item">
                             <h4><font><em>{$vo['per']}</em>%</font></h4>

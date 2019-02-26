@@ -3,6 +3,7 @@ namespace app\index\controller;
 
 class Progress extends Common
 {
+    protected $need_login = true;
     //列表
     public function index()
     {
@@ -34,7 +35,7 @@ class Progress extends Common
             $where[] =  ['auth_status','=',2];
         }
         $where[] =['uid','=',$this->user_id];
-        $list = $model->where($where)->paginate()->each(function(&$item, $key)use(&$arr){
+        $list = $model->where($where)->where('status','gt',0)->paginate()->each(function(&$item, $key)use(&$arr){
             $status_name = '审批中';
             $status_color = '0';
             $status_intro = '审核中';

@@ -29,7 +29,7 @@ class Mine extends Common
     public function index()
     {
         return view('index',[
-            'user_model_info' => $this->user_model_info
+            'user_model_info' => $this->user_model_info,
         ]);
     }
 
@@ -125,7 +125,7 @@ class Mine extends Common
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
 //            ->setLabel('Scan the code', 16, $resource_path.'/assets/noto_sans.otf', LabelAlignment::CENTER)
 //            ->setLogoPath($resource_path.'/assets/symfony.png')
-            ->setLogoWidth(150)
+            ->setLogoWidth(100)
             ->setValidateResult(false)
         ;
         $root_path = str_replace('\\','/',\Env::get('root_path'));

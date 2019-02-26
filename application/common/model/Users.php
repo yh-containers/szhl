@@ -6,7 +6,7 @@ class Users extends Base
 {
     protected $name='users';
 
-    protected $insert = ['face'=>'/uploads/face/toux.png','type','fuid1'];
+    protected $insert = ['face'=>'/uploads/face/toux.png','type','fuid1','proxy_id','name'];
     protected $auto = ['join_time'];
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
@@ -15,16 +15,33 @@ class Users extends Base
     public function setFuid1Attr($value,$data)
     {
         //判断是否有邀请者
-        if(cookie('?req_user_id')){
+        if(session('?req_user_id')){
             //查看邀请者的邀请者
             $model = new self();
-            $value=cookie('req_user_id');
+            $value=session('req_user_id');
             $fuid2 = $model->where('id',$value)->value('fuid1',0);
             $this->setAttr('fuid2',$fuid2);
         }
 
         return $value;
     }
+
+    //设置用户类型
+    public function setNameAttr($value,$data)
+    {
+        if(empty($value) && !empty($data['phone'])){
+            $value = substr($data['phone'],-4).'用户';
+        }
+        return $value;
+    }
+
+    //设置用户类型
+    public function setProxyIdAttr($value,$data)
+    {
+
+        return $value?$value:0;
+    }
+
 
     //设置用户类型
     public function setTypeAttr($value,$data)
@@ -125,6 +142,7 @@ class Users extends Base
             session($session_name,[
                 'user_id' => $this->getData('id'),
                 'type' => $this->getData('type'),
+                'proxy_id' => $this->getData('proxy_id'),
             ]);
         }
 

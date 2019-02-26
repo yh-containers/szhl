@@ -4,6 +4,7 @@ namespace app\index\controller;
 class Proxy extends Common
 {
     protected $need_login = true;
+    protected $ignore_login_action = 'req';
     //列表
     public function index()
     {
@@ -117,5 +118,21 @@ class Proxy extends Common
                 return $item;
             });
         return ['code'=>1,'msg'=>'获取成功','data'=>$list];
+    }
+
+    //代理申请
+    public function req()
+    {
+        if($this->request->isAjax()){
+            $model = new \app\common\model\ProxyReq();
+            $php_input = $this->request->param();
+            $php_input['uid']= $this->user_id;
+            $validate = new \app\common\validate\ProxyReq();
+            $result=$model->actionAdd($php_input,$validate);
+            return ['code'=>$result['code'],'msg'=>$result['code']?'申请成功,请耐心等待审核':$result['msg'],'url'=>url('Index/index')];
+        }
+        return view('req',[
+
+        ]);
     }
 }

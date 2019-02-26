@@ -15,7 +15,7 @@
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 		<tr class="text-c">
-			<th width="80">序号</th>
+			<th width="20">序号</th>
 			<th width="100">申请编号</th>
 			<th width="100">项目名称</th>
 			<th width="100">申请用户</th>
@@ -23,7 +23,7 @@
 			<th width="100">申请额度</th>
 			<th width="100">贷款期限</th>
 			<th width="130">申请日期</th>
-			<th width="70">状态</th>
+			<th width="130">状态</th>
 			<th width="100">操作</th>
 		</tr>
 		</thead>
@@ -38,9 +38,12 @@
 				<td>{$vo['money']}{:$money_unit[$vo['money_unit']]}</td>
 				<td>{$vo['auth_time']}{:$auth_unit[$vo['auth_unit']]}</td>
 				<td>{$vo['create_time']}</td>
-				<td>{:$vo::$fields_status[$vo['status']].','.$vo::$fields_face_status[$vo['face_status']].','.$vo::$fields_auth_status[$vo['auth_status']]}</td>
+				<td>{:$vo::$fields_status[$vo['status']].','.$vo::$fields_face_status[$vo['face_status']].','.$vo::$fields_auth_status[$vo['auth_status']].','.$vo::$fields_send_award_status[$vo['send_award_status']]}</td>
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("detail",['id'=>$vo['id']])}','申请详情')" class="ml-5"> 详情</a>
+					{if(!session('admin_user_info.proxy_id'))}
+					<a href="javascript:;"  class="ml-5 opt-pointer" data-id="{$vo['id']}"> 分配</a>
+					{/if}
 				</td>
 			</tr>
 		{/volist}
@@ -48,5 +51,55 @@
 	</table>
 	{$list|raw}
 </div>
+<div class="pd-20"  id="handle-pointer" style="display: none">
+	<form class="layui-form" action="">
+		<div class="row">
+			<div class="layui-form-item">
 
+				<div class="layui-form-item">
+					<label class="layui-form-label">选择业务员</label>
+					<div class="layui-input-inline">
+						<select name="p_auth_mid">
+							{volist name="manage_list" id="vo"}
+							<option value="{$vo['id']}">{$vo['name']}-{$vo['account']}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</div>
+{/block}
+
+{block name="script"}
+<script>
+	layui.use(['form'], function(){
+		var form = layui.form;
+	});
+	//指派人员
+	$(".opt-pointer").click(function(){
+		var id = $(this).data('id')
+		layer.open({
+			title: '审核指派'
+			,type: 1
+			,content: $("#handle-pointer")
+			,area: ['500px', '300px']
+			,btn: ['确定', '取消']
+			,yes: function(index, layero){
+				//按钮【按钮一】的回调
+				var p_auth_mid = $("#handle-pointer select[name='p_auth_mid']").val()
+				$.common.modify("{:url('Req/pointManager')}",{p_auth_mid:p_auth_mid,id:id},'是否指派?')
+			}
+			,success: function (layero) {
+				var btn0 = layero.find('.layui-layer-btn0');
+				var btn1 = layero.find('.layui-layer-btn1');
+				btn1.css('background', '#ff5359');
+				btn1.css('border', 'none');
+				btn1.css('color', '#fff');
+			}
+		})
+	})
+</script>
 {/block}

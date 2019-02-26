@@ -1,0 +1,76 @@
+{extend name="base"/}
+
+{block name="title"}业务信息{/block}
+{block name="style"}
+<style>
+    body {background-color: #ff8700;}
+</style>
+{/block}
+{block name="content"}
+<div class="container">
+    <img src="/static/index/images/agent_banner.jpg" alt="" />
+    <div class="form">
+        <input type="tel" class="tel" id="mobile" name="phone" value="" placeholder="请输入您的手机号码" maxlength="11">
+        <div class="code-box">
+            <input type="tel" class="code" id="code" name="verify" value="" placeholder="短信验证码" maxlength="6">
+            <button type="button" id="get-verify" class="code btn-send"  onclick="$.common.sendVerify(this)" data-phone="" data-type="3" >获取验证码</button>
+        </div>
+        <button id="req-btn" class="btn code">申请成为代理商</button>
+
+        <div class="agreement clearfix">
+            <div class="checkbox">
+                <p><input type="checkbox" name="agree" id="agree" checked /><label>我已认真阅读并同意</label><a href="javascript:;" class="on_pop">《中瀚哲服务协议》</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="agent_process">
+        <img src="/static/index/images/agent_process.png" alt="" />
+    </div>
+</div>
+<!--《中瀚哲服务协议》-->
+{:widget('PageCrumb/serviceProtocol')}
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+
+    $('.on_pop').click(function(){
+        $('.pact_pop').show();
+    });
+    $('.close').click(function(){
+        $('.pact_pop').hide();
+    });
+
+    $("input[name='phone']").change(function(){
+        $("#get-verify").data('phone',$(this).val())
+    })
+
+    $("#req-btn").click(function(){
+        var agree = $("input[name='agree']").prop('checked')
+        var verify = $("input[name='verify']").val()
+        var phone = $("input[name='phone']").val()
+
+        if(!agree){
+            alert('请先同意协议')
+            return false;
+        }
+
+        var obj={}
+
+        //帐号密码登录
+        obj.phone=phone;
+        obj.verify=verify;
+
+        $.post("{:url('')}",obj,function(result){
+            console.log(result)
+            alert(result.msg)
+            if(result.code==1){
+                setTimeout(function(){window.location.href=result.url},1000)
+            }
+        })
+
+    })
+
+</script>
+{/block}
+

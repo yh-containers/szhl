@@ -1,0 +1,90 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}代理商管理,代理员申请列表{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+	</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+		<tr class="text-c">
+			<th width="80">序号</th>
+			<th width="100">手机号码</th>
+			<th width="130">创建时间</th>
+			<th width="70">状态</th>
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>{$i}</td>
+				<td>{$vo['phone']}</td>
+				<td>{:$vo['create_time']}</td>
+				<td>{:$vo::$fields_status[$vo['status']]}</td>
+				<td>
+					<a href="javascript:;" class="handle-auth" data-id="{$vo['id']}">处理</a>
+				</td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list|raw}
+</div>
+<div class="pd-20"  id="handle-auth" style="display: none">
+	<div class="row">
+		<div class="layui-form-item">
+			<textarea  name="content" rows="6"  placeholder="请输入审核内容" class="layui-textarea"></textarea>
+		</div>
+	</div>
+
+</div>
+{/block}
+
+
+{block name="script"}
+<script>
+	layui.use(['layer','form'], function(){
+		var form = layui.form;
+		var layer = layui.layer;
+		//调用示例
+		layer.photos({
+			photos: '#layer-photos-demo'
+			,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+		});
+
+	});
+
+	//处理提现信息
+	$(".handle-auth").click(function(){
+		var id = $(this).data('id')
+		layer.open({
+			title: '处理审核记录'
+			,type: 1
+			,content: $("#handle-auth")
+			,btn: ['确定','取消']
+			,area: ['500px', '300px']
+			,yes: function(index, layero){
+				//按钮【按钮一】的回调
+				var content = $("#handle-auth textarea[name='content']").val()
+				$.common.modify("{:url('User/handleProxyReq')}",{handle_intro:content,status:2,id:id},'是否提交审核信息')
+			}
+			,success: function (layero) {
+				var btn0 = layero.find('.layui-layer-btn0');
+				var btn1 = layero.find('.layui-layer-btn1');
+				btn1.css('background', '#ff5359');
+				btn1.css('border', 'none');
+				btn1.css('color', '#fff');
+			}
+		})
+	})
+
+</script>
+{/block}

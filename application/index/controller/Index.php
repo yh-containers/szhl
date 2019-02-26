@@ -24,12 +24,15 @@ class Index extends Common
         $flow_msg = [];
         //菜单栏
         $menu = \app\common\model\Product::$type_label;
+        //热门产品
+        $model_product = new \app\common\model\Product();
+
         //验证当前登录者是那种身份跳转对应页面
         if($this->user_type==1){
 
             $page = 'home';
         }elseif($this->user_type==2){
-
+            $model_product = $model_product->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
             $page = 'proxy';
         }else{
 
@@ -42,9 +45,9 @@ class Index extends Common
         $model_article = new \app\common\model\Article();
         $article_list = $model_article->order('sort','asc')->limit(3)->select();
 
-        //热门产品
-        $model_product = new \app\common\model\Product();
+
         $product_list = $model_product->limit(5)->order('is_hot','asc')->select();
+        //文章
         $model_message = new \app\common\model\UserMessage();
         $flow_msg = $model_message->where('type',3)->order('id','desc')->limit(10)->select();
         return view($page,[

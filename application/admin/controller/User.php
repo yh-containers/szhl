@@ -102,7 +102,8 @@ class User extends Common
             if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
             //对应代理商/平台id
             $php_input['proxy_id'] = $this->proxy_id;
-
+            $php_input['type'] = $type;
+//            dump($php_input);exit;
             $validate = new \app\common\validate\Users();
             $validate->scene(self::SCENE.'_add');
             return $model->actionAdd($php_input,$validate);
@@ -139,5 +140,30 @@ class User extends Common
         ]);
     }
 
+
+    //代理商申请
+    public function proxyReq()
+    {
+        $model = new \app\common\model\ProxyReq();
+        $list = $model->paginate();
+        return view('proxyReq',[
+            'list'=>$list,
+        ]);
+    }
+
+    //代理审核处理
+    public function handleProxyReq()
+    {
+        $id = $this->request->param('id',0,'intval');
+        $php_input = $this->request->param();
+        try{
+            $php_input['opt_uid'] = $this->user_id;
+            $model = new \app\common\model\ProxyReq();
+            $model->handleReq($id,$php_input);
+            return ['code'=>1,'msg'=>'操作成功'];
+        }catch (\Exception $e){
+            return ['code'=>0,'msg'=>'操作异常:'.$e->getMessage()];
+        }
+    }
 
 }

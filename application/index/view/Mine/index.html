@@ -12,9 +12,10 @@
                 <a href="{:url('Mine/personal')}">
                     <div class="avatar"><img src="{:$user_model_info['face']}"></div>
                     <div class="name">{$user_model_info['name']}</div>
-                    <div class="identity">合作方-CR</div>
+                    <div class="identity">{:$user_model_info?$user_model_info::$fields_type[$user_model_info['type']]:''}</div>
                 </a>
             </div>
+            {if(session('user_info.type'))}
             <div class="menber_income">
                 <a href="{:url('Mine/myIncome')}">
                     <span>我的收益(元)</span>
@@ -28,8 +29,11 @@
                     <span>我的主页</span>
                 </a>
             </div>
+            {/if}
             <ul>
+                {if(session('user_info.type')!=2)}
                 <li><a href="{:url('Mine/loan')}"><i class="icon iconfont icon-daikuan"></i><span>我的借款</span></a></li>
+                {/if}
                 <li><a href="{:url('Mine/about')}"><i class="icon iconfont icon-guanyu"></i><span>关于中瀚哲</span></a></li>
                 <li><a href="{:url('article/index')}"><i class="icon iconfont icon-laba"></i><span>媒体报道</span></a></li>
                 <li><a href="{:url('Mine/suggest')}"><i class="icon iconfont icon-yijianfankui"></i><span>意见反馈</span></a></li>

@@ -45,7 +45,7 @@
                     console.log(res)
                     layui.each(list, function(index, item){
                         lis.push('<div class="row '+(item.is_hot?'hot':'')+'">\n' +
-                            '                <a href="'+detail_url+'?id='+item.id+'">\n' +
+                            '                <a href="'+detail_url+'?id='+item.id+'&proxy_pro_id="'+item.proxy_pro_id+'">\n' +
                             '                    <div class="goods-info">\n' +
                             '                        <div class="item">\n' +
                             '                            <h4><font><em>'+item.per+'</em>%</font></h4>\n' +
