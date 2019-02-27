@@ -100,10 +100,11 @@ class User extends Common
         if($this->request->isAjax()){
             $php_input = $this->request->param();
             if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
-            //对应代理商/平台id
-            $php_input['proxy_id'] = $this->proxy_id;
-            $php_input['type'] = $type;
-//            dump($php_input);exit;
+            //对应代理商/平台id--编辑无法修改用户原有属性
+            if(empty($php_input['id'])){
+                $php_input['proxy_id'] = $this->proxy_id;
+                $php_input['type'] = $type;
+            }
             $validate = new \app\common\validate\Users();
             $validate->scene(self::SCENE.'_add');
             return $model->actionAdd($php_input,$validate);

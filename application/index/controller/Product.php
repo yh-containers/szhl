@@ -29,10 +29,10 @@ class Product extends Common
      * */
     public function showList()
     {
-
+        $where =[];
         $model = new \app\common\model\Product();
 
-        $type = $this->request->param('type',1,'intval');
+        $type = $this->request->param('type',0,'intval');
         //产品labels属性
         $lid = $this->request->param('lid');
         $lid = explode(',',$lid);
@@ -90,14 +90,14 @@ class Product extends Common
             }
         }
         //按类型查询
-        $where[] = [
-            ['type','=',$type],
-        ];
+        $type && $where[] = ['type','=',$type];
+
 
         //关键字
         $keyword = $this->request->param('keyword','','trim');
         if($keyword){
-            $where[] = ['name','like','%'.$keyword.'%'];
+            $keyword = iconv('gbk','utf-8',$keyword);
+            $keyword && $where[] = ['name','like','%'.$keyword.'%'];
         }
 
         if($lid){

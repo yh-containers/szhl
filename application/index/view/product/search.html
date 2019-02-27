@@ -52,11 +52,11 @@
                             '                            <span>'+item.per_unit+'利率低至</span>\n' +
                             '                        </div>\n' +
                             '                        <div class="item">\n' +
-                            '                            <h4><em>'+item.auth_time_start+(item.auth_time_end?'-'+item.auth_time_end:'')+'</em>个'+item.auth_unit+'</h4>\n' +
+                            '                            <h4><em>'+(item.auth_time_end?item.auth_time_end:item.auth_time_start)+'</em>个'+item.auth_unit+'</h4>\n' +
                             '                            <span>期限长至</span>\n' +
                             '                        </div>\n' +
                             '                        <div class="item">\n' +
-                            '                            <h4><em>'+item.money_start+(item.money_end?'-'+item.money_end:'')+'</em>'+item.money_unit+'</h4>\n' +
+                            '                            <h4><em>'+(item.money_end?item.money_end:item.money_start)+'</em>'+item.money_unit+'</h4>\n' +
                             '                            <span>额度高至</span>\n' +
                             '                        </div>\n' +
                             '                    </div>\n' +
