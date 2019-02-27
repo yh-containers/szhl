@@ -49,7 +49,7 @@
     layui.use('flow', function(){
         var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
         var flow = layui.flow;
-        var show_class = ['verify','success','refuse','discuss']
+        var show_class = ['verify','success','refuse','discuss','verify']
         flow.load({
             elem: '.client_inner' //指定列表容器
             ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页

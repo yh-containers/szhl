@@ -133,7 +133,7 @@ class ProductReq extends Base
                 $intro = '申请额度'.$model['money'].Product::$money_unit[$model['money_unit']].',期限'.$model['auth_time'].Product::$auth_unit[$model['auth_unit']];
                 $model->linkLogs()->saveAll([
                     ['title'=>$title,'intro'=>$intro],
-                    ['title'=>'审批中','intro'=>'请耐心等待，工作人员将尽快与您取得联系'],
+                    ['title'=>'审批中','intro'=>'您的贷款申请已提交成功！'],
                 ]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
@@ -159,20 +159,20 @@ class ProductReq extends Base
             //审核
             if(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==1){
                 $title = '恭喜您通过审核';
-                $intro = $model['auth_content']?$model['auth_content']:'恭喜您通过审核';
+                $intro = $model['auth_content']?$model['auth_content']:'您的贷款申请已审核通过，客服人员将与你预约面谈';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
             }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
                 $title = '审核被拒';
-                $intro = $model['auth_content']?$model['auth_content']:'';
+                $intro = $model['auth_content']?$model['auth_content']:'非常抱歉，您申请的贷款未功款成功！';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
             }elseif(isset($model['send_award_status']) && $model['send_award_status']!=$send_award_status && $model['send_award_status']==1){
                 $title = '申请额度已发放';
-                $intro = $model['auth_content']?$model['auth_content']:'恭喜您申请额度已发放';
+                $intro = $model['auth_content']?$model['auth_content']:'恭喜您，您申请的贷款已成功放款！';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
@@ -180,15 +180,15 @@ class ProductReq extends Base
                 UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'****',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
 
             }elseif(isset($model['p_auth_mid']) && $model['p_auth_mid']!=$send_award_status && $model['p_auth_mid']>0){
-                $model_manage = new Manage();
-                $model_manage = $model_manage->get($model['p_auth_mid']);
-                $title = '指派审核员';
-                $intro = '指派审核员:用户名'.$model_manage['name'].'帐号:'.$model_manage['account'];
-                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+//                $model_manage = new Manage();
+//                $model_manage = $model_manage->get($model['p_auth_mid']);
+//                $title = '指派审核员';
+//                $intro = '指派审核员:用户名'.$model_manage['name'].'帐号:'.$model_manage['account'];
+//                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
 
             }elseif(isset($model['status']) && $model['status']==$status){
-                $title = '更新资料';
-                $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
+//                $title = '更新资料';
+//                $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
 
             }
         });
@@ -221,7 +221,6 @@ class ProductReq extends Base
         $model->auth_uid = $user_id;
         $model->auth_status = $auth_status;
         $model->auth_content = $auth_content;
-        $model->auth_time = time();
 
         $state = $model->save();
         return $state;
@@ -257,7 +256,7 @@ class ProductReq extends Base
             $model->save();
             //增加分佣操作
             $money_unit_transform = Product::moneyUnit($model['money_unit']); //单位换算
-            $commission_money = $model['money']*$money_unit_transform*$model['commission']; //佣金
+            $commission_money = $model['money']*$money_unit_transform*$model['commission']*0.01; //佣金
             if($commission_users){
                 $commission_data = [];
                 foreach($commission_users as $vo){
@@ -336,6 +335,29 @@ class ProductReq extends Base
         }
         return false;
     }
+
+    //获取产品状态
+    public function getStatusInfo()
+    {
+        $status_info = [1,'创建申请',''];
+        if($this['auth_status']==2){
+            $status_info = [2,'审核被拒',$this['auth_content']?$this['auth_content']:'审核被拒'];
+
+        }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==0){
+            $status_info = [3,'未发款','未发款'];
+
+        }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==1){
+            $status_info = [4,'已放款','已放款'];
+
+        }elseif($this['face_status']==0){
+            $status_info = [5,'面谈中',$this['auth_content']?$this['auth_content']:'面谈中'];
+
+        }
+
+        return $status_info;
+    }
+
+
 
     //关联日志
     public function linkLogs()

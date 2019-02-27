@@ -59,7 +59,7 @@
             <div class="panel panel-primary">
                 <div class="panel-header">其它操作</div>
                 <div class="panel-body">
-                    {if(!session('admin_user_info.proxy_id'))}
+                    {if(!session('admin_user_info.proxy_id') && empty($model['p_auth_mid']))}
                         <a href="javascript:;"  class="layui-btn mb-5" data-id="{$model['id']}" id="opt-pointer">分配业务员</a>
                     {/if}
 
@@ -70,7 +70,7 @@
                         <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="face-info">面谈资料</a>
 
                     {elseif($model['auth_status']==1 && $model['face_status'] && !$model['send_award_status'])/}
-                        <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="send-award">发放金额</a>
+                        <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="send-award">放款</a>
 
                     {/if}
 
@@ -391,9 +391,7 @@
 
     $("#send-award").click(function(){
         var id = $(this).data('id')
-        layer.confirm('是否发放奖金',function(){
-            $.common.modify("{:url('Req/sendAward')}",{id:id},'是否发放奖金')
-        })
+        $.common.confirm("{:url('Req/sendAward')}",{id:id},'是否放款?')
     })
 
 </script>

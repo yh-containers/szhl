@@ -6,6 +6,33 @@ class Req extends Common
     public function index()
     {
         $where=[];
+        //删选状态
+        $status = $this->request->param('status',0,'intval');
+        if($status==1){
+            //未审核
+            $where[] = ['auth_status','=',0];
+        }elseif ($status==2){
+            //未面谈
+            $where[] = ['auth_status','gt',0];
+            $where[] = ['face_status','=',0];
+        }elseif ($status==3){
+            //审核通过
+            $where[] = ['auth_status','=',1];
+        }elseif ($status==4){
+            //审核拒绝
+            $where[] = ['auth_status','=',2];
+        }elseif ($status==5){
+            //已放款
+            $where[] =['send_award_status','=',1];
+
+        }elseif ($status==6){
+            //已指派
+            $where[] = ['p_auth_mid','gt',0];
+        }elseif ($status==7){
+            //未指派
+            $where[] =['p_auth_mid','eq',0];
+
+        }
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         //获取当前登录者身份
@@ -29,6 +56,7 @@ class Req extends Common
             'money_unit' => \app\common\model\Product::$money_unit,
             'auth_unit' => \app\common\model\Product::$auth_unit,
             'manage_list' => $manage_list,
+            'status' => $status,
         ]);
     }
 

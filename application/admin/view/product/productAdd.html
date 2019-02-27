@@ -60,9 +60,9 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目类型</label>
 					<div class="layui-input-inline">
-						<select name="type" lay-verify="">
+						<select name="type"  lay-filter="type">
 							<option value="">请选择项目类型</option>
-							{volist name="type_label" id="vo"}
+							{volist name="type_label_data" id="vo"}
 							<option value="{$vo['type']}" {:$vo['type']==$model['type']?'selected':''} >{$vo['name']}</option>
 							{/volist}
 
@@ -138,12 +138,15 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<label class="layui-form-label">项目标签</label>
-					<div class="layui-input-block">
-						{volist name="label_list" id="vo"}
-						<input type="checkbox" name="labels[]" value="{$vo['id']}" {:$model['labels']?(in_array($vo['id'],$model['labels'])?'checked':''):''} title="{$vo['name']}">
+					<label class="layui-form-label" id="labels-block">项目标签</label>
+					{volist name="type_label_data" id="vo"}
+					<div class="layui-input-block  labels{$vo['type']}" style="{:$model['type']==$vo['type']?'':'display:none;'}">
+						{volist name="vo['data']" id="child"}
+						<input type="checkbox" name="labels[{$vo['type']}][]" value="{$child['id']}" {:$model['labels']?(in_array($child['id'],$model['labels'])?'checked':''):''} title="{$child['name']}">
 						{/volist}
 					</div>
+					{/volist}
+
 				</div>
 			</div>
 
@@ -179,7 +182,11 @@
 
 		//监听提交
 		form.on('submit(formDemo)', $.common.formSubmit);
-
+		form.on("select(type)",function(data){
+			var value = data.value
+			$('#labels-block').nextAll().hide();
+			$(".labels"+value).show()
+		})
 		$.common.uploadFile(upload,'#test1')
 	});
 	$(function(){
@@ -192,6 +199,10 @@
 		//移除
 		$("#product-condition").on('click','.condition-close',function(){
 			$(this).parent().remove()
+		})
+
+		$("select[name='type']").change(function(){
+
 		})
 	})
 </script>

@@ -40,22 +40,8 @@ class Proxy extends Common
             ->where($where)
             ->order('create_time',$order)
             ->paginate()->each(function(&$item,$index){
-                $status_name = '审批中';
-                $status_color = 2;
-                if($item['auth_status']==1){
-                    $status_name='已放款';
-                    $status_color = 1;
 
-                }elseif($item['auth_status']==2){
-                    $status_name='已拒绝';
-                    $status_color = 2;
-
-                }elseif($item['face_status']==1){
-                    $status_name='已面谈';
-                    $status_color = 3;
-
-                }
-
+                list($status_color,$status_name,$status_intro) = $item->getStatusInfo();
                 $item=[
                     'id' => $item['id'],
                     'name' => $item['name'],

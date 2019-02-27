@@ -28,6 +28,7 @@ class Mine extends Common
     //我的首页
     public function index()
     {
+
         return view('index',[
             'user_model_info' => $this->user_model_info,
         ]);

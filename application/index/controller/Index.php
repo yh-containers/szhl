@@ -4,7 +4,15 @@ namespace app\index\controller;
 class Index extends Common
 {
     protected $need_login = true;
-    protected $ignore_login_action = 'identity,login,reg,forget,sendSms,changeLocation';
+    protected $ignore_login_action = 'repair,identity,login,reg,forget,sendSms,changeLocation';
+
+    //维护页面
+    public function repair()
+    {
+        return view('repair',[
+
+        ]);
+    }
 
     //选择身份
     public function identity()
@@ -29,16 +37,16 @@ class Index extends Common
 
         //验证当前登录者是那种身份跳转对应页面
         if($this->user_type==1){
-
             $page = 'home';
+
         }elseif($this->user_type==2){
-            $model_product = $model_product->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
             $page = 'proxy';
+
         }else{
-
-
             $page = 'homeMember';
+
         }
+        $this->proxy_id && $model_product = $model_product->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
         //轮播图
         $model_flow_image = new \app\common\model\FlowImage();
         $flow_image = $model_flow_image->where('status',1)->order('sort','asc')->select();

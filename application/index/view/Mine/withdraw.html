@@ -20,7 +20,7 @@
             <i class="icon iconfont icon-cuo"></i>
         </div>
         <div class="current_card">
-            {if($model_card)}
+            {if(count($model_card)>0)}
             <a href="javascript:;" class="pop_list">
                 <input type="hidden" name="cid" value="{$model_card[0]['id']}"/>
                 <h3>{$model_card[0]['bank_card_name']}</h3>
@@ -96,6 +96,9 @@
         $("#submit").click(function(){
             $.post($('#form').attr('action'),$("#form").serialize(),function(result){
                 alert(result.msg)
+                if(result.code==1){
+                    setTimeout(function(){window.location.reload()},1000)
+                }
             })
         })
     });

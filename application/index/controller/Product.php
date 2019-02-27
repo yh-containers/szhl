@@ -15,11 +15,11 @@ class Product extends Common
         $lid = $this->request->param('lid');
         //产品labels
         $model_label = new \app\common\model\Label();
-        $label_list = $model_label->select();
+        $label_list = $model_label->where('status',1)->where('type',$type)->select();
         return view('index',[
             'label_list' => $label_list,
             'type' => $type,
-            'title_info' => \app\common\model\Product::getTypeInfo(),
+            'title_info' => \app\common\model\Product::getTypeInfo($type),
             'lid' => $lid,
         ]);
     }
@@ -96,15 +96,17 @@ class Product extends Common
 
         //关键字
         $keyword = $this->request->param('keyword','','trim');
-        $keyword && $where[] = ['name','like','%'.$keyword.'%'];
+        if($keyword){
+            $where[] = ['name','like','%'.$keyword.'%'];
+        }
 
         if($lid){
             foreach($lid as $vo){
                 is_numeric($vo) && $vo>0 && $where[] =['','EXP',\think\Db::raw("FIND_IN_SET($vo,labels)")];
             }
         }
-        //代理
-        if($this->user_type==2){
+        //代理/指定代理商邀请的用户
+        if($this->user_type==2 || $this->proxy_id){
             $model = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
         }
 

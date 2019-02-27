@@ -27,7 +27,7 @@ $.common={
                   layer.msg(result.msg)
                   if(result.code==1){
                       //刷新页面
-                      // setTimeout(function(){location.reload()},1000)
+                      setTimeout(function(){location.reload()},1000)
                   }
               })
           })
@@ -41,7 +41,21 @@ $.common={
                   layer.msg(result.msg)
                   if(result.code==1){
                       //刷新页面
-                      // setTimeout(function(){location.reload()},1000)
+                      setTimeout(function(){location.reload()},1000)
+                  }
+              })
+          })
+    },
+    //修改
+    confirm(url, obj,title){
+          title = title?title:'是否修改数据';
+          obj = Object.assign({},obj)
+          layer.confirm(title,function(){
+              $.post(url,obj, function(result){
+                  layer.msg(result.msg)
+                  if(result.code==1){
+                      //刷新页面
+                      setTimeout(function(){location.reload()},1000)
                   }
               })
           })

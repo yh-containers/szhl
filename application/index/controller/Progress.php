@@ -19,42 +19,25 @@ class Progress extends Common
         $status = $this->request->param('status',null,'intval');
         $model = new \app\common\model\ProductReq();
         $where = [];
-        !is_null($status) && $where[] = ['status','=',$status];
         if($status==1){
             //审批中
             $where[] = ['status','=',1];
         }elseif($status==2){
             //面谈中
             $where[] =  ['status','=',1];
-            $where[] =  ['face_status','=',1];
+            $where[] =  ['face_status','=',0];
+            $where[] =  ['auth_status','=',1];
         }elseif($status==3){
             //已放款
-            $where[] =  ['auth_status','=',1];
+            $where[] =  ['send_award_status','=',1];
         }elseif($status==4){
             //已被拒
             $where[] =  ['auth_status','=',2];
         }
         $where[] =['uid','=',$this->user_id];
         $list = $model->where($where)->where('status','gt',0)->paginate()->each(function(&$item, $key)use(&$arr){
-            $status_name = '审批中';
-            $status_color = '0';
-            $status_intro = '审核中';
-            if($item['auth_status']==1){
-                $status_name='已通过';
-                $status_color = '1';
-                $status_intro = $item['auth_content']?$item['auth_content']:'已通过';
 
-            }elseif($item['auth_status']==2){
-                $status_name='已拒绝';
-                $status_color = '2';
-                $status_intro = $item['auth_content']?$item['auth_content']:'已拒绝';
-
-            }elseif($item['face_status']==1){
-                $status_name='已面谈';
-                $status_color = '3';
-                $status_intro = $item['face_content']?$item['face_content']:'待审核';
-
-            }
+            list($status_color,$status_name,$status_intro) = $item->getStatusInfo();
             $item= [
                 'id'        => $item['id'],
                 'no'        => $item['no'],
@@ -90,6 +73,13 @@ class Progress extends Common
             'model' => $model,
             'money_unit' => \app\common\model\Product::$money_unit,
             'auth_unit'  => \app\common\model\Product::$auth_unit,
+        ]);
+    }
+
+    public function applyData()
+    {
+        return view('applyData',[
+
         ]);
     }
 }

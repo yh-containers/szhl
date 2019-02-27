@@ -1,0 +1,320 @@
+{extend name="base"/}
+
+{block name="title"}完善资料{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>完善资料</h4>
+    </div>
+
+    <div class="main">
+        <div class="apply_date">
+            <div class="row">
+                <div class="list">
+                    <div class="label">贷款金额</div>
+                    <div class="con">
+                        <input class="num" type="text" name="num" value="8" /><font>万</font>
+                    </div>
+                </div>
+                <div class="list">
+                    <div class="label">姓名</div>
+                    <div class="con">
+                        <input type="text" name="name" value="测试" />
+                    </div>
+                </div>
+                <div class="list">
+                    <div class="label">身份证号</div>
+                    <div class="con">
+                        <input type="tel" name="number" value="433122********9035" />
+                    </div>
+                </div>
+                <div class="list">
+                    <div class="label">电话</div>
+                    <div class="con">
+                        <input type="tel" name="phone" value="15808885588" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="item">
+                    <div class="label">户籍</div>
+                    <div class="con">
+                        <input type="text" name="addr" value="" />
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">职业类别</div>
+                    <div class="con">
+                        <a href="javascript:;">上班</a>
+                        <a href="javascript:;">自雇</a>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">单位性质</div>
+                            <div class="con">
+                                <a href="javascript:;">普通公司</a>
+                                <a href="javascript:;">优质公司</a>
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">职位</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">上班时间</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">工资</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">工资发放形式</div>
+                            <div class="con">
+                                <a href="javascript:;">代发</a>
+                                <a href="javascript:;">现金</a>
+                                <a href="javascript:;">转账</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">深圳营业执照</div>
+                            <div class="con">
+                                <a href="javascript:;">有</a>
+                                <a href="javascript:;">无</a>
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">是否是法人</div>
+                            <div class="con">
+                                <a href="javascript:;">法人</a>
+                                <a href="javascript:;">明股</a>
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">营业执照年限</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">行业</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">最近6个月月均对公流水</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">最近6个月月均对私流水</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">有无实地经营</div>
+                            <div class="con">
+                                <a href="javascript:;">有</a>
+                                <a href="javascript:;">无</a>
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">是否可实地考察</div>
+                            <div class="con">
+                                <a href="javascript:;">是</a>
+                                <a href="javascript:;">否</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="item">
+                    <div class="label">本人及配偶名下是否有案件</div>
+                    <div class="con">
+                        <a href="javascript:;">是</a>
+                        <a href="javascript:;">否</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">手机是否实名登记</div>
+                    <div class="con">
+                        <a href="javascript:;">是</a>
+                        <a href="javascript:;">否</a>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">实名登记时长</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="item">
+                    <div class="label">社保信息</div>
+                    <div class="con">
+                        <a href="javascript:;">有社保</a>
+                        <a href="javascript:;">无社保</a>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">社保基数</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">交费时间</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">公积金信息</div>
+                    <div class="con">
+                        <a href="javascript:;" data-show="0">有公积金</a>
+                        <a href="javascript:;" data-show="1">无公积金</a>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">公积金基数0</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">交费时间0</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item item_sub" style="display: none">
+                        <div class="items">
+                            <div class="label">公积金基数1</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">交费时间1</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="item">
+                    <div class="label">房产信息</div>
+                    <div class="con">
+                        <a href="javascript:;">全款</a>
+                        <a href="javascript:;">按揭</a>
+                        <a href="javascript:;">外地房</a>
+                        <a href="javascript:;">无房</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">车产信息</div>
+                    <div class="con">
+                        <a href="javascript:;">全款</a>
+                        <a href="javascript:;">按揭</a>
+                        <a href="javascript:;">无车</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">保单</div>
+                    <div class="con">
+                        <a href="javascript:;">有保险</a>
+                        <a href="javascript:;">无保险</a>
+                    </div>
+
+                    <div class="item item_sub">
+                        <div class="items">
+                            <div class="label">保险公司</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">购买时间</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                        <div class="items">
+                            <div class="label">年缴保费</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                         <div class="items">
+                            <div class="label">保费合计</div>
+                            <div class="con">
+                                <input type="text" name="text" value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="item">
+                    <div class="label">其他信用贷款</div>
+                    <div class="con">
+                        <a href="javascript:;">有</a>
+                        <a href="javascript:;">无</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">征信查询次数</div>
+                    <div class="con">
+                        <a href="javascript:;">有</a>
+                        <a href="javascript:;">无</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn_data">
+            <a href="javascript:;">确认提交</a>
+        </div>
+    </div>
+
+
+{/block}
+{block name="script"}
+<script>
+    $(".item .con a").on("click",function(){
+        $(this).addClass("checked").siblings().removeClass("checked");
+        var index = $(this).data('show')
+        var $this = $(this).parent();
+        var item_index = $this.index()
+        $this.parent().find('>div:gt('+(item_index)+')').toggle()
+    });
+</script>
+{/block}

@@ -90,7 +90,7 @@ class ProductReq extends Validate
     //面谈
     public function sceneAdmin_face()
     {
-        $this->only(['id','face_uid','face_content'])
+        $this->only(['id','face_uid'])
         ;
     }
 

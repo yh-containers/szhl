@@ -15,15 +15,22 @@ class Users extends Base
     public function setFuid1Attr($value,$data)
     {
         //判断是否有邀请者
-        if(session('?req_user_id')){
+        if(session('?req_user_id') && session('req_user_id')){
             //查看邀请者的邀请者
             $model = new self();
             $value=session('req_user_id');
-            $fuid2 = $model->where('id',$value)->value('fuid1',0);
-            $this->setAttr('fuid2',$fuid2);
+            $req_user_info = $model->where('id',$value)->find();
+            if($req_user_info){
+                $fuid2 = $req_user_info['fuid2']?:0;
+                $proxy_id = $req_user_info['proxy_id']; //邀请者代理商
+
+                $fuid2 && $this->setAttr('fuid2',$fuid2);
+                $proxy_id && $this->setAttr('proxy_id',$proxy_id);
+
+            }
         }
 
-        return $value;
+        return $value?$value:0;
     }
 
     //设置用户类型
@@ -35,10 +42,9 @@ class Users extends Base
         return $value;
     }
 
-    //设置用户类型
+    //设置用户属于哪个代理商
     public function setProxyIdAttr($value,$data)
     {
-
         return $value?$value:0;
     }
 
@@ -156,7 +162,7 @@ class Users extends Base
         empty($model) && abort(4000,'用户信息异常');
         //更新用户余额
         $model->money	= [$money>0?'inc':'dec', abs($money)];
-        $model>0 && $is_record_history_money && $model->history_money=['inc', $money];
+        !empty($model) && $is_record_history_money && $model->history_money=['inc', $money];
         //附加数据
         $model->setAttr('mod_money',$money); //变动余额
         $model->setAttr('mod_intro',$intro); //说明

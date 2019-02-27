@@ -5,8 +5,14 @@ class Product extends Common
 {
     public function index()
     {
+        $keyword = $this->request->param('keyword','','trim');
         $model = new \app\common\model\Product();
         $where=[];
+
+        if($keyword){
+            $where[] = ['name','like','%'.$keyword.'%'];
+        }
+
         //绑定代理商用户
         if($this->proxy_id) {
             $list = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id)->paginate();
@@ -19,6 +25,7 @@ class Product extends Common
         return view('index',[
             'list'=>$list,
             'proxy_id'=>$this->proxy_id,
+            'keyword'=>$keyword,
         ]);
 
     }
@@ -32,10 +39,11 @@ class Product extends Common
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
-            if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
             //对应代理商/平台id
             $php_input['proxy_id'] = $this->proxy_id;
             $php_input['opt_uid'] = $this->user_id;
+            //重组labels标签
+            $php_input['labels'] = empty($php_input['labels'])?[]:(isset($php_input['type'])?isset($php_input['labels'])?$php_input['labels'][$php_input['type']]:[]:[]);
             $validate = new \app\common\validate\Product();
             return $model->actionAdd($php_input,$validate);
         }
@@ -46,15 +54,23 @@ class Product extends Common
         $model = $model->where($where)->get($id);
         //项目标签
         $model_label = new \app\common\model\Label();
-        $label_list = $model_label->where('status',1)->select();
+
+        $type_label = \app\common\model\Product::$type_label;
+        $type_label_data = [];
+        foreach ($type_label as $vo) {
+            $type_label_data[$vo['type']]=array_merge($vo,['data'=>[]]);
+        }
+
+        $model_label->where('status',1)->select()->each(function($item,$index)use(&$type_label_data){
+            isset($type_label_data[$item['type']]) && $type_label_data[$item['type']]['data'][] = $item->toArray();
+        });;
 
         return view('productAdd',[
             'model' => $model,
-            'label_list' => $label_list,
             'money_unit' => \app\common\model\Product::moneyUnit(),
             'auth_unit' => \app\common\model\Product::authUnit(),
             'per_unit' => \app\common\model\Product::perUnit(),
-            'type_label' => \app\common\model\Product::$type_label,
+            'type_label_data' => $type_label_data,
         ]);
     }
 
@@ -130,9 +146,18 @@ class Product extends Common
     public function labels()
     {
         $model = new \app\common\model\Label();
-        $list = $model->order('sort','asc')->select();
+        $type_label = \app\common\model\Product::$type_label;
+        $type_label_data = [];
+        foreach ($type_label as $vo) {
+            $type_label_data[$vo['type']]=array_merge($vo,['data'=>[]]);
+        }
+        $model->order('sort','asc')->select()->each(function($item,$index)use(&$type_label_data){
+            isset($type_label_data[$item['type']]) && $type_label_data[$item['type']]['data'][] = $item->toArray();
+        });
+
         return view('lables',[
-            'list'=>$list,
+            'type_label_data'=>$type_label_data,
+            'label_fields_status'=>\app\common\model\Label::$fields_status,
         ]);
 
     }
@@ -149,6 +174,7 @@ class Product extends Common
         $model = $model->get($id);
         return view('labelsAdd',[
             'model' => $model,
+            'type_label' => \app\common\model\Product::$type_label,
         ]);
     }
     public function labelsDel()

@@ -30,7 +30,6 @@
                     </div>
                 </li>
                 {/volist}
-
             </ul>
         </div>
         <div class="apply_det_mode">
@@ -65,6 +64,10 @@
                     <span>{:$model['card']?substr_replace($model['card'],'********','3','11'):''}</span>
                 </div>
             </div>
+        </div>
+
+        <div class="btn_data">
+            <a href="{:url('progress/applyData')}">完善资料</a>
         </div>
     </div>
 
