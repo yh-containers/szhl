@@ -16,15 +16,17 @@ class System extends Common
     //管理人员
     public function manage()
     {
-
+        $keyword = $this->request->param('keyword','','trim');
+        $keyword && $where[] = ['account|name','like','%'.$keyword.'%'];
 
         $model = new \app\common\model\Manage();
         $where[] = ['proxy_id','=',$this->proxy_id];
         $list = $model->with(['linkRole'=>function($query){
             return $query->field('id,name');
-        }])->where($where)->paginate();
+        }])->withCount(['linkProductReq','linkProductReqComplete','linkProductReqTodayComplete'])->where($where)->paginate();
         return view('manage',[
             'list'=>$list,
+            'keyword' => $keyword,
         ]);
     }
 
@@ -258,5 +260,16 @@ class System extends Common
         ]);
     }
 
+    //合同模板
+    public function contractTemp()
+    {
+        (new \app\common\service\temp\Contract())->changeContent(model('users')->find());
+        $model = new \app\common\model\Setting();
+        $content = $model->getContent('contract_temp');
+        return view('contractTemp',[
+            'content'=>$content,
+            'temp_var' => \app\common\service\temp\Contract::getAllVar(),
+        ]);
+    }
 
 }

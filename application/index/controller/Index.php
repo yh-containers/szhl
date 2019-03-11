@@ -4,19 +4,24 @@ namespace app\index\controller;
 class Index extends Common
 {
     protected $need_login = true;
-    protected $ignore_login_action = 'repair,identity,login,reg,forget,sendSms,changeLocation';
+    protected $ignore_login_action = 'repair,identity,login,reg,forget,sendSms,changeLocation,test';
 
     //维护页面
     public function repair()
     {
+//        dump($_SESSION);exit;
         return view('repair',[
 
         ]);
     }
 
     //选择身份
-    public function identity()
+    public function identity($is_choose=0)
     {
+        if($this->user_id && !$is_choose){
+            //表名用户已登录状态--直接跳转首页
+            $this->redirect('index/index');
+        }
         return view('identity',[
 
         ]);
@@ -94,6 +99,7 @@ class Index extends Common
                     //帐号密码登录
                     $model->pwdLogin($php_input);
                 }
+                cookie('identity_type',null);
                 return ['code'=>1,'msg'=>'登录成功','url'=>url('index/index')];
             }catch (\Exception $e) {
                 return ['code'=>$e->getCode(),'msg'=>$e->getMessage()];
@@ -195,4 +201,83 @@ class Index extends Common
             'content' => $content
         ]);
     }
+
+    //
+    public function applyConfirm()
+    {
+        return view('applyConfirm');
+    }
+
+
+    /*
+     * 产品检索功能
+     * */
+    public function match()
+    {
+        //查询已选的属性
+        $one =$one_data = $two = $two_data = $three = $three_data=  [];
+        $model_setting = new \app\common\model\Setting();
+        $content = $model_setting->getContent('user_search');
+        $choose_item = $content?json_decode($content,true):[];
+        $one = isset($choose_item[0])?$choose_item[0]:[];
+        $two = isset($choose_item[1])?$choose_item[1]:[];
+        $three = isset($choose_item[2])?$choose_item[2]:[];
+        if($one) {
+            $one_data=(new \app\common\model\ProductSpuCol())->whereIn('id',$one)->order('sort','asc')->select()->toArray();
+            foreach ($one_data as &$vo) {
+                foreach ($vo['content'] as &$item){
+                    $item['spu_type'] = 0;      //spu_coll的id
+                    $item['spu_sc_id'] = $vo['id'];      //spu_coll的id
+                }
+                $vo['content'] = arrayToTree2($vo['content']);
+
+            }
+        }
+        if($two) {
+            $two_data=(new \app\common\model\ProductSpuCol())->whereIn('id',$two)->order('sort','asc')->select()->toArray();
+            foreach ($two_data as &$vo_two) {
+                if(isset($vo_two['content'])){
+                    foreach ($vo_two['content'] as &$item_two){
+                        $item_two['spu_type'] = 0;      //spu_coll的id
+                        $item_two['spu_sc_id'] = $vo_two['id'];      //spu_coll的id
+                    }
+                    $vo_two['content'] = arrayToTree2($vo_two['content']);
+                }
+
+            }
+        }
+        if($three) {
+            $three_data=(new \app\common\model\ProductSpuCol())->whereIn('id',$three)->order('sort','asc')->select()->toArray();
+            foreach ($three_data as &$vo_three) {
+                if(isset($vo_three['content'])){
+                    foreach ($vo_three['content'] as &$item_three){
+                        $item_three['spu_type'] = 0;      //spu_coll的id
+                        $item_three['spu_sc_id'] = $vo_three['id'];      //spu_coll的id
+                    }
+                    $vo_three['content'] = arrayToTree2($vo_three['content']);
+                }
+
+            }
+        }
+//        dump($one_data);exit;
+        return view('match',[
+            'one_data' => $one_data,
+            'two_data' => $two_data,
+            'three_data' => $three_data,
+        ]);
+    }
+
+    public function test()
+    {
+        dump(\app\common\service\wechat\Jssdk::menu());exit;
+
+//        $model = new \app\common\model\Users();
+//        $model = $model->get(1);
+//        dump($model->getTicket());
+        //获取二维码
+//        dump(\app\common\service\wechat\Jssdk::qrcode(1));exit;
+//        $wechant_jssdk
+
+    }
+
 }

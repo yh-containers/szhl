@@ -11,6 +11,16 @@
     <span class="l">
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("manageAdd")}','添加管理员')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加管理员</a>
 	</span>
+	<span class="col-sm-3 r">
+		<form method="get">
+			<div class="col-sm-8 inline	">
+				<input type="text" class="input-text r" name="keyword" value="{$keyword}" placeholder="文本框">
+			</div>
+			<div class="col-sm-4 ">
+				<button class="	btn btn-primary radius l inline" type="submit">搜索</button>
+			</div>
+		</form>
+	</span>
 	</div>
 
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -20,6 +30,9 @@
 			<th width="100">用户名</th>
 			<th width="100">帐号</th>
 			<th width="100">角色</th>
+			<th width="100">任务数量</th>
+			<th width="100">已完成数量</th>
+			<th width="100">今日完成数量</th>
 			<th width="130">更新时间</th>
 			<th width="70">状态</th>
 			<th width="100">操作</th>
@@ -32,6 +45,9 @@
 				<td>{$vo['name']}</td>
 				<td>{$vo['account']}</td>
 				<td>{$vo['link_role']['name']}</td>
+				<td>{$vo['link_product_req_count']}</td>
+				<td>{$vo['link_product_req_complete_count']}</td>
+				<td>{$vo['link_product_req_today_complete_count']}</td>
 				<td>{$vo['update_time']}</td>
 				<td>{:$vo::$fields_status[$vo['status']]}</td>
 				<td>

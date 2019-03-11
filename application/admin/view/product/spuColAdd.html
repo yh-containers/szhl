@@ -1,0 +1,268 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+		<input type="hidden" name="sid" value="{$spu_info['id']}"/>
+		<div class="row">
+			<div class="col-sm-8">
+
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">spu名称</label>
+					<div class="layui-input-block">
+						<input type="text" value="{$spu_info['name']}"  readonly placeholder="spu名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">属性名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" value="{$model['name']}"  placeholder="属性名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-btn-group">
+					<button class="layui-btn" onclick="getConfig(-1)" type="button">增加选项</button>
+				</div>
+				<div class="layui-form-item">
+
+					<table id="table1" class="layui-table" lay-filter="table1"></table>
+				</div>
+
+
+
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+	</form>
+</div>
+
+<div class="pd-20"  id="opt-name" style="display: none">
+	<form class="layui-form" action="">
+		<div class="row">
+			<div class="layui-form-item">
+				<label class="layui-form-label">id</label>
+				<div class="layui-input-inline">
+					<input type="number" name="id" value=""  placeholder="id" maxlength="20" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">父id</label>
+				<div class="layui-input-inline">
+					<input type="number" name="pid" value=""  placeholder="id" maxlength="20" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">名称</label>
+				<div class="layui-input-inline">
+					<input type="text" name="name" value=""  placeholder="名称" maxlength="20" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-inline">
+					<input type="checkbox" name="is_range" title="范围选项" lay-skin="primary"/>
+					<input type="checkbox" name="is_input" title="是否为输入栏" lay-skin="primary"/>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</div>
+{/block}
+{block name="script"}
+<script type="text/html" id="oper-col">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', function(data){
+            var req_data={}
+            req_data = data.field
+            req_data.content = table_data;
+		    $.post("",req_data,function(result){
+		        layer.msg(result.msg)
+            })
+            return false;
+        });
+
+		$.common.uploadFile(upload,'#test1');
+
+	});
+
+
+
+	var tree_id={:$model['content']?count($model['content']):0};
+	var table_data = {:json_encode($model['content']?$model['content']:[])};
+	//重新渲染表
+	var renderTable;
+
+	layui.config({
+		base: '/static/admin/lib/layui-v2.4.5/lay/modules/'
+	}).extend({
+		treetable: 'treetable-lay/treetable'
+	}).use(['table','treetable'], function () {
+		var treetable = layui.treetable;
+		var table = layui.table;
+		// 渲染表格
+		renderTable = function () {
+
+			treetable.render({
+				treeColIndex: 1,          // treetable新增参数
+				treeSpid: -1,             // treetable新增参数
+				treeIdName: 'id',       // treetable新增参数
+				treePidName: 'pid',     // treetable新增参数
+				treeDefaultClose: false,   // treetable新增参数
+				treeLinkage: true,        // treetable新增参数
+				elem: '#table1',
+				// url: 'json/data1.json',
+				data: table_data,
+				cols: [[
+					{field: 'id', title: 'id'},
+					{field: 'name', title: '名称'},
+					{
+						title: '格式', templet: function (item) {
+							console.log(item)
+							return item.hasOwnProperty('is_input')?(item.is_input>0?'输入栏':'选择项'):'选择项';
+						}
+					},
+					{templet: '#oper-col', title: '操作'}
+
+				]]
+			});
+		};
+
+		renderTable();
+
+		//监听工具条
+		table.on('tool(table1)', function (obj) {
+			var data = obj.data;
+			var layEvent = obj.event;
+			console.log(obj)
+			var index = $(obj.tr).data('index')
+			if (layEvent === 'del') {
+				var opt_index;
+				table_data.map(function(item,index){
+					if(item.id==data.id){
+						opt_index=index
+					}
+				})
+				opt_index>=0 && table_data.splice(opt_index,1)
+				console.log(table_data);
+				obj.del()
+			} else if (layEvent === 'edit') {
+				if(data.hasOwnProperty('is_range') && data.is_range>0){
+					$("#opt-name input[name='is_range']").attr('checked',true).next().addClass('layui-form-checked')
+				}else{
+					$("#opt-name input[name='is_range']").attr('checked',false).next().removeClass('layui-form-checked')
+				}
+				console.log(data.is_input)
+				if(data.hasOwnProperty('is_input') && data.is_input>0){
+					$("#opt-name input[name='is_input']").attr('checked',true).next().addClass('layui-form-checked')
+				}else{
+					$("#opt-name input[name='is_input']").attr('checked',false).next().removeClass('layui-form-checked')
+				}
+				getConfig(data.id,data.pid,data.name,index)
+			}
+		});
+	});
+
+	//表主键自增
+	function incTreeId() {
+		return ++tree_id;
+	}
+
+	function getConfig(t_id,pid,name,tree_index)
+	{
+		if(t_id===-1){
+			$("#opt-name input[name='id']").val(tree_id)
+		}else{
+			$("#opt-name input[name='id']").val(t_id)
+		}
+
+		pid = pid?pid:-1
+
+		$("#opt-name input[name='pid']").val(pid)
+		$("#opt-name input[name='name']").val(name)
+		layer.open({
+			title: '操作选项'
+			,type: 1
+			,content: $("#opt-name")
+			,area: ['500px', '370px']
+			,btn: ['确定', '取消']
+			,yes: function(index, layero){
+
+
+				var name = $("#opt-name input[name='name']").val()
+				var id = $("#opt-name input[name='id']").val()
+				var pid = $("#opt-name input[name='pid']").val()
+				var is_range = $("#opt-name input[name='is_range']").prop('checked')?1:0
+				var is_input = $("#opt-name input[name='is_input']").prop('checked')?1:0
+				var obj = {'id':id,name:name,pid:pid,is_range:is_range,is_input:is_input}
+				try {
+					if(tree_index>=0){
+					    var opt_index;
+					    table_data.map(function(item,index){
+					        if(item.id==t_id){
+					            opt_index=index
+                            }
+                        })
+                        if(opt_index>=0){
+                            table_data[opt_index]=obj
+                            //刷新数据
+                            renderTable();
+                        }
+
+					}else{
+						//构造数据
+						var old_table_data = table_data
+						old_table_data.push(obj)
+						//刷新数据
+						renderTable();
+						table_data = old_table_data
+					}
+					//自增
+					if(t_id===-1){
+						$("#opt-name input[name='id']").val(incTreeId())
+					}
+					layer.msg('操作成功');
+
+				} catch (e) {
+					layer.msg('请检测id与pid对应关系')
+				}
+
+			}
+		})
+	}
+
+
+
+</script>
+{/block}

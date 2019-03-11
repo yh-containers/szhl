@@ -1,0 +1,101 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<input type="hidden" name="tid" value="{$type}"/>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="cl mb-10">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
+				</span>
+			</div>
+			{volist name="list" id="vo"}
+			<div class="layui-card">
+				<div class="layui-card-header">{$vo['name']}</div>
+				<div class="layui-card-body layui-btn-container">
+					{volist name="vo['link_col']" id="col"}
+					<button type="button" class="layui-btn layui-btn-sm spu-unit {:in_array($col['id'],$exist_spu)?'':'layui-btn-primary'}" data-id="{$col['id']}">{$col['name']}</button>
+					{/volist}
+				</div>
+			</div>
+			{/volist}
+
+		</div>
+		<div class="col-sm-8" >
+			<div class="layui-card">
+				<div class="layui-card-header">选择的属性信息</div>
+				<div class="layui-card-body" id="unit-col">
+					{volist name="exist_spu_data" id="vo"}
+					<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-{$vo['sc_id']}" data-id="{$vo['sc_id']}">{$vo['link_spu']['name']}</button>
+					{/volist}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+		if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+	//选中的所有属性
+	var spu_col={:json_encode($exist_spu,true)};
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', function (obj) {
+			var type={$type};
+			if(!spu_col.length){
+				layer.msg('请选择属性后再提交');
+				return false;
+			}
+			$.post("",{type:type,spu_col:spu_col},function(result){
+				layer.msg(result.msg)
+			})
+			return false;
+		});
+
+		$.common.uploadFile(upload,'#test1')
+	});
+
+	$(function(){
+		$(".spu-unit").click(function(){
+			var id = $(this).data('id');
+			var name = $(this).text();
+			if($(this).hasClass('layui-btn-primary')){
+				//选中操作
+				$(this).removeClass('layui-btn-primary')
+				$("#unit-col").append('<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-"'+id+'>'+name+'</button>')
+				spu_col.push(id);
+			}else{
+				//未选中操作
+				$(this).addClass('layui-btn-primary')
+				$("#unit-col .unit-"+id).remove()
+				spu_col.remove(id);
+			}
+		})
+	})
+
+</script>
+{/block}

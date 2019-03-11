@@ -1,0 +1,62 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}产品管理,产品列表{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+		{if(!$proxy_id)}
+    	<a href="javascript:;" onclick="$.common.openUrl('{:url("spuAdd")}','添加spu')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加spu</a>
+		{/if}
+	</span>
+    <span class="col-sm-3 r">
+		<form method="get">
+			<div class="col-sm-8 inline	">
+				<input type="text" class="input-text r" name="keyword" value="{$keyword}" placeholder="文本框">
+			</div>
+			<div class="col-sm-4 ">
+				<button class="	btn btn-primary radius l inline" type="submit">搜索</button>
+			</div>
+		</form>
+	</span>
+	</div>
+
+	<table class="layui-table ">
+		<thead>
+		<tr >
+			<th width="80">序号</th>
+			<th width="100">名称</th>
+			<th width="100">spu</th>
+			<th width="70">状态</th>
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="vo"}
+			<tr class="">
+				<td>{$key+1}</td>
+				<td><a href="{:url('spucol',['spu_id'=>$vo['id']])}">{$vo['name']}</a></td>
+				<td>
+					{volist name="vo['link_col']" id="col"}
+					{$col['name']},
+					{/volist}
+
+				</td>
+				<td>{:$vo::$fields_status[$vo['status']]}</td>
+				<td>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("spuAdd",['id'=>$vo['id']])}','编辑产品')" class="ml-5"> 编辑</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("spuCol",['spu_id'=>$vo['id']])}','查看属性')" class="ml-5"> 查看属性</a>
+					<a href="javascript:;" onclick="$.common.del('{:url("spuDel",['id'=>$vo['id']])}','删除')" class="ml-5"> 删除</a>
+				</td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list|raw}
+</div>
+
+{/block}

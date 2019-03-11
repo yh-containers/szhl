@@ -1,0 +1,153 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<input type="hidden" name="tid" value="{$type}"/>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="cl mb-10">
+				<span class="l">
+					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
+				</span>
+			</div>
+			{volist name="list" id="vo"}
+			<div class="layui-card">
+				<div class="layui-card-header">{$vo['name']}</div>
+				<div class="layui-card-body layui-btn-container">
+					{volist name="vo['link_col']" id="col"}
+					<button type="button" class="layui-btn layui-btn-sm spu-unit {:in_array($col['id'],$exist_spu)?'':'layui-btn-primary'}" data-id="{$col['id']}">{$col['name']}</button>
+					{/volist}
+				</div>
+			</div>
+			{/volist}
+
+		</div>
+		<div class="col-sm-8" >
+			<div class="layui-card">
+				<form action="" id="form">
+
+				<div class="layui-tab layui-tab-brief"  lay-filter="docDemoTabBrief">
+					<ul class="layui-tab-title">
+						<li class="layui-this">基本信息</li>
+						<li>资产信息</li>
+						<li>征用信息</li>
+					</ul>
+						<div class="layui-tab-content" id="unit-col">
+							<div class="layui-tab-item layui-show">
+								<input type="hidden" name="content[ids][]" value="index"/>
+								{if(isset($choose_item[0]))}
+									{volist name="choose_item[0]" id="vo"}
+										{if(array_key_exists($vo,$choose_list))}
+										<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-{$vo}">
+											<input type="hidden" name="content[ids][]" value="{$vo}"/>
+											{$choose_list[$vo]['name']}
+										</button>
+										{/if}
+									{/volist}
+								{/if}
+							</div>
+							<div class="layui-tab-item">
+								<input type="hidden" name="content[ids][]" value="index"/>
+								{if(isset($choose_item[1]))}
+									{volist name="choose_item[1]" id="vo"}
+									{if(array_key_exists($vo,$choose_list))}
+										<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-{$vo}">
+											<input type="hidden" name="content[ids][]" value="{$vo}"/>
+											{$choose_list[$vo]['name']}
+										</button>
+									{/if}
+									{/volist}
+								{/if}
+							</div>
+							<div class="layui-tab-item">
+								<input type="hidden" name="content[ids][]" value="index"/>
+								{if(isset($choose_item[2]))}
+									{volist name="choose_item[2]" id="vo"}
+										{if(array_key_exists($vo,$choose_list))}
+										<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-{$vo}">
+											<input type="hidden" name="content[ids][]" value="{$vo}"/>
+											{$choose_list[$vo]['name']}
+										</button>
+										{/if}
+									{/volist}
+								{/if}
+							</div>
+						</div>
+
+				</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+		if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+	//table选中项
+	var table_element_index = 0;
+	//选中的所有属性
+	var spu_col={:json_encode($exist_spu?$exist_spu:[])};
+	//Demo
+	layui.use(['form','upload','element'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+		var element = layui.element;
+
+		//监听提交
+		form.on('submit(formDemo)', function (obj) {
+
+			$.post($("#form").attr('action'),$("#form").serialize(),function(result){
+				layer.msg(result.msg)
+			})
+			return false;
+		});
+		//监听Tab切换，以改变地址hash值
+		element.on('tab(docDemoTabBrief)', function(obj){
+			//控制切换选项
+			table_element_index = obj.index
+			console.log(obj)
+		});
+		$.common.uploadFile(upload,'#test1')
+	});
+
+	$(function(){
+		$(".spu-unit").click(function(){
+			var id = $(this).data('id');
+			var name = $(this).text();
+			if($(this).hasClass('layui-btn-primary')){
+				//选中操作
+				$(this).removeClass('layui-btn-primary')
+				var html = '<button type="button" class="layui-btn layui-btn-sm spu-unit layui-btn-primary unit-'+id+'"><input type="hidden" name="content[ids][]" value="'+id+'"/>'+name+'</button>';
+				$("#unit-col .layui-tab-item:eq("+table_element_index+")").append(html)
+				spu_col.push(id);
+			}else{
+				//未选中操作
+				$(this).addClass('layui-btn-primary')
+				$("#unit-col .unit-"+id).remove()
+				spu_col.remove(id);
+			}
+		})
+	})
+
+</script>
+{/block}

@@ -1,0 +1,68 @@
+{if(isset($data[0]) && isset($data[0]['son']))}
+<div class="item item_sub">
+    {volist name="data" id="vo"}
+
+    <div class="items">
+        <div class="label">{$vo['name']}</div>
+        <div class="con menu">
+            {volist name="vo['son']" id="item"}
+            <a
+                    class="{:isset($item['is_input'])?($item['is_input']>0?'a-ipt':''):''}"
+                    href="javascript:;"
+                    data-type="{$item['spu_type']}"
+                    data-col_id="{$item['spu_sc_id']}"
+                    data-parent_id="{$item['id']}"
+                    data-child_pid="{$item['pid']}"
+                    data-name="{$vo['name']}"
+                    data-info="{$item['name']}"
+                    data-is_range="{:isset($item['is_range'])?($item['is_range']>0?$item['is_range']:0):0}"
+                    data-is_input="{:isset($item['is_input'])?($item['is_input']>0?$item['is_input']:0):0}"
+            >
+                {if(isset($item['is_input'])&&$item['is_input']>0)}
+                    <input type="text" value="" placeholder="{$item['name']}"/>
+                {else/}
+                    {$item['name']}
+                {/if}
+            </a>
+            {/volist}
+
+        </div>
+        {volist name="vo['son']" id="item"}
+        {:isset($item['son'])?widget('PageCrumb/chooseItem',['data'=>$item['son']]):''}
+        {/volist}
+    </div>
+
+
+    {/volist}
+</div>
+{elseif(isset($data[0]) && !isset($data[0]['son']))}
+<div class="item item_sub">
+    <div class="items">
+        <div class="con menu">
+            {volist name="$data" id="vo"}
+                <a
+                        class="{:isset($vo['is_input'])?($vo['is_input']>0?'a-ipt':''):''}"
+                        href="javascript:;"
+                        data-type="{$vo['spu_type']}"
+                        data-col_id="{$vo['spu_sc_id']}"
+                        data-parent_id="{$vo['id']}"
+                        data-child_pid="{$vo['pid']}"
+                        data-name=""
+                        data-info="{$vo['name']}"
+                        data-is_range="{:isset($vo['is_range'])?($vo['is_range']>0?$vo['is_range']:0):0}"
+                        data-is_input="{:isset($vo['is_input'])?($vo['is_input']>0?$vo['is_input']:0):0}"
+                >
+                    {if(isset($vo['is_input'])&&$vo['is_input']>0)}
+                        <input type="text" value="" placeholder="{$vo['name']}"/>
+                    {else/}
+                        {$vo['name']}
+                    {/if}
+                </a>
+            {/volist}
+        </div>
+
+    </div>
+</div>
+
+
+{/if}

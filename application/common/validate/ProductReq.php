@@ -81,9 +81,16 @@ class ProductReq extends Validate
     //申请步骤二
     public function sceneIndex_req1()
     {
-        $this->only(['id','pid','name','card','phone','sex','work_unit','is_marry','addr','vocation_type','is_cr',
-            'cr_times_two','credit_money','is_house','is_car','is_warranty','is_social_security','is_accumulation_fund',])
+        $this->only(['id','pid','name','card','phone'])
             ->append('pid','checkStep:1')
+            ;
+    }
+
+
+    public function sceneIndex_match()
+    {
+        $this->only(['pid','name','card','phone'])
+            ->append('pid','checkStep:3')
             ;
     }
 
@@ -101,7 +108,6 @@ class ProductReq extends Validate
         //获取项目信息
         $model = new \app\common\model\Product();
         $model = $model->get($value);
-
         if(empty($model)){
             return '项目信息异常';
         }

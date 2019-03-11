@@ -1,0 +1,41 @@
+{extend name="base"/}
+
+{block name="title"}完善资料{/block}
+{block name="style"}
+<style>
+    body{
+        background: #fff;
+    }
+</style>
+{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>签订合同</h4>
+    </div>
+
+    <div class="main">
+
+        <a href="{:url('generateContract')}">下载合同</a>
+        <div class="btn_data">
+            <a href="javascript:;" id="submit" data-id="{$req_id}">同意</a>
+        </div>
+    </div>
+
+
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post("",{id:$(this).data('id')},function(result){
+                alert(result.msg)
+                if(result.code==1){
+                    window.history.back()
+                }
+            })
+        })
+    })
+</script>
+{/block}

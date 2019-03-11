@@ -1,0 +1,73 @@
+{extend name="base"/}
+
+{block name="title"}提交申请{/block}
+
+{block name="content"}
+    <div class="header">
+        <a class="back" href="javascript:history.go(-1)"></a>
+        <h4>提交申请</h4>
+    </div>    
+    <div class="main">
+        <form action="{:url('flowAction')}" id="form">
+            <input type="hidden" name="submit" value="match"/>
+            <input type="hidden" name="match_id" value="{$match_info['id']}"/>
+            <input type="hidden" name="pid" value="{$model['id']}"/>
+            <div class="apply_content">
+                <div class="apply_goods">
+                    <div class="apply_goods_name">
+                        <div class="img"><img src="{$model['img']}" alt="" /></div>
+                        <div class="txt">
+                            <h4>{$model['name']}</h4>
+                        </div>
+                    </div>
+                    <div class="apply_list">
+                        <div class="item">
+                            <div class="label">贷款金额</div>
+                            <div class="con"><input type="text" placeholder="{:$model['money_start'].($model['money_end']?'-'.$model['money_end']:'')}" name="money" value="{:$match_info['money']<$model['money_start']?$model['money_start']:($model['money_end']?($model['money_end']<$match_info['money']?$model['money_end']:$match_info['money']):$match_info['money'])}" /><em>万</em></div>
+                        </div>
+                        <div class="item">
+                            <div class="label">贷款期限</div>
+                            <div class="con"><input type="text" placeholder="{:$model['auth_time_start'].($model['auth_time_end']?'-'.$model['auth_time_end']:'')}" name="auth_time" value="" /><em>个月</em></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="apply_data">
+                    <div class="apply_list">
+                        <div class="item">
+                            <div class="label"><font>*</font>姓名</div>
+                            <div class="con"><input type="text" name="name" placeholder="请输入姓名" /></div>
+                        </div>
+                        <div class="item">
+                            <div class="label"><font>*</font>身份证号码</div>
+                            <div class="con"><input type="text" name="card" maxlength="18" placeholder="请输入身份证号码" /></div>
+                        </div>
+                        <div class="item">
+                            <div class="label"><font>*</font>手机号码</div>
+                            <div class="con"><input type="tel" name="phone" maxlength="11" placeholder="请输入手机号码" /></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="apply_btn">
+                    <a href="javascript:;" id="submit" class="btn btn-primary">确认提交</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{/block}
+
+{block name="script"}
+<script>
+    $(function(){
+        $("#submit").click(function(){
+            $.post($("#form").attr('action'),$("#form").serialize(),function(result){
+                alert(result.msg)
+                if(result.hasOwnProperty('url')){
+                    window.location.href=result.url
+                }
+            })
+        })
+    })
+</script>
+{/block}

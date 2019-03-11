@@ -80,4 +80,16 @@ class PageCrumb extends Controller
         return $this->fetch('/widget/wechatJssdk',[
         ]);
     }
+
+    //选项
+    public function chooseRow($data,$key='')
+    {
+        return $this->fetch('/widget/chooseRow',['data'=>$key?$data[$key]:$data]);
+    }
+
+    //选项
+    public function chooseItem($data)
+    {
+        return $this->fetch('/widget/chooseItem',['data'=>$data]);
+    }
 }

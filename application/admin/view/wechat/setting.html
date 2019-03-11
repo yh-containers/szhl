@@ -1,0 +1,62 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}微信设置,常规设置{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-header">
+                    其它操作
+                    <button type="button"  class="btn btn-warning  size-S radius f-r submit" >保存</button>
+                </div>
+                <div class="panel-body pd-5">
+                    <form class="layui-form" action="{:url('System/settingAction')}">
+
+                        <input type="hidden" name="type" value="wechat_setting"/>
+
+                        <div class="layui-form-item">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">关注语设置</label>
+                                <div class="layui-input-block">
+                                    <textarea name="content[follow]" class="layui-textarea">{:isset($wechat_setting['follow'])?$wechat_setting['follow']:''}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+       <!-- <div class="col-sm-6">
+            <div class="panel panel-primary">
+                    <div class="panel-header">
+
+                        <button type="button"  class="btn btn-warning  size-S radius f-r submit">保存</button>
+                    </div>
+                    <div class="panel-body pd-5">
+
+
+
+                    </div>
+            </div>
+        </div>-->
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $('.submit').click(function(){
+            var $this=$(this).parent().parent().find('form')
+            $.post($this.attr('action'),$this.serialize(),function(result){
+                layer.msg(result.msg)
+            })
+        })
+    })
+</script>
+{/block}

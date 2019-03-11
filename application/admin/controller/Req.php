@@ -1,11 +1,15 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\model\Users;
+
 class Req extends Common
 {
     public function index()
     {
         $where=[];
+        $keyword = $this->request->param('keyword','','trim');
+        $keyword && $where[] = ['no','like','%'.$keyword.'%'];
         //删选状态
         $status = $this->request->param('status',0,'intval');
         if($status==1){
@@ -57,6 +61,7 @@ class Req extends Common
             'auth_unit' => \app\common\model\Product::$auth_unit,
             'manage_list' => $manage_list,
             'status' => $status,
+            'keyword' => $keyword,
         ]);
     }
 
@@ -69,7 +74,6 @@ class Req extends Common
         $id = $this->request->param('id',0,'intval');
         $model = new \app\common\model\ProductReq();
         $model = $model->where($where)->with(['linkLogs','linkPlan'])->get($id);
-
         //指派员工
         $model_manage = new \app\common\model\Manage();
         $manage_list = $model_manage->where('proxy_id',$this->proxy_id)->select();
@@ -128,6 +132,7 @@ class Req extends Common
     //指定用户
     public function pointManager()
     {
+
         $id = $this->request->param('id',0,'intval');
         $p_auth_mid = $this->request->param('p_auth_mid',0,'intval');
         if(empty($id)) return ['code'=>0,'msg'=>'操作对象异常!'];
@@ -152,6 +157,19 @@ class Req extends Common
         $php_input['status'] = 1;    //已还款
         $php_input['opt_uid'] = $this->user_id;    //操作用户
         return $model->actionAdd($php_input,$validate);
+    }
+
+    //确定签订合同
+    public function handleContract()
+    {
+        $id = $this->request->param('id',0,'intval');
+        $model = new \app\common\model\ProductReq();
+        try{
+            $model->contract($id,$this->user_id);
+            return ['code'=>1,'msg'=>'操作成功'];
+        }catch (\Exception $e){
+            return ['code'=>0,'msg'=>'操作异常'.$e->getMessage()];
+        }
     }
 
 }

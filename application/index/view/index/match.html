@@ -1,0 +1,147 @@
+{extend name="base"/}
+
+{block name="title"}客户评估{/block}
+
+{block name="content"}
+
+<div class="header">
+    <a class="back" href="javascript:;" onclick="history_back()"></a>
+    <h4>客户评估</h4>
+</div>
+<div class="main" id="match">
+    <div class="apply_process filter_process">
+        <div class="item active">
+            <span>1</span>
+            <p>基本信息</p>
+        </div>
+        <div class="item two">
+            <span>2</span>
+            <p>资产信息</p>
+        </div>
+        <div class="item three">
+            <span>3</span>
+            <p>征信信息</p>
+        </div>
+    </div>
+
+    <!--第一步-->
+    <div class="step">
+        <div class="apply_date">
+            <div class="row">
+                <div class="amount">
+                    <strong>
+                        <span>贷款金额</span>
+                        <input class="num" type="number" name="money" placeholder="0.1~1000" />
+                        <span>万</span>
+                    </strong>
+                </div>
+
+
+            </div>
+
+        </div>
+        {volist name="one_data" id="vo"}
+        {if(isset($vo['content']))}
+        {:widget('PageCrumb/chooseRow',['data'=>$vo])}
+        {/if}
+        {/volist}
+        <div class="btn_data">
+            <a href="javascript:;" onclick="opt_step(2)">下一步</a>
+        </div>
+    </div>
+
+    <div class="step two" style="display: none">
+
+        {volist name="two_data" id="vo"}
+        {if(isset($vo['content']))}
+            {:widget('PageCrumb/chooseRow',['data'=>$vo])}
+        {/if}
+        {/volist}
+        <div class="btn_data">
+            <a href="javascript:;" onclick="opt_step(3)">下一步</a>
+        </div>
+    </div>
+
+    <div class="step three" style="display: none">
+
+        {volist name="three_data" id="vo"}
+        {if(isset($vo['content']))}
+            {:widget('PageCrumb/chooseRow',['data'=>$vo])}
+        {/if}
+        {/volist}
+        <div class="btn_data">
+            <a href="javascript:;" onclick="search_data()">快速查询</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script>
+    //从第1步开始
+    var step = 1;
+    $(function(){
+        $(".item .con a").click(function () {
+            $(this).addClass("checked").siblings().removeClass("checked");
+            $(this).parent().siblings('div.item_sub').hide().eq($(this).index()).show();
+            console.log($(this).is(':has(input)'))
+        });
+
+
+    })
+    function opt_step(step_num){
+        step = step_num
+        //隐藏所有 显示第几步
+        $(".main .step").hide();
+        $(".main .step:eq("+(step_num-1)+")").show();
+        //控制
+        $(".filter_process .item:eq("+(step_num-1)+")").addClass('active')
+    }
+
+    function search_data() {
+        var info={}
+        info.money = $("input[name='money']").val();
+        var choose_data = [];
+        $("#match .checked").each(function(){
+            var obj={};
+            obj.type = $(this).data('type'),
+                obj.col_id = $(this).data('col_id'),
+                obj.parent_id = $(this).data('parent_id'),
+                obj.child_pid = $(this).data('child_pid'),
+                obj.name = $(this).data('name'),
+                obj.info = $(this).is(':has(input)')?$(this).find('input').val():$(this).data('info'),
+                obj.is_range = $(this).data('is_range'),
+                choose_data.push(obj)
+        })
+        info.content = choose_data
+        // console.log(info)
+        $.post("{:url('product/match')}",info,function(result){
+            if(result.hasOwnProperty('url')){
+                window.location.href=result.url
+            }else{
+                alert(result.msg)
+            }
+
+        })
+    }
+
+    function history_back () {
+
+        //返回上一级
+        if(step>1){
+            //控制
+            $(".main .step").hide();
+            $(".filter_process .item:eq("+(step-1)+")").removeClass('active')
+            $(".main .step:eq("+(step-2)+")").show();
+            step--;
+        }else{
+            window.location.href="{:url('index/index')}"
+        }
+    }
+
+</script>
+{/block}

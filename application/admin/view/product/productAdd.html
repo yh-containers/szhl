@@ -3,6 +3,7 @@
 {block name="style"}
 <style>
 	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+	.layui-table, .layui-table-view {margin: 0}
 </style>
 {/block}
 {block name="breadcrumb"}{/block}
@@ -13,7 +14,7 @@
 	<form class="layui-form" action="">
 		<input type="hidden" name="id" value="{$model['id']}"/>
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-6">
 				<div class="cl  bg-1 bk-gray mb-10 ml-40">
 				<span class="l">
 					<button type="button" class="btn size-L btn-success-outline radius"   lay-submit lay-filter="formDemo" ><i class="icon-plus"></i> 保存</button>
@@ -28,7 +29,18 @@
 						<img src="{$model['img']}" alt="项目图片" class="radius" width="80" height="80">
 					</div>
 				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目类型</label>
+					<div class="layui-input-inline">
+						<select name="type"  lay-filter="type">
+							<option value="">请选择项目类型</option>
+							{volist name="type_label_data" id="vo"}
+							<option value="{$vo['type']}" {:$vo['type']==$model['type']?'selected':''} >{$vo['name']}</option>
+							{/volist}
 
+						</select>
+					</div>
+				</div>
 				<div class="layui-form-item">
 					<label class="layui-form-label">项目名称</label>
 					<div class="layui-input-block">
@@ -51,92 +63,95 @@
 						<input type="radio" name="status" value="1" title="启用" {:$model['status']!=2?'checked':''}>
 						<input type="radio" name="status" value="2" title="禁用"  {:$model['status']==2?'checked':''}>
 					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">项目佣金</label>
+						<div class="layui-input-inline">
+							<input type="number" name="commission" value="{$model['commission']}"  placeholder="项目佣金" class="layui-input">
+
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">项目利息</label>
+						<div class="layui-input-inline">
+							<input type="number" name="per" value="{$model['per']}"  placeholder="利息" class="layui-input">
+
+						</div>
+						<div class="layui-input-inline">
+							<select name="per_unit" lay-verify="">
+								<option value="">利息单位{$model['per_unit']}</option>
+								{volist name="per_unit['unit']" id="vo"}
+								{if(!in_array($key,$per_unit['hide']))}
+								<option value="{$key}" {:$model?($key==$model['per_unit']?'selected':''):($key==$per_unit['default']?'selected':'')} >{$vo}</option>
+								{/if}
+								{/volist}
+
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">项目额度</label>
+						<div class="layui-input-inline">
+							<input type="number" name="money_start" value="{$model['money_start']}"  placeholder="起始额度" class="layui-input">
+
+						</div>
+						<div class="layui-input-inline">
+							<input type="number" name="money_end" value="{:$model['money_end']?$model['money_end']:''}"  placeholder="结束额度" class="layui-input">
+						</div>
+
+						<div class="layui-input-inline">
+							<select name="money_unit" lay-verify="">
+								<option value="">额度单位</option>
+								{volist name="money_unit['unit']" id="vo"}
+								{if(!in_array($key,$money_unit['hide']))}
+								<option value="{$key}" {:$model?($key==$model['money_unit']?'selected':''):($key==$money_unit['default']?'selected':'')}>{$vo}</option>
+								{/if}
+								{/volist}
+
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">项目期限</label>
+						<div class="layui-input-inline">
+							<input type="number" name="auth_time_start" value="{$model['auth_time_start']}"  placeholder="开始期限" class="layui-input">
+
+						</div>
+						<div class="layui-input-inline">
+							<input type="number" name="auth_time_end" value="{:$model['auth_time_end']?$model['auth_time_end']:''}"  placeholder="结束期限" class="layui-input">
+						</div>
+
+						<div class="layui-input-inline">
+							<select name="auth_unit" lay-verify="">
+								<option value="">期限单位</option>
+								{volist name="auth_unit['unit']" id="vo"}
+								{if(!in_array($key,$auth_unit['hide']))}
+								<option value="{$key}" {:$model?($key==$model['auth_unit']?'selected':''):($key==$auth_unit['default']?'selected':'')}>{$vo}</option>
+								{/if}
+								{/volist}
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item" id="product-condition">
+						<label class="layui-form-label">申请条件</label>
+						<div class="layui-input-block">
+							<a href="javascript:;" class="btn btn-primary-outline radius add-condition">增加条件</a>
+						</div>
+						{volist name="model['condition']" id="vo"  empty="<div class='layui-input-inline product-condition'><textarea name='condition[]' rows='5' cols='12' placeholder='申请条件' class='layui-textarea'></textarea><i class='layui-icon layui-icon-close condition-close'></i></div>"}
+						<div class="layui-input-inline product-condition">
+							<textarea name="condition[]" rows="5" cols="12" placeholder="申请条件" class="layui-textarea">{:$vo['title'].PHP_EOL.$vo['desc']}</textarea>
+							<i class="layui-icon layui-icon-close condition-close"></i>
+						</div>
+						{/volist}
+					</div>
+
 				</div>
 
 
 			</div>
 
-			<div class="col-sm-8">
-				<div class="layui-form-item">
-					<label class="layui-form-label">项目类型</label>
-					<div class="layui-input-inline">
-						<select name="type"  lay-filter="type">
-							<option value="">请选择项目类型</option>
-							{volist name="type_label_data" id="vo"}
-							<option value="{$vo['type']}" {:$vo['type']==$model['type']?'selected':''} >{$vo['name']}</option>
-							{/volist}
+			<div class="col-sm-6" id="table-tree">
 
-						</select>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">项目佣金</label>
-					<div class="layui-input-inline">
-						<input type="number" name="commission" value="{$model['commission']}"  placeholder="项目佣金" class="layui-input">
-
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">项目利息</label>
-					<div class="layui-input-inline">
-						<input type="number" name="per" value="{$model['per']}"  placeholder="利息" class="layui-input">
-
-					</div>
-					<div class="layui-input-inline">
-						<select name="per_unit" lay-verify="">
-							<option value="">利息单位{$model['per_unit']}</option>
-							{volist name="per_unit['unit']" id="vo"}
-							{if(!in_array($key,$per_unit['hide']))}
-							<option value="{$key}" {:$model?($key==$model['per_unit']?'selected':''):($key==$per_unit['default']?'selected':'')} >{$vo}</option>
-							{/if}
-							{/volist}
-
-						</select>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">项目额度</label>
-					<div class="layui-input-inline">
-						<input type="number" name="money_start" value="{$model['money_start']}"  placeholder="起始额度" class="layui-input">
-
-					</div>
-					<div class="layui-input-inline">
-						<input type="number" name="money_end" value="{:$model['money_end']?$model['money_end']:''}"  placeholder="结束额度" class="layui-input">
-					</div>
-
-					<div class="layui-input-inline">
-						<select name="money_unit" lay-verify="">
-							<option value="">额度单位</option>
-							{volist name="money_unit['unit']" id="vo"}
-							{if(!in_array($key,$money_unit['hide']))}
-							<option value="{$key}" {:$model?($key==$model['money_unit']?'selected':''):($key==$money_unit['default']?'selected':'')}>{$vo}</option>
-							{/if}
-							{/volist}
-
-						</select>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">项目期限</label>
-					<div class="layui-input-inline">
-						<input type="number" name="auth_time_start" value="{$model['auth_time_start']}"  placeholder="开始期限" class="layui-input">
-
-					</div>
-					<div class="layui-input-inline">
-						<input type="number" name="auth_time_end" value="{:$model['auth_time_end']?$model['auth_time_end']:''}"  placeholder="结束期限" class="layui-input">
-					</div>
-
-					<div class="layui-input-inline">
-						<select name="auth_unit" lay-verify="">
-							<option value="">期限单位</option>
-							{volist name="auth_unit['unit']" id="vo"}
-							{if(!in_array($key,$auth_unit['hide']))}
-							<option value="{$key}" {:$model?($key==$model['auth_unit']?'selected':''):($key==$auth_unit['default']?'selected':'')}>{$vo}</option>
-							{/if}
-							{/volist}
-						</select>
-					</div>
-				</div>
 				<div class="layui-form-item">
 					<label class="layui-form-label" id="labels-block">项目标签</label>
 					{volist name="type_label_data" id="vo"}
@@ -148,25 +163,31 @@
 					{/volist}
 
 				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">项目属性</label>
+					{volist name="type_spu_data" id="vo"}
+					<div class="layui-collapse layui-input-block tree-item" id="table-tree-item-{$vo['type']}"  {:$vo['type']==$model['type']?'':'style="display:none"'} >
+							{volist name="vo['data']" id="item"}
+								<div class="layui-colla-item "   >
+									<h2 class="layui-colla-title">{$item['link_spu']['name']}</h2>
+									<div class="layui-colla-content">
+										<table id="table-{:$vo['type'].'-'.$item['sc_id']}" class="layui-table" lay-filter="table1" style="margin: 0"></table>
+									</div>
+								</div>
+							{/volist}
+
+					</div>
+					{/volist}
+
+
+
+
+
+				</div>
 			</div>
 
 
-		</div>
-		<div class="row">
-			<div class="layui-form-item" id="product-condition">
-				<label class="layui-form-label">申请条件</label>
-				<div class="layui-input-block">
-					<a href="javascript:;" class="btn btn-primary-outline radius add-condition">增加条件</a>
-				</div>
-				{volist name="model['condition']" id="vo"  empty="<div class='layui-input-inline product-condition'><textarea name='condition[]' rows='5' cols='12' placeholder='申请条件' class='layui-textarea'></textarea><i class='layui-icon layui-icon-close condition-close'></i></div>"}
-				<div class="layui-input-inline product-condition">
-					<textarea name="condition[]" rows="5" cols="12" placeholder="申请条件" class="layui-textarea">{:$vo['title'].PHP_EOL.$vo['desc']}</textarea>
-					<i class="layui-icon layui-icon-close condition-close"></i>
-				</div>
-				{/volist}
-			</div>
 
-		</div>
 
 
 	</form>
@@ -174,21 +195,112 @@
 
 {/block}
 {block name="script"}
+
 <script>
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+		if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+
+	var choose_data = {:json_encode($choose_data?$choose_data:[])};
+	//do something
+	layui.config({
+		base: '/static/admin/lib/layui-v2.4.5/lay/modules/'
+	}).extend({
+		treetable: 'treetable-lay/treetable'
+	}).use(['table','treetable'], function () {
+		var treetable = layui.treetable;
+		var table = layui.table;
+		// 渲染表格
+		renderTable = function (elem,tree_data) {
+			// console.log(elem)
+			// console.log(tree_data)
+			treetable.render({
+				treeColIndex: 0,          // treetable新增参数
+				treeSpid: -1,             // treetable新增参数
+				treeIdName: 'id',       // treetable新增参数
+				treePidName: 'pid',     // treetable新增参数
+				treeDefaultClose: false,   // treetable新增参数
+				treeLinkage: true,        // treetable新增参数
+				elem: elem,
+				// url: 'json/data1.json',
+				data: tree_data,
+				cols: [[
+					{field: 'name', title: '名称'},
+					{ title: '操作',templet:  function(item){
+						return '<a class="layui-btn  layui-btn-xs checked-item '+(choose_data.indexOf(item.type_id+'-'+item.id) > -1?'':'layui-btn-primary')+'" lay-event="checkbox" >选择</a>'
+					}},
+
+				]]
+			});
+		};
+
+		// renderTable();
+
+		//监听工具条
+		table.on('tool(table1)', function (obj) {
+			var data = obj.data;
+			var layEvent = obj.event;
+			var $this = $(obj.tr).find('.checked-item');
+			var choose_var = data.type_id+'-'+data.id;
+			if (layEvent === 'checkbox') {
+				if($this.hasClass('layui-btn-primary')){
+					//移除
+					$this.removeClass('layui-btn-primary')
+					choose_data.push(choose_var)
+				}else{
+					//选中
+					$this.addClass('layui-btn-primary')
+					choose_data.remove(choose_var)
+				}
+			}
+		});
+		var table_data =[];
+		table_data = {:json_encode($type_spu_data?$type_spu_data:[],true)};
+		for(var i=0;i<table_data.length;i++){
+			var type=table_data[i].type;
+			var data = table_data[i].data;
+			data.map(function(item_ch,index_ch){
+				var sc_id = item_ch.sc_id
+				var content = item_ch.link_spu.content
+				renderTable("#table-"+type+'-'+sc_id,content)
+			})
+		}
+	});
+
+
 	//Demo
-	layui.use(['form','upload'], function(){
+	layui.use(['form','upload','element'], function(){
 		var form = layui.form;
 		var upload = layui.upload;
 
 		//监听提交
-		form.on('submit(formDemo)', $.common.formSubmit);
+		form.on('submit(formDemo)', (data)=>{
+			var req_data={}
+			req_data = data.field
+			req_data.choose_data = choose_data;
+			$.post("",req_data,function(result){
+				layer.msg(result.msg)
+			})
+			return false;
+		});
 		form.on("select(type)",function(data){
 			var value = data.value
 			$('#labels-block').nextAll().hide();
 			$(".labels"+value).show()
+			//切换
+			$(".tree-item").hide()
+			$("#table-tree-item-"+value).show()
+
+
 		})
 		$.common.uploadFile(upload,'#test1')
 	});
+
+
+
 	$(function(){
 		$(".add-condition").click(function(){
 			$(this).parent().parent().append('<div class="layui-input-inline product-condition">\n' +
@@ -201,9 +313,6 @@
 			$(this).parent().remove()
 		})
 
-		$("select[name='type']").change(function(){
-
-		})
 	})
 </script>
 {/block}

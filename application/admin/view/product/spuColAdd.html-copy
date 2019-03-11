@@ -1,0 +1,92 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+{block name="style"}
+<style>
+	.product-condition i{position: absolute;top:0;right: 0;background: red;color:#fff;font-size: 16px;font-weight: bold;cursor: pointer}
+</style>
+{/block}
+{block name="breadcrumb"}{/block}
+
+{block name="content"}
+<div class="pd-20">
+
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value="{$model['id']}"/>
+		<input type="hidden" name="sid" value="{$spu_info['id']}"/>
+		<div class="row">
+			<div class="col-sm-8">
+
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">spu名称</label>
+					<div class="layui-input-block">
+						<input type="text" value="{$spu_info['name']}"  readonly placeholder="spu名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">属性名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" value="{$model['name']}"  placeholder="属性名称" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-block">
+						<input type="number" name="sort" value="{$model['sort']}"  placeholder="排序" autocomplete="off" maxlength="20" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">类型</label>
+					<div class="layui-input-block">
+						<input type="radio" name="type" value="0" title="选择项" {:$model?(empty($model['type'])?'checked':''):'checked'} >
+						<input type="radio" name="type" value="1" title="文本输入" {:$model['type']==1?'checked':''} >
+					</div>
+				</div>
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">内容</label>
+					<div class="layui-input-block">
+						<textarea name="content" class="layui-textarea" >{$model['content']}</textarea>
+						<div class="layui-form-mid layui-word-aux">每行代表一个选项</div>
+					</div>
+				</div>
+
+
+
+
+
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+	</form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+	//Demo
+	layui.use(['form','upload'], function(){
+		var form = layui.form;
+		var upload = layui.upload;
+
+		//监听提交
+		form.on('submit(formDemo)', $.common.formSubmit);
+
+		$.common.uploadFile(upload,'#test1')
+	});
+
+</script>
+{/block}

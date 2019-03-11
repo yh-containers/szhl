@@ -11,6 +11,7 @@ class ProductReq extends Base
     public static $fields_face_status=['未面谈','已面谈'];
     public static $fields_auth_status=['未审核','已审核','拒绝'];
     public static $fields_send_award_status=['未发放','已发放'];
+    public static $fields_is_contract=['未签合同','已签合同'];
 
     public static $fields_sex = ['未知','男','女'];
     public static $fields_marry = ['未婚','已婚'];
@@ -25,7 +26,16 @@ class ProductReq extends Base
     protected $name='product_req';
     protected $insert = ['status'=>1,'no'];
     protected $auto=['status'];
-    protected $json = ['product_info'];
+    protected $json = ['product_info','content'];
+
+    //状态切换
+    public function setStatusAttr($value)
+    {
+        if($value==2){
+            $this->setAttr('complete_time',time()); //完成时间
+        }
+        return $value;
+    }
 
     //设置申请单号
     public function setNoAttr($value)
@@ -127,6 +137,7 @@ class ProductReq extends Base
             $face_status = $model->getOrigin('face_status');
             $auth_status = $model->getOrigin('auth_status');
             $send_award_status = $model->getOrigin('send_award_status');
+            $is_contract = $model->getOrigin('is_contract');
             //申请状态更改
             if(isset($model['status']) && $model['status']!=$status && $model['status']==1){
                 $title = '提交申请成功';
@@ -166,7 +177,7 @@ class ProductReq extends Base
 
             }elseif(isset($model['auth_status']) &&  $model['auth_status']!=$auth_status && $model['auth_status']==2){
                 $title = '审核被拒';
-                $intro = $model['auth_content']?$model['auth_content']:'非常抱歉，您申请的贷款未功款成功！';
+                $intro = $model['auth_content']?$model['auth_content']:'非常抱歉，您申请的贷款未放款成功！';
                 $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
@@ -177,7 +188,14 @@ class ProductReq extends Base
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
                 //创建提示消息
-                UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'****',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
+                UserMessage::recordMsg(3,'成功借款','恭喜！'.substr_replace($model['phone'],'*',3,4).'的用户成功借款'.$model['money'].Product::$money_unit[$model['money_unit']],$model['uid']);
+
+            }elseif(isset($model['is_contract']) && $model['is_contract']!=$is_contract && $model['is_contract']>0){
+                $title = '签订合同';
+                $intro = '签订合同成功';
+                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
             }elseif(isset($model['p_auth_mid']) && $model['p_auth_mid']!=$send_award_status && $model['p_auth_mid']>0){
 //                $model_manage = new Manage();
@@ -221,6 +239,11 @@ class ProductReq extends Base
         $model->auth_uid = $user_id;
         $model->auth_status = $auth_status;
         $model->auth_content = $auth_content;
+        //拒绝
+        if($auth_status==2){
+            $model->status = 2; //标记申请已完成
+        }
+
 
         $state = $model->save();
         return $state;
@@ -287,7 +310,6 @@ class ProductReq extends Base
         }
 
         return $state;
-
     }
 
     //处理项目还款计划
@@ -339,17 +361,17 @@ class ProductReq extends Base
     //获取产品状态
     public function getStatusInfo()
     {
-        $status_info = [1,'创建申请',''];
+        $status_info = [1,'审核中','审核中'];
         if($this['auth_status']==2){
             $status_info = [2,'审核被拒',$this['auth_content']?$this['auth_content']:'审核被拒'];
 
         }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==0){
-            $status_info = [3,'未发款','未发款'];
+            $status_info = [3,'待放款','待发款'];
 
         }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==1){
             $status_info = [4,'已放款','已放款'];
 
-        }elseif($this['face_status']==0){
+        }elseif($this['auth_status']>0 && $this['face_status']==0){
             $status_info = [5,'面谈中',$this['auth_content']?$this['auth_content']:'面谈中'];
 
         }
@@ -357,6 +379,29 @@ class ProductReq extends Base
         return $status_info;
     }
 
+    //产品签订合同
+    public function contract($id,$opt_uid,$mine_opt_uid=0)
+    {
+        $model_info = $this->get($id);
+        empty($model_info) && abort(4000,'操作对象异常');
+        !empty($model_info['is_contract']) && abort(4000,'已签订合同，无法再次操作');
+        //获取用户信息
+        $model_user = (new Users())->where('id',$model_info['uid'])->find();
+        empty($model_info) && abort(4000,'用户资料异常');
+
+        try{
+            $model_info->is_contract=1;
+            $model_info->contract_opt_id=$opt_uid;
+            $model_info->mine_opt_uid=$mine_opt_uid;//自己同意合同
+            $model_info->contract_time=time();
+            //模版内容
+            $model_info->contract_content=\app\common\service\temp\Contract::changeContent($model_user);
+            $model_info->save();
+        }catch (\Exception $e){
+            abort(4000,$e->getMessage());
+        }
+
+    }
 
 
     //关联日志

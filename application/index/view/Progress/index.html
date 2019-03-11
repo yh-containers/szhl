@@ -12,6 +12,7 @@
             <li class="my_nav_list_item {:is_null($status)?'active':''}"><a href="{:url('Progress/index')}">全部</a></li>
             <li class="my_nav_list_item {:$status==1?'active':''}"><a href="{:url('Progress/index',['status'=>1])}">审批中</a></li>
             <li class="my_nav_list_item {:$status==2?'active':''}"><a href="{:url('Progress/index',['status'=>2])}">面谈中</a></li>
+            <li class="my_nav_list_item {:$status==5?'active':''}"><a href="{:url('Progress/index',['status'=>5])}">未放款</a></li>
             <li class="my_nav_list_item {:$status==3?'active':''}"><a href="{:url('Progress/index',['status'=>3])}">已放款</a></li>
             <li class="my_nav_list_item {:$status==4?'active':''}"><a href="{:url('Progress/index',['status'=>4])}">已拒绝</a></li>
         </ul>

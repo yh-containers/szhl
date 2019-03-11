@@ -8,14 +8,17 @@ class User extends Common
 {
     public function index()
     {
+        $keyword = $this->request->param('keyword','','trim');
         $model = new \app\common\model\Users();
         $where=[];
+        $keyword && $where[] = ['name|phone','like','%'.$keyword.'%'];
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         $list = $model->where($where)->paginate();
         return view('index',[
             'list' => $list,
-            'proxy_id' => $this->proxy_id
+            'proxy_id' => $this->proxy_id,
+            'keyword' => $keyword,
         ]);
 
     }
@@ -27,7 +30,7 @@ class User extends Common
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         $model = new \app\common\model\Users();
-        $model = $model->with(['linkDirectFuid','linkMineReq'])->where($where)->find();
+        $model = $model->with(['linkDirectFuid','linkMineReq','linkMineReqTwo'])->where($where)->find();
         return view('userDetail',[
             'model' => $model
         ]);
@@ -82,10 +85,14 @@ class User extends Common
     //代理用户
     public function proxy()
     {
+        $keyword = $this->request->param('keyword','','trim');
         $model = new \app\common\model\Manage();
-        $list = $model->where('proxy_id',1)->paginate();
+        $where=[];
+        $keyword && $where[] = ['name|account','like','%'.$keyword.'%'];
+        $list = $model->where($where)->where('proxy_id',1)->paginate();
         return view('proxy',[
             'list'=>$list,
+            'keyword' => $keyword,
         ]);
     }
 
@@ -165,6 +172,16 @@ class User extends Common
         }catch (\Exception $e){
             return ['code'=>0,'msg'=>'操作异常:'.$e->getMessage()];
         }
+    }
+
+    //合同信息查看
+    public function contract($id=0)
+    {
+        $id = $id?intval($id):0;
+        $model = new \app\common\model\Users();
+        $model = $model->get($id);
+        $content = (new \app\common\service\temp\Contract())->changeContent($model);
+        return $content;
     }
 
 }

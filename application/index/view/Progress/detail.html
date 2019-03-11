@@ -13,7 +13,7 @@
         <div class="apply_status">
             <img src="/static/index/images/apply_status.png">
             <div class="text">
-                <p>{:$model?$model::$fields_status[$model['status']].','.$model::$fields_face_status[$model['face_status']].','.$model::$fields_auth_status[$model['auth_status']]:''}</p>
+                <p>{:$model?$model::$fields_status[$model['status']].','.$model::$fields_face_status[$model['face_status']].','.$model::$fields_is_contract[$model['is_contract']].','.$model::$fields_auth_status[$model['auth_status']]:''}</p>
             </div>
         </div>
         <div class="logistics">
@@ -66,9 +66,21 @@
             </div>
         </div>
 
+        {if(!$model['face_status'] && $model['face_status']!=2)}
         <div class="btn_data">
-            <a href="{:url('progress/applyData')}">完善资料</a>
+
+            <a href="{:url('progress/applyData',['req_id'=>$model['id']])}">完善资料</a>
+
         </div>
+        {elseif(!$model['is_contract'] && $model['face_status']!=2)/}
+        <div class="btn_data">
+
+            <a href="{:url('progress/contract',['req_id'=>$model['id']])}">签订合同</a>
+
+
+        </div>
+        {/if}
+
     </div>
 
 {/block}

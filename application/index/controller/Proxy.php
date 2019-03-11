@@ -59,8 +59,9 @@ class Proxy extends Common
     //我推荐的用户
     public function client()
     {
+        $uid = $this->request->param('uid',0,'intval');
         $model_users = new \app\common\model\Users();
-        $where[] = ['fuid1','=',$this->user_id];
+        $where[] = ['fuid1','=',$uid?$uid:$this->user_id];
         //推荐总人数
         $total_up_number = $model_users->where($where)->count();
         //本月推荐人数
@@ -76,6 +77,7 @@ class Proxy extends Common
         });
 
         return view('client',[
+            'uid'=>$uid,
             'total_up_number' =>$total_up_number,
             'current_month_up_number' =>$current_month_up_number,
             'current_day_up_number' =>$current_day_up_number,
@@ -86,8 +88,9 @@ class Proxy extends Common
     //我推荐的用户数据
     public function showClientList()
     {
+        $uid = $this->request->param('uid',0,'intval');
         $model = new \app\common\model\Users();
-        $where[] = ['fuid1','=',$this->user_id];
+        $where[] = ['fuid1','=',$uid?$uid:$this->user_id];
         $list = $model
             ->where($where)
             ->withSum(['linkReqList'=>function($query){

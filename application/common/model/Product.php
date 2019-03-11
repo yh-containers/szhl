@@ -227,4 +227,10 @@ class Product extends Base
     {
         return $this->hasOne('ProxyProduct','pid');
     }
+
+    //关联代理商--一条数据
+    public function linkChoose()
+    {
+        return $this->hasMany('ProductChoose','pid');
+    }
 }

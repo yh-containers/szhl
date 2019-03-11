@@ -1,0 +1,706 @@
+{extend name="base"/}
+
+{block name="title"}申请贷款{/block}
+
+{block name="content"}
+<div class="header">
+    <a class="back" href="javascript:history.go(-1)"></a>
+    <h4>申请贷款</h4>
+</div>
+<div class="main">
+    <div class="apply_content">
+
+        <div class="apply_process">
+            <div class="item active">
+                <span>1</span>
+                <p>选择产品</p>
+            </div>
+            <div class="item active">
+                <span>2</span>
+                <p>填写信息</p>
+            </div>
+            <div class="item">
+                <span>3</span>
+                <p>申请成功</p>
+            </div>
+        </div>
+        <div class="apply_data">
+            <div class="apply_list">
+                <div class="item">
+                    <div class="label"><font>*</font>姓名</div>
+                    <div class="con"><input type="text" placeholder="请输入姓名" /></div>
+                </div>
+                <div class="item">
+                    <div class="label"><font>*</font>身份证号码</div>
+                    <div class="con"><input type="text" maxlength="18" placeholder="请输入身份证号码" /></div>
+                </div>
+                <div class="item">
+                    <div class="label"><font>*</font>年龄</div>
+                    <div class="con"><input type="tel" maxlength="11" placeholder="请输入年龄" /></div>
+                </div>
+                <div class="item">
+                    <div class="label"><font>*</font>手机号码</div>
+                    <div class="con"><input type="tel" maxlength="11" placeholder="请输入手机号码" /></div>
+                </div>
+            </div>
+
+            <div class="apply_date">
+                <div class="row">
+                    <div class="item">
+                        <div class="label">户籍</div>
+                        <div class="con">
+                            <a href="javascript:;">大陆籍</a>
+                            <a href="javascript:;">港澳台</a>
+                            <a href="javascript:;">外籍</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">婚姻状况</div>
+                        <div class="con">
+                            <a href="javascript:;">已婚</a>
+                            <a href="javascript:;">未婚</a>
+                            <a href="javascript:;">离异</a>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">职业类别</div>
+                        <div class="con menu">
+                            <a href="javascript:;">上班</a>
+                            <a href="javascript:;">自雇</a>
+                        </div>
+                        <div class="item_content">
+                            <!-- 上班 -->
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">单位名称</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入单位名称" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">单位地址</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入单位地址" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">有无6个月以上代发工资</div>
+                                    <div class="con">
+                                        <a href="javascript:;">有</a>
+                                        <a href="javascript:;">无</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">有无社保</div>
+                                    <div class="con">
+                                        <a href="javascript:;">有</a>
+                                        <a href="javascript:;">无</a>
+                                    </div>
+                                    <div class="item_content">
+                                        <!-- 有社保 -->
+                                        <div class="item item_sub">
+                                            <div class="items">
+                                                <div class="label">社保基数</div>
+                                                <div class="con">
+                                                    <input type="text" placeholder="例如：3000" />
+                                                </div>
+                                            </div>
+                                            <div class="items">
+                                                <div class="label">缴存年限</div>
+                                                <div class="con">
+                                                    <input type="text" placeholder="例如：1年" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">有无公积金</div>
+                                    <div class="con">
+                                        <a href="javascript:;">有</a>
+                                        <a href="javascript:;">无</a>
+                                    </div>
+                                    <div class="item_content">
+                                        <!-- 有公积金 -->
+                                        <div class="item item_sub">
+                                            <div class="items">
+                                                <div class="label">缴存年限</div>
+                                                <div class="con">
+                                                    <input type="text" placeholder="例如：1年" />
+                                                </div>
+                                            </div>
+                                            <div class="items">
+                                                <div class="label">公积金基数</div>
+                                                <div class="con">
+                                                    <input type="text" placeholder="例如：3000" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">是否可以考察</div>
+                                    <div class="con">
+                                        <a href="javascript:;">是</a>
+                                        <a href="javascript:;">否</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">社保与当前单位是否一致</div>
+                                    <div class="con">
+                                        <a href="javascript:;">是</a>
+                                        <a href="javascript:;">否</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 自雇 -->
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">企业名称</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入企业名称" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">企业地址</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入企业地址" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">营业执照注册时间</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="例如：2019-1-1" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">股份</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">是否为法人</div>
+                                    <div class="con">
+                                        <a href="javascript:;">是</a>
+                                        <a href="javascript:;">否</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">月开票额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入月开票额" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">年纳税额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入年纳税额" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="apply_date">
+                <div class="title">配偶信息</div>
+                <div class="row">
+                    <div class="item">
+                        <div class="label">姓名</div>
+                        <div class="con"><input type="text" placeholder="请输入姓名" /></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">身份证号码</div>
+                        <div class="con"><input type="text" maxlength="18" placeholder="请输入身份证号码" /></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">年龄</div>
+                        <div class="con"><input type="tel" maxlength="11" placeholder="请输入年龄" /></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">手机号码</div>
+                        <div class="con"><input type="tel" maxlength="11" placeholder="请输入手机号码" /></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">配偶能否知道贷款</div>
+                        <div class="con">
+                            <a href="javascript:;">是</a>
+                            <a href="javascript:;">否</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">配偶名下有无案件</div>
+                        <div class="con">
+                            <a href="javascript:;">有</a>
+                            <a href="javascript:;">无</a>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">职业类别</div>
+                        <div class="con menu">
+                            <a href="javascript:;">上班</a>
+                            <a href="javascript:;">自雇</a>
+                        </div>
+                        <div class="item_content">
+                            <!-- 上班 -->
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">单位名称</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入单位名称" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 自雇 -->
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">营业执照名称</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入营业执照名称" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">注册时间</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="例如：2019-1-1" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">股份</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">是否为法人</div>
+                                    <div class="con">
+                                        <a href="javascript:;">是</a>
+                                        <a href="javascript:;">否</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply_date">
+                <div class="title">资产条件信息</div>
+                <div class="row">
+                    <div class="item">
+                        <div class="label">房产</div>
+                        <div class="con">
+                            <a href="javascript:;">有深房</a>
+                            <a href="javascript:;">全国房</a>
+                            <a href="javascript:;">无房</a>
+                        </div>
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">房产类型</div>
+                                    <div class="con">
+                                        <a href="javascript:;">住宅</a>
+                                        <a href="javascript:;">商住两用</a>
+                                        <a href="javascript:;">公寓</a>
+                                        <a href="javascript:;">别墅</a>
+                                        <a href="javascript:;">商铺</a>
+                                        <a href="javascript:;">厂房</a>
+                                        <a href="javascript:;">宿舍楼</a>
+                                        <a href="javascript:;">综合楼</a>
+                                        <a href="javascript:;">自建房</a>
+                                        <a href="javascript:;">小产权房</a>
+                                        <a href="javascript:;">福利房</a>
+                                        <a href="javascript:;">军产权</a>
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">房产状态</div>
+                                    <div class="con">
+                                        <a href="javascript:;">月供</a>
+                                        <a href="javascript:;">月供已结清</a>
+                                        <a href="javascript:;">全款购房</a>
+                                    </div>
+                                    <div class="item_content">
+                                        <div class="item item_sub">
+                                            <div class="items">
+                                                <div class="label">还款方式</div>
+                                                <div class="con">
+                                                    <a href="javascript:;">等额还款</a>
+                                                    <a href="javascript:;">先息后本</a>
+                                                    <a href="javascript:;">其他还款方式</a>
+                                                </div>
+                                            </div>
+
+                                            <div class="items">
+                                                <div class="label">月供时间</div>
+                                                <div class="con">
+                                                    <a href="javascript:;">1个月</a>
+                                                    <a href="javascript:;">1-3个月</a>
+                                                    <a href="javascript:;">3-6个月</a>
+                                                    <a href="javascript:;">6-12个月</a>
+                                                    <a href="javascript:;">12-24个月</a>
+                                                    <a href="javascript:;">24个月以上</a>
+                                                </div>
+                                            </div>
+
+                                            <div class="items">
+                                                <div class="label">月供金额</div>
+                                                <div class="con">
+                                                    <input type="text" placeholder="例如：3000" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">保险公司</div>
+                        <div class="con">
+                            <a href="javascript:;">平安</a>
+                            <a href="javascript:;">太平洋</a>
+                            <a href="javascript:;">太平</a>
+                            <a href="javascript:;">中国人寿</a>
+                            <a href="javascript:;">泰康</a>
+                            <a href="javascript:;">无保险</a>
+                        </div>
+
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">缴费方式</div>
+                                    <div class="con">
+                                        <a href="javascript:;">年缴</a>
+                                        <a href="javascript:;">月缴</a>
+                                        <a href="javascript:;">季缴</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">缴费时间</div>
+                                    <div class="con">
+                                        <a href="javascript:;">年缴</a>
+                                        <a href="javascript:;">月缴</a>
+                                        <a href="javascript:;">季缴</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">保费年缴金额</div>
+                                    <div class="con">
+                                        <a href="javascript:;">年缴</a>
+                                        <a href="javascript:;">月缴</a>
+                                        <a href="javascript:;">季缴</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">保单近2年有无断交、复效、变更投保人</div>
+                                    <div class="con">
+                                        <a href="javascript:;">有</a>
+                                        <a href="javascript:;">无</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="item">
+                        <div class="label">车子状态</div>
+                        <div class="con">
+                            <a href="javascript:;">按揭中</a>
+                            <a href="javascript:;">抵押中</a>
+                            <a href="javascript:;">全款车</a>
+                            <a href="javascript:;">无车</a>
+                        </div>
+
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">按揭时间</div>
+                                    <div class="con">
+                                        <a href="javascript:;">6个月以下</a>
+                                        <a href="javascript:;">6-12个月</a>
+                                        <a href="javascript:;">12个月以上</a>
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">车龄</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入车龄" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">车型</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入车型" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">裸车价</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入裸车价" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">车龄</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入车龄" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">车型</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入车型" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">裸车价</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入裸车价" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply_date">
+                <div class="title">征信情况</div>
+                <div class="row">
+                    <div class="item">
+                        <div class="label">有无小额</div>
+                        <div class="con">
+                            <a href="javascript:;">有</a>
+                            <a href="javascript:;">无</a>
+                        </div>
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">小额金额</div>
+                                    <div class="con">
+                                        <a href="javascript:;">0.5万以下</a>
+                                        <a href="javascript:;">0.5-1万</a>
+                                        <a href="javascript:;">1万以上</a>
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">小额笔数</div>
+                                    <div class="con">
+                                        <a href="javascript:;">0-2</a>
+                                        <a href="javascript:;">2笔以上</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">消费金额贷款有无</div>
+                        <div class="con">
+                            <a href="javascript:;">有</a>
+                            <a href="javascript:;">无</a>
+                        </div>
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">消费金额贷款金额</div>
+                                    <div class="con">
+                                        <a href="javascript:;">0.5万以下</a>
+                                        <a href="javascript:;">0.5-1万</a>
+                                        <a href="javascript:;">1万以上</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">贷款或信用卡是否正常</div>
+                        <div class="con">
+                            <a href="javascript:;">是</a>
+                            <a href="javascript:;">否</a>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">当前有无逾期</div>
+                        <div class="con">
+                            <a href="javascript:;">无</a>
+                            <a href="javascript:;">1</a>
+                            <a href="javascript:;">2</a>
+                            <a href="javascript:;">3</a>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">2年内逾期</div>
+                        <div class="con">
+                            <a href="javascript:;">无</a>
+                            <a href="javascript:;">1</a>
+                            <a href="javascript:;">2</a>
+                            <a href="javascript:;">3</a>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">2年外逾期</div>
+                        <div class="con">
+                            <a href="javascript:;">无</a>
+                            <a href="javascript:;">1</a>
+                            <a href="javascript:;">2</a>
+                            <a href="javascript:;">3</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="apply_date">
+                <div class="title">负债情况</div>
+                <div class="row">
+                    <div class="item">
+                        <div class="label">信用贷负债</div>
+                        <div class="con">
+                            <a href="javascript:;">有</a>
+                            <a href="javascript:;">无</a>
+                        </div>
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">放贷银行</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入放贷银行" />
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">放贷总额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入放贷总额" />
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">余额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入余额" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">到时时间</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入到时时间" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">抵押类负债</div>
+                        <div class="con">
+                            <a href="javascript:;">有</a>
+                            <a href="javascript:;">无</a>
+                        </div>
+                        <div class="item_content">
+                            <div class="item item_sub">
+                                <div class="items">
+                                    <div class="label">放贷银行</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入放贷银行" />
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">放贷总额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入放贷总额" />
+                                    </div>
+                                </div>
+
+                                <div class="items">
+                                    <div class="label">余额</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入余额" />
+                                    </div>
+                                </div>
+                                <div class="items">
+                                    <div class="label">到时时间</div>
+                                    <div class="con">
+                                        <input type="text" placeholder="请输入到时时间" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">信用卡总额</div>
+                        <div class="con">
+                            <input type="text" placeholder="信用卡总额" value="0" />
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">近6个月平均使用额</div>
+                        <div class="con">
+                            <input type="text" placeholder="近6个月平均使用额" value="0" />
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="label">客户及配偶近半年月流水</div>
+                        <div class="con">
+                            <a href="javascript:;">0.5W</a>
+                            <a href="javascript:;">0.5-1万</a>
+                            <a href="javascript:;">1-2万</a>
+                            <a href="javascript:;">2万-5万</a>
+                            <a href="javascript:;">5万以上</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="apply_btn">
+            <a href="apply_success.html" class="btn btn-primary">确定提交</a>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    $(".item .con a").on("click",function(){
+        $(this).addClass("checked").siblings().removeClass("checked");
+    });
+</script>
+
+{/block}
+

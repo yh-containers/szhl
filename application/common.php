@@ -32,6 +32,30 @@ function arr_field_group(array $data,$field)
     }
     return array_values($arr);
 }
+/**
+ * 递归实现无限极分类
+ * @param $array 分类数据
+ * @param $pid 父ID
+ * @param $level 分类级别
+ * @return $list 分好类的数组 直接遍历即可 $level可以用来遍历缩进
+ */
+
+/**
+ * @方法二：将数据格式转换成树形结构数组
+ * @param array $items 要进行转换的数组
+ * return array $items 转换完成的数组
+ */
+function arrayToTree2(array $items) {
+    $tree = array();
+    foreach ($items as $item)
+        if (isset($items[$item['pid']])) {
+            $items[$item['pid']]['son'][] = &$items[$item['id']];
+        } else {
+            $tree[] = &$items[$item['id']];
+        }
+    return $tree;
+}
+
 
 /**
  * curl 函数
@@ -93,4 +117,44 @@ function go_curl($url, $type='GET', $data = false, &$err_msg = null, $timeout = 
         }
     }
     return $response;
+}
+
+/**
+ * 发送HTTP请求方法
+ * @param  string $url    请求URL
+ * @param  array  $params 请求参数
+ * @param  string $method 请求方法GET/POST
+ * @return array  $data   响应数据
+ */
+function net_req($url, $params, $method = 'GET', $header = array(), $multi = false){
+    $opts = array(
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HTTPHEADER     => $header
+    );
+    /* 根据请求类型设置特定参数 */
+    switch(strtoupper($method)){
+        case 'GET':
+            $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+            break;
+        case 'POST':
+            //判断是否传输文件
+            $params = $multi ? $params : http_build_query($params);
+            $opts[CURLOPT_URL] = $url;
+            $opts[CURLOPT_POST] = 1;
+            $opts[CURLOPT_POSTFIELDS] = $params;
+            break;
+        default:
+            throw new Exception('不支持的请求方式！');
+    }
+    /* 初始化并执行curl请求 */
+    $ch = curl_init();
+    curl_setopt_array($ch, $opts);
+    $data  = curl_exec($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+    if($error) throw new Exception('请求发生错误：' . $error);
+    return  $data;
 }

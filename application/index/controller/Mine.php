@@ -103,7 +103,7 @@ class Mine extends Common
         return view('myHome',[
             'user_model_info' => $this->user_model_info,
             'user_model'      => $this->user_model,
-            'req_url' => url('index/login',['req_user_id'=>$this->user_model_info["id"]],false,true),
+            'req_url' => $this->user_model_info->getTicket(),
         ]);
     }
 
@@ -284,4 +284,11 @@ class Mine extends Common
             'info' => $info
         ]);
     }
+
+    //合同
+//    public function contract()
+//    {
+//        $content = (new \app\common\service\temp\Contract())->changeContent($this->user_model_info);
+//        return htmlspecialchars_decode($content);
+//    }
 }

@@ -21,7 +21,8 @@
         </div>
     </div>
 
-    <div class="nav_list">
+    <div class="nav_col_4">
+        <a href="{:url('match')}" class="item"><img src="/static/index/images/nav-10.png"><span>贷款匹配</span></a>
         {volist name="menu" id="vo"}
         <a href="{:url('Product/index',['type'=>$vo['type']])}" class="item"><img src="/static/index/images/nav-{$vo['nav']}.png"><span>{$vo['name']}</span></a>
         {/volist}

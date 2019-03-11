@@ -1,0 +1,69 @@
+﻿{extend name="base"/}
+{block name="title"}管理人员{/block}
+
+{block name="breadcrumb"}系统管理,服务协议,合同模版{/block}
+
+{block name="content"}
+
+<div class="pd-20">
+    <form class="layui-form" action="{:url('settingAction')}">
+
+        <input type="hidden" name="type" value="contract_temp">
+        <div class="layui-form-item col-sm-8">
+            <div class="col-sm-12">
+                <!-- 加载编辑器的容器 -->
+                <script id="container" name="content" type="text/plain">{:htmlspecialchars_decode($content)}</script>
+            </div>
+        </div>
+        <div class="col-sm--4">
+            <button type="button" class="layui-btn mt-10"  lay-submit lay-filter="formDemo" data-type="content">立即提交</button>
+            <h4>模板API</h4>
+
+            <div id="btns">
+                <div>
+                    {volist name="temp_var" id="vo"}
+                    <button type="button" onclick="setTempVar('{$vo['var']}')">{$vo['name']}</button>
+                    {/volist}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </form>
+
+</div>
+
+
+
+{/block}
+{block name="script"}
+<!-- 配置文件 -->
+<script type="text/javascript" src="/static/admin/ueditor1_4_3_3/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/static/admin/ueditor1_4_3_3/ueditor.all.js"></script>
+<script>
+    var ue = UE.getEditor('container',{
+        toolbars: [
+            ['fullscreen', 'source', 'undo', 'redo','inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts','|','simpleupload'],
+            ['lineheight','|','customstyle', 'paragraph', 'fontfamily', 'fontsize', '|','directionalityltr', 'directionalityrtl', 'indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify'],
+            ['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
+        ]
+    });
+
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+        form.on('submit(formDemo)', $.common.formSubmit);
+
+    });
+    function setTempVar(temp_var) {
+        console.log(temp_var)
+
+        ue.execCommand('inserthtml',temp_var);
+    }
+
+</script>
+{/block}

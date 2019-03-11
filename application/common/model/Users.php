@@ -8,6 +8,7 @@ class Users extends Base
 
     protected $insert = ['face'=>'/uploads/face/toux.png','type','fuid1','proxy_id','name'];
     protected $auto = ['join_time'];
+    protected $json = ['wechat_qrcode'];
 
     public static $fields_type=['普通用户','合作伙伴','代理用户'];
 
@@ -29,6 +30,7 @@ class Users extends Base
 
             }
         }
+
 
         return $value?$value:0;
     }
@@ -251,6 +253,39 @@ class Users extends Base
         return '佣金奖励';
     }
 
+    /*
+     * 获取用户微信ticket
+     * */
+    public function getTicket()
+    {
+        $user_id = (int)$this->getData('id');
+        if(!$user_id){
+            return false;
+        }
+        if($this->wechat_qrcode){
+            if((time()-$this->wechat_qrcode['create_time']) <   $this->wechat_qrcode['expire_seconds']){
+                return $this->wechat_qrcode['url'];
+            }
+        }
+        try{
+            $ticket_info = \app\common\service\wechat\Jssdk::qrcodeUser($user_id);
+            if($ticket_info===false){
+                //异常
+                return false;
+            }else{
+                list($ticket,$expire_seconds,$url) = $ticket_info;
+                //缓存票据
+                $this->wechat_qrcode= ['ticket'=>$ticket,'expire_seconds'=>$expire_seconds,'url'=>$url,'create_time'=>time()];
+                $this->save();
+                return $url;
+            }
+        }catch (\Exception $e){
+            //异常--内部异常
+            return false;
+        }
+
+
+    }
 
     /*
      * 忘记密码
@@ -270,6 +305,14 @@ class Users extends Base
     public function linkMineReq()
     {
         return $this->hasMany('Users','fuid1');
+    }
+
+    /*
+     * 我邀请我的人--二级关联查询
+     * */
+    public function linkMineReqTwo()
+    {
+        return $this->hasMany('Users','fuid2');
     }
 
     /*

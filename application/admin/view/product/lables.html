@@ -25,7 +25,7 @@
 		<tbody>
 		{volist name="type_label_data" id="vo"}
 			<tr class="text-c">
-				<td rowspan="{:count($vo['data'])+1}">{$vo['name']}</td>
+				<td rowspan="{:count($vo['data'])+1}">{$vo['name']}（<a  href="javascript:;" onclick="$.common.openUrl('{:url("productCond",['type'=>$vo['type']])}','（{$vo['name']}）贷款条件信息')" >贷款条件信息</a>）</td>
 				{if(!$vo['data'])}
 				<td></td>
 				<td></td>
@@ -43,6 +43,13 @@
 				</tr>
 			{/volist}
 		{/volist}
+
+		<tr class="text-c">
+			<td>贷款匹配（<a  href="javascript:;" onclick="$.common.openUrl('{:url("productSearchCond")}','（贷款匹配）贷款匹配')" >贷款匹配</a>）</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
 		</tbody>
 	</table>
 

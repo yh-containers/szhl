@@ -34,7 +34,7 @@
                             <td>用户类型</td>
                             <td>{$model::$fields_type[$model['type']]}</td>
                             <td></td>
-                            <td><a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.request()->domain().'/index.php/index/login?req_user_id='.$model['id'].'&path='.$model['face']}','二维码')" class="ml-5">二维码</a></td>
+                            <td><a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.$model->getTicket().'&path='.$model['face']}','二维码')" class="ml-5">二维码</a></td>
                         </tr>
                         <tr>
                             <td>账户余额</td>
@@ -72,7 +72,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-3">
             <div class="panel panel-primary">
                 <div class="panel-header">我发展的用户</div>
                 <div class="panel-body pd-5">
@@ -85,7 +85,31 @@
                         </thead>
 
                         <tbody>
-                        {volist name="model['linkMineReq']" id="vo"}
+                        {volist name="model['link_mine_req']" id="vo"}
+                        <tr>
+                            <td>{$vo['name']}</td>
+                            <td>{$vo['phone']}</td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="panel panel-primary">
+                <div class="panel-header">我的二级用户</div>
+                <div class="panel-body pd-5">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <td>用户名</td>
+                            <td>手机号</td>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {volist name="model['link_mine_req_two']" id="vo"}
                         <tr>
                             <td>{$vo['name']}</td>
                             <td>{$vo['phone']}</td>

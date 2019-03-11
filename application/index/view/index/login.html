@@ -139,10 +139,10 @@
             }
 
             $.post("{:url('')}",obj,function(result){
-                console.log(result)
-                alert(result.msg)
                 if(result.code==1){
                     setTimeout(function(){window.location.href=result.url},1000)
+                }else{
+                    alert(result.msg)
                 }
             })
 

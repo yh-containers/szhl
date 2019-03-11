@@ -11,6 +11,16 @@
     <span class="l">
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("proxyAdd")}','添加代理用户')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加代理用户</a>
 	</span>
+	<span class="col-sm-3 r">
+		<form method="get">
+			<div class="col-sm-8 inline	">
+				<input type="text" class="input-text r" name="keyword" value="{$keyword}" placeholder="文本框">
+			</div>
+			<div class="col-sm-4 ">
+				<button class="	btn btn-primary radius l inline" type="submit">搜索</button>
+			</div>
+		</form>
+	</span>
 	</div>
 
 	<table class="table table-border table-bordered table-hover table-bg table-sort">

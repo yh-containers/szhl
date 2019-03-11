@@ -13,6 +13,16 @@
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("add")}','添加用户')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加用户</a>
 		{/if}
 	</span>
+	<span class="col-sm-3 r">
+		<form method="get">
+			<div class="col-sm-8 inline	">
+				<input type="text" class="input-text r" name="keyword" value="{$keyword}" placeholder="文本框">
+			</div>
+			<div class="col-sm-4 ">
+				<button class="	btn btn-primary radius l inline" type="submit">搜索</button>
+			</div>
+		</form>
+	</span>
 	</div>
 
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -41,7 +51,7 @@
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("userDetail",['id'=>$vo['id']])}','信息')" class="ml-5"> 查看</a>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("add",['id'=>$vo['id']])}','编辑')" class="ml-5"> 编辑</a>
-					<a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.request()->domain().'/index.php/index/login?req_user_id='.$vo['id'].'&path='.$vo['face']}','二维码')" class="ml-5"> 二维码</a>
+					<a href="javascript:;" onclick="$.common.openUrl('{:url("qrCode").'?content='.$vo->getTicket().'&path='.$vo['face']}','二维码')" class="ml-5"> 二维码</a>
 				</td>
 			</tr>
 		{/volist}
