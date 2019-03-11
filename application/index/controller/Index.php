@@ -269,7 +269,8 @@ class Index extends Common
 
     public function test()
     {
-        dump(\app\common\service\wechat\Jssdk::menu());exit;
+//        dump($_SESSION);
+//        dump(\app\common\service\wechat\Jssdk::sendMsg($openid,$content));exit;
 
 //        $model = new \app\common\model\Users();
 //        $model = $model->get(1);

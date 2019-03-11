@@ -146,12 +146,22 @@ class Users extends Base
             //清空缓存
             session($session_name,null);
         }else{
+            $user_id = $this->getData('id');
             //保存登录信息
             session($session_name,[
-                'user_id' => $this->getData('id'),
+                'user_id' => $user_id,
                 'type' => $this->getData('type'),
                 'proxy_id' => $this->getData('proxy_id'),
             ]);
+            //微信授权信息
+            $auth_info_wx = session('auth_info_wx');
+            if(!empty($auth_info_wx)){
+                //绑定微信号
+                $state = (new self())->where('id',$user_id)->setField('openid',$auth_info_wx['openid']);
+                //有影响就删除之前帐号关联的微信号
+                $state && (new self())->where([['id','<>',$user_id],['openid','=',$auth_info_wx['openid']]])->setField('openid','');
+            }
+
         }
 
     }
@@ -185,6 +195,9 @@ class Users extends Base
                //成功邀请用户
                //创建提示消息
                UserMessage::recordMsg(1,'成功邀请一位用户','',$model['fuid1']);
+               //发送微信通知
+               $openid = (new Users())->where('id',$model['fuid1'])->value('openid');
+               $openid && \app\common\service\wechat\Jssdk::sendMsg($openid,'成功邀请一位用户');
            }
         });
 

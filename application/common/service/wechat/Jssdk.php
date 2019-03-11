@@ -143,4 +143,29 @@ class Jssdk
         return $result;
     }
 
+    /*
+     * 发送消息
+     * */
+    public static function sendMsg($openid,$content,$type='text')
+    {
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.self::getAccessToken();
+        $data['touser'] = $openid;
+        $data['msgtype'] = $type;
+        if($type=='text'){
+            $data['text'] = ['content'=>$content];
+        }else{
+            return false;
+        }
+        $json = json_encode($data,JSON_UNESCAPED_UNICODE);
+        $result = net_req($url,$json,'POST',[
+            'Content-Type: application/x-www-form-urlencoded'
+        ],true);
+        $result = json_decode($result,true);
+        if($result['errcode']>0){
+            //异常
+            return false;
+        }
+        return true;
+    }
+
 }
