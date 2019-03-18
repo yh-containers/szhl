@@ -63,6 +63,11 @@
                     <label>身份证号</label>
                     <span>{:$model['card']?substr_replace($model['card'],'********','3','11'):''}</span>
                 </div>
+                {if($model['is_contract'])}
+                <div class="btn_data">
+                    <a href="{:url('progress/lookContract',['req_id'=>$model['id'],'state'=>1])}">下载合同</a>
+                </div>
+                {/if}
             </div>
         </div>
 

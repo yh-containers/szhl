@@ -6,6 +6,30 @@ class Index extends Common
     protected $need_login = true;
     protected $ignore_login_action = 'repair,identity,login,reg,forget,sendSms,changeLocation,test';
 
+    protected $beforeActionList = [
+        'checkWxAuthLogin',
+    ];
+
+    public function checkWxAuthLogin()
+    {
+        if(session('?auth_info_wx') && !session('?is_check_wx_login')){
+            //标记已检测微信登录状态
+            session('is_check_wx_login',1);
+            //微信直接登录
+            $auth_info_wx= session('auth_info_wx');
+            if(!empty($auth_info_wx['openid'])){
+                $model =  new \app\common\model\Users();
+                $user_model = $model->where(['openid'=>$auth_info_wx['openid']])->find();
+                if(!empty($user_model)){
+                    $user_model->handleLoginInfo();
+                    $this->redirect(url('index/index'));
+                }
+
+            }
+        }
+
+    }
+
     //维护页面
     public function repair()
     {
@@ -86,7 +110,6 @@ class Index extends Common
             $this->redirect('index/identity');
         }
 
-
         if($this->request->ISAJAX()){
             $mode = $this->request->param('mode',0,'intval');
             $php_input = $this->request->param();
@@ -104,7 +127,6 @@ class Index extends Common
             }catch (\Exception $e) {
                 return ['code'=>$e->getCode(),'msg'=>$e->getMessage()];
             }
-
         }
 
         return view('login',[

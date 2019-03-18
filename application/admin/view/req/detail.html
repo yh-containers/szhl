@@ -76,6 +76,8 @@
 
                     {if($model['auth_status']==1 && !$model['is_contract'])}
                         <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="contract">合同</a>
+                    {elseif($model['is_contract']==1)/}
+                        <a href="{:url('contract',['id'=>$model['id'],'state'=>1])}"  class="layui-btn" data-id="{$model['id']}" target="_blank">查看合同</a>
                     {/if}
                 </div>
             </div>
@@ -152,6 +154,59 @@
                     </table>
                 </div>
             </div>
+
+            <div class="panel panel-primary mt-10">
+                <div class="panel-header">
+                    客户信息
+                    <button type="button"  class="btn btn-warning  size-S radius f-r down-excel">下载excel</button>
+                </div>
+                <div class="panel-body">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col width="70">
+                            <col width="80">
+                            <col>
+                        </colgroup>
+
+                        <tbody>
+
+                        <tr>
+                            <td>用户名</td>
+                            <td>{$model['name']}</td>
+                            <td>手机号码</td>
+                            <td>{$model['phone']}</td>
+                            <td>身份证</td>
+                            <td>{$model['card']}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {for start="0" end="count($model['percent_data'])"  step="4" name="i" }
+                        {php}
+                        $content = array_slice($model['percent_data'],$i,4);
+                        {/php}
+                        <tr>
+                            <td>{:isset($content[0])?$content[0]['name']:''}</td>
+                            <td>{:isset($content[0])?$content[0]['info']:''}</td>
+                            <td>{:isset($content[1])?$content[1]['name']:''}</td>
+                            <td>{:isset($content[1])?$content[1]['info']:''}</td>
+                            <td>{:isset($content[2])?$content[2]['name']:''}</td>
+                            <td>{:isset($content[2])?$content[2]['info']:''}</td>
+                            <td>{:isset($content[3])?$content[3]['name']:''}</td>
+                            <td>{:isset($content[3])?$content[3]['info']:''}</td>
+                        </tr>
+                        {/for}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="panel panel-primary mt-10">
                 <div class="panel-header">还款计划</div>
                 <div class="panel-body">

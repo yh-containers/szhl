@@ -172,7 +172,6 @@ class Product extends Common
         if($this->user_type==2){
             $model = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
         }
-
         $model = $model->get($id);
         $model && $model->setInc('view');//新增浏览次数
         return view('detail',[

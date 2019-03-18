@@ -51,7 +51,7 @@ class Mine extends Common
     {
         //限制可修改的字段
         $type = $this->request->param('type','');
-        $limit_fields = ['face'=>'','name'=>'','city'=>0];
+        $limit_fields = ['face'=>'','name'=>'','city'=>0,'birthday'=>''];
         $php_input = $this->request->param();
         $php_input = array_filter(array_intersect_key($php_input,$limit_fields));
         if($type=='face'){

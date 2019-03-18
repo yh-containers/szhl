@@ -29,7 +29,9 @@ class Common extends Controller
                 header('content-type:application/json; charset=utf-8');
                 echo json_encode(['code'=>-1,'msg'=>'请先登录','url'=>url('Login/login')]);exit;
             }else{
-                $this->redirect('Login/login');
+//                header('Location:'.url('login/login',[],true,true));
+//                $this->redirect('Login/login');
+                echo '<script>window.parent.location.href="'.url('login/login',[],true,true).'"</script>';exit;
 
             }
         }

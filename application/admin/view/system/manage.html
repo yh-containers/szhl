@@ -11,6 +11,14 @@
     <span class="l">
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("manageAdd")}','添加管理员')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加管理员</a>
 	</span>
+    <span class="l select-box ml-10 inline">
+    	<select class="select" id="select-block">
+			<option value="0">部门</option>
+			{volist name="model_role" id="vo"}
+			<option value="{$vo['id']}" {:$rid==$vo['id']?'selected':''}>{$vo['name']}</option>
+			{/volist}
+		</select>
+	</span>
 	<span class="col-sm-3 r">
 		<form method="get">
 			<div class="col-sm-8 inline	">
@@ -61,4 +69,14 @@
 	{$list|raw}
 </div>
 
+{/block}
+
+{block name="script"}
+<script>
+	$(function () {
+		$("#select-block").change(function(){
+			window.location.href="{:url('')}?rid="+$(this).val()
+		})
+	})
+</script>
 {/block}

@@ -86,28 +86,69 @@ class Progress extends Common
     public function applyData()
     {
         $req_id = $this->request->param('req_id',0,'intval');
-        $model = new \app\common\model\ProductReq();
-        $model = $model->where(['id'=>$req_id,'uid'=>$this->user_id])->find();
         if($this->request->isAjax()){
-            $model_content = $model['content']?$model['content']:[];
-            $content = $this->request->param('content');
-            foreach ($content as $key=>$vo) {
-                if(!empty($model_content)){
-                    if(isset($model_content[$key])){
-                        $model_content[$key]['info'] = $vo;
-                    }
-                }
-            }
-            $model->content = $model_content;
-            $model->save();
-            return ['code'=>1,'msg'=>'修改成功'];
+            $php_input = $this->request->param();
+            $model_req = new \app\common\model\ProductReq();
+            $result = $model_req->actionAdd($php_input);
+            return $result;
         }
 
+        //查询已选的属性
+        $model_setting = new \app\common\model\Setting();
+        $content = $model_setting->getContent('perfect_data');
+        $data = $content?explode(',',$content):[];
+        $one_data=(new \app\common\model\ProductSpuCol())->whereIn('id',$data)->order('sort','asc')->select()->toArray();
+        $one_data = array_column($one_data,null,'id');
+        $result_data = [];
+        foreach ($data as $vo) {
+            $info = isset($one_data[$vo])?$one_data[$vo]:[];
+            if($info){
+                foreach ($info['content'] as &$item){
+                    $item['spu_type'] = 0;      //spu_coll的id
+                    $item['spu_sc_id'] = $info['id'];      //spu_coll的id
+                }
+                $info['content'] = arrayToTree2($info['content']);
+                $result_data[]= $info;
+            }
+
+
+        }
+        $model = new \app\common\model\ProductReq();
+        $model = $model->get($req_id);
 
         return view('applyData',[
+            'one_data' => $result_data,
+            'req_id' => $req_id,
             'model' => $model,
         ]);
     }
+
+
+//    public function applyData()
+//    {
+//        $req_id = $this->request->param('req_id',0,'intval');
+//        $model = new \app\common\model\ProductReq();
+//        $model = $model->where(['id'=>$req_id,'uid'=>$this->user_id])->find();
+//        if($this->request->isAjax()){
+//            $model_content = $model['content']?$model['content']:[];
+//            $content = $this->request->param('content');
+//            foreach ($content as $key=>$vo) {
+//                if(!empty($model_content)){
+//                    if(isset($model_content[$key])){
+//                        $model_content[$key]['info'] = $vo;
+//                    }
+//                }
+//            }
+//            $model->content = $model_content;
+//            $model->save();
+//            return ['code'=>1,'msg'=>'修改成功'];
+//        }
+//
+//
+//        return view('applyData',[
+//            'model' => $model,
+//        ]);
+//    }
     /*
      * 合同信息
      * */
@@ -143,6 +184,45 @@ class Progress extends Common
     {
         $model_user = (new \app\common\model\Users())->where('id',$this->user_id)->find();
         $content = \app\common\service\temp\Contract::changeContent($model_user);
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>中翰哲</title>
+    <meta name="keywords" content="中瀚哲">
+    <meta name="description" content="中瀚哲">
+    <style>
+
+
+body {
+font-family:simsun;
+}</style>
+</head>
+<body>
+'.$content.'
+</body>
+</html>';
+//        return $html;
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setBasePath(\Env::get('root_path'));
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream();
+    }
+
+    /*
+     * 查看
+     * */
+    public function lookContract()
+    {
+        $req_id = $this->request->param('req_id',0,'intval');
+        $model = new \app\common\model\ProductReq();
+        $content = $model->where(['id'=>$req_id,'uid'=>$this->user_id])->value('contract_content');
         $html = '<!DOCTYPE html>
 <html>
 <head>

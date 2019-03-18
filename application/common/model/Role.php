@@ -17,4 +17,9 @@ class Role extends Base
     {
         return $value?strtolower($value):'';
     }
+
+    public function linkChild()
+    {
+        return $this->hasMany('Role','pid');
+    }
 }

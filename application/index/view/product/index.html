@@ -131,6 +131,9 @@
                     layui.each(list, function(index, item){
                         lis.push('<div class="row '+(item.is_hot?'hot':'')+'">\n' +
                             '                <a href="'+detail_url+'?id='+item.id+'&proxy_pro_id="'+item.proxy_pro_id+'>\n' +
+                            '                    <div class="goods-name">\n' +
+                            '                        <span class="name">'+item.name+'</span>\n' +
+                            '                    </div>\n' +
                             '                    <div class="goods-info">\n' +
                             '                        <div class="item">\n' +
                             '                            <h4><font><em>'+item.per+'</em>%</font></h4>\n' +
@@ -145,10 +148,7 @@
                             '                            <span>额度高至</span>\n' +
                             '                        </div>\n' +
                             '                    </div>\n' +
-                            '                    <div class="goods-name">\n' +
-                            '                        <span class="name">'+item.name+'</span>\n' +
-                            '                        <span class="desc">'+item.intro+'</span>\n' +
-                            '                    </div>\n' +
+                            '                    <div class="desc">'+item.intro+'</div>\n' +
                             '                </a>\n' +
                             '            </div>');
                     });

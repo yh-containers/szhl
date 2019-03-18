@@ -21,8 +21,9 @@ class Users extends Base
             $model = new self();
             $value=session('req_user_id');
             $req_user_info = $model->where('id',$value)->find();
-            if($req_user_info){
-                $fuid2 = $req_user_info['fuid2']?:0;
+            //普通会员无法享受代理
+            if($req_user_info && $req_user_info['type']>0){
+                $fuid2 = $req_user_info['fuid1']?:0;
                 $proxy_id = $req_user_info['proxy_id']; //邀请者代理商
 
                 $fuid2 && $this->setAttr('fuid2',$fuid2);

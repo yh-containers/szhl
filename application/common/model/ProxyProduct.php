@@ -43,4 +43,10 @@ class ProxyProduct extends Base
     {
         return $this->hasMany('ProductLogs','pid','pid')->order('id','desc');
     }
+
+    //关联代理商
+    public function linkManage()
+    {
+        return $this->belongsTo('Manage','proxy_id');
+    }
 }

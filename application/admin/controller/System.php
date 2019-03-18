@@ -16,17 +16,30 @@ class System extends Common
     //管理人员
     public function manage()
     {
+        $rid = $this->request->param('rid',0,'intval');
         $keyword = $this->request->param('keyword','','trim');
         $keyword && $where[] = ['account|name','like','%'.$keyword.'%'];
-
         $model = new \app\common\model\Manage();
-        $where[] = ['proxy_id','=',$this->proxy_id];
-        $list = $model->with(['linkRole'=>function($query){
+        $model = $model->with(['linkRole'=>function($query){
             return $query->field('id,name');
-        }])->withCount(['linkProductReq','linkProductReqComplete','linkProductReqTodayComplete'])->where($where)->paginate();
+        }])->withCount(['linkProductReq','linkProductReqComplete','linkProductReqTodayComplete']);
+        $model_role = new \app\common\model\Role();
+        if($rid) {
+            //所有角色
+            $rids = $model_role->where('pid',$rid)->column('id');
+            array_push($rids,$rid);
+            $model = $model->whereIn('rid',$rids);
+        }
+
+
+        $where[] = ['proxy_id','=',$this->proxy_id];
+        $list = $model->where($where)->paginate();
+        $model_role = $model_role->where('pid',0)->where([['proxy_id','=',$this->proxy_id],['id','gt',1]])->select();
         return view('manage',[
             'list'=>$list,
             'keyword' => $keyword,
+            'model_role' => $model_role,
+            'rid' => $rid,
         ]);
     }
 
@@ -49,7 +62,7 @@ class System extends Common
         $model = $model->get($id);
         //角色
         $model_role = new \app\common\model\Role();
-        $model_role = $model_role->where([['proxy_id','=',$this->proxy_id],['id','gt',1]])->select();
+        $model_role = $model_role->with(['linkChild'])->where('pid',0)->where([['proxy_id','=',$this->proxy_id],['id','gt',1]])->select();
         return view('manageAdd',[
             'model' => $model,
             'model_role' => $model_role,
@@ -69,8 +82,9 @@ class System extends Common
     {
         $model = new \app\common\model\Role();
         $where[] = ['proxy_id','=',$this->proxy_id];
+        $where[] = ['pid','=',0];
 
-        $list = $model->where($where)->paginate();
+        $list = $model->with(['linkChild'])->where($where)->select();
         return view('role',[
             'list'=>$list,
         ]);
@@ -111,7 +125,12 @@ class System extends Common
                 return $query->where($prefix.'status',1)->order($order_field, 'asc');
             }])->where($prefix.'status',1)->order($order_field, 'asc');
         }])->where($where)->order($order_field, 'asc')->select();
+
+        //所有部门信息
+        $model_top = (new \app\common\model\Role())->where('pid',0)->select();
+
         return view('roleAdd',[
+            'model_top' => $model_top,
             'model' => $model,
             'node' => $node,
             'with_fields' => $with_fields,

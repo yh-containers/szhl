@@ -7,7 +7,12 @@ class Req extends Common
 {
     public function index()
     {
+        $today_time = strtotime(date("Y-m-d"));
+        $is_today = $this->request->param('is_today','','trim');  //今天数据
+
         $where=[];
+        $is_today && $where[] = ['create_time','egt',$today_time]; //今日数据
+
         $keyword = $this->request->param('keyword','','trim');
         $keyword && $where[] = ['no','like','%'.$keyword.'%'];
         //删选状态
@@ -36,6 +41,14 @@ class Req extends Common
             //未指派
             $where[] =['p_auth_mid','eq',0];
 
+        }elseif ($status==8){
+            //已完成
+            $where[] =['status','eq',2];
+
+        }elseif ($status==9){
+            //已完成
+            $where[] =['status','gt',0];
+
         }
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
@@ -47,14 +60,18 @@ class Req extends Common
             $where[]=['p_auth_mid','=',$this->user_id];
         }
 
+        //状态必须大于零
+        $where[] =['status','gt',0];
+
         $model = new \app\common\model\ProductReq();
-        $list = $model->where($where)->paginate();
+        $list = $model->where($where)->order('id','desc')->paginate();
 
         //指派员工
 
         $manage_list = $model_manage->where('proxy_id',$this->proxy_id)->select();
 
-
+        $type_label = \app\common\model\Product::$type_label;
+        $type_label = array_column($type_label,null,'type');
         return view('index',[
             'list'=>$list,
             'money_unit' => \app\common\model\Product::$money_unit,
@@ -62,6 +79,7 @@ class Req extends Common
             'manage_list' => $manage_list,
             'status' => $status,
             'keyword' => $keyword,
+            'type_label' => $type_label,
         ]);
     }
 
@@ -172,4 +190,15 @@ class Req extends Common
         }
     }
 
+    //合同查看--已完成
+    public function contract($id=0)
+    {
+        $id = $id?intval($id):0;
+        $state = $this->request->param('state',0,'intval');
+        $model = new \app\common\model\ProductReq();
+        $contract_content = $model->where('id',$id)->value('contract_content');
+        $contract_content=preg_replace('/(<img[^>]+src=[\'\"](?=[^\/]))/','$1/',$contract_content);
+//        $content = (new \app\common\service\temp\Contract())->changeContent($model,'/');
+        return $contract_content;
+    }
 }

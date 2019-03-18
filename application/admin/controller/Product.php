@@ -5,14 +5,14 @@ class Product extends Common
 {
     public function index()
     {
+        $type = $this->request->param('type',0,'intval');
         $keyword = $this->request->param('keyword','','trim');
         $model = new \app\common\model\Product();
         $where=[];
-
+        $type && $where[] = ['type','=',$type];
         if($keyword){
             $where[] = ['name','like','%'.$keyword.'%'];
         }
-
         //绑定代理商用户
         if($this->proxy_id) {
             $list = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id)->paginate();
@@ -22,10 +22,14 @@ class Product extends Common
 
 //        $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
 //        $list = $model->where($where)->paginate();
+        $type_label = \app\common\model\Product::$type_label;
+        $type_label = array_column($type_label,null,'type');
         return view('index',[
             'list'=>$list,
             'proxy_id'=>$this->proxy_id,
             'keyword'=>$keyword,
+            'type_label' => $type_label,
+            'type'         => $type,
         ]);
 
     }
@@ -97,19 +101,24 @@ class Product extends Common
             $type_label_data[$vo['type']]=array_merge($vo,['data'=>[]]);
         }
         //项目贷款信息
+        $search_attr_content = (new \app\common\model\Setting())->getContent('user_search');
+        $search_attr_content = $search_attr_content?json_decode($search_attr_content,true):[];
+        $search_attr = [];
+        foreach($search_attr_content as $vo){
+            $search_attr = array_merge($search_attr,$vo);
+        }
         $type_spu_data = [];
-        $type_spu = (new \app\common\model\ProductTypeSpu())
-            ->with(['linkSpu'])
-            ->whereIn('type',$labels_type)->select()->toArray();
+        $type_spu = (new \app\common\model\ProductSpuCol())
+            ->whereIn('id',$search_attr)->select()->toArray();
         foreach ($type_spu as $vo) {
+            //强制调节
+            $vo['type']  = -1;
             //强制写入id sc_id
-            if($vo['link_spu']){
-                foreach($vo['link_spu']['content'] as &$item){
-                    $item['type_id'] = $vo['link_spu']['id'];
-                    $item['type_sid'] = $vo['link_spu']['sid'];
-                }
-
+            foreach($vo['content'] as &$item){
+                $item['type_id'] = $vo['id'];
+                $item['type_sid'] = $vo['sid'];
             }
+
             if(array_key_exists($vo['type'],$type_spu_data)){
                 $type_spu_data[$vo['type']]['data'][] = $vo;
             }else{
@@ -169,9 +178,13 @@ class Product extends Common
             ['proxy_id','=',1],
             ['status','=',1]
         ])->select();
+
+        //获取产品已代理那些人
+        $proxy_exists_users = (new \app\common\model\ProxyProduct())->with(['linkManage'])->where('pid',$id)->select();
         return view('productDetail',[
             'model' => $model,
             'proxy_users' => $proxy_users,
+            'proxy_exists_users' => $proxy_exists_users,
             'proxy_id' => $proxy_id,
         ]);
     }
@@ -477,5 +490,42 @@ class Product extends Common
         ]);
     }
 
+    /*
+     * 完善资料
+     * */
+    public function perfectData()
+    {
+        $model_setting = new \app\common\model\Setting();
+
+        if($this->request->isAjax()){
+            $spu_col = $this->request->param('spu_col');
+            if(empty($spu_col)) return ['code'=>0,'msg'=>'请选择对应属性'];
+
+
+            try{
+                $model_setting->setContent('perfect_data',implode(',',$spu_col));
+                return ['code'=>1,'msg'=>'操作成功'];
+            }catch (\Exception $e){
+                return ['code'=>0,'msg'=>'操作异常:'.$e->getMessage()];
+            }
+        }
+
+        //查询已选的属性
+        $setting_content = $model_setting->getContent('perfect_data');
+        $setting_content = $setting_content?explode(',',$setting_content):[];
+        $model_col = new \app\common\model\ProductSpuCol();
+        $exist_spu_data = $model_col->whereIn('id',$setting_content)->select()->toArray();
+        $exist_spu_data = array_column($exist_spu_data,null,'id');
+
+        $model = new \app\common\model\ProductSpu();
+        $list = $model->with(['linkCol'=>function($query){
+            return $query->order('sort','asc');
+        }])->where(['status'=>1])->order('sort','asc')->select()->toArray();
+        return view('perfectData',[
+            'list' => $list,
+            'exist_spu' => $setting_content,
+            'exist_spu_data' => $exist_spu_data,
+        ]);
+    }
 
 }

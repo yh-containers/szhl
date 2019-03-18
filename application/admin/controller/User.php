@@ -8,10 +8,13 @@ class User extends Common
 {
     public function index()
     {
+        $today_time = strtotime(date("Y-m-d"));
+        $is_today = $this->request->param('is_today','','trim');  //今天数据
         $keyword = $this->request->param('keyword','','trim');
         $model = new \app\common\model\Users();
         $where=[];
         $keyword && $where[] = ['name|phone','like','%'.$keyword.'%'];
+        $is_today && $where[] = ['create_time','egt',$today_time];
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
         $list = $model->where($where)->paginate();
@@ -32,7 +35,8 @@ class User extends Common
         $model = new \app\common\model\Users();
         $model = $model->with(['linkDirectFuid','linkMineReq','linkMineReqTwo'])->where($where)->find();
         return view('userDetail',[
-            'model' => $model
+            'model' => $model,
+
         ]);
     }
 
@@ -89,7 +93,7 @@ class User extends Common
         $model = new \app\common\model\Manage();
         $where=[];
         $keyword && $where[] = ['name|account','like','%'.$keyword.'%'];
-        $list = $model->where($where)->where('proxy_id',1)->paginate();
+        $list = $model->where($where)->where('proxy_id',1)->order('id','desc')->paginate();
         return view('proxy',[
             'list'=>$list,
             'keyword' => $keyword,
@@ -121,6 +125,7 @@ class User extends Common
         return view('add',[
             'model'=>$model,
             'type'=>$type,
+            'user_type'=>\app\common\model\Users::$fields_type
         ]);
     }
 
@@ -153,7 +158,7 @@ class User extends Common
     public function proxyReq()
     {
         $model = new \app\common\model\ProxyReq();
-        $list = $model->paginate();
+        $list = $model->order('id','desc')->paginate();
         return view('proxyReq',[
             'list'=>$list,
         ]);
@@ -180,7 +185,7 @@ class User extends Common
         $id = $id?intval($id):0;
         $model = new \app\common\model\Users();
         $model = $model->get($id);
-        $content = (new \app\common\service\temp\Contract())->changeContent($model);
+        $content = (new \app\common\service\temp\Contract())->changeContent($model,'/');
         return $content;
     }
 

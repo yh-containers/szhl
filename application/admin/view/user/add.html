@@ -8,6 +8,19 @@
 	<form class="layui-form" action="">
 		<input type="hidden" name="id" value="{$model['id']}"/>
 		<div class="layui-form-item">
+			<label class="layui-form-label">项目类型</label>
+			<div class="layui-input-inline">
+				<select name="type"  lay-filter="type">
+					{volist name="user_type" id="vo"}
+						{if($key!=2)}
+							<option value="{$key}" {:$key==$model['type']?'selected':''} >{$vo}</option>
+						{/if}
+					{/volist}
+
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
 			<label class="layui-form-label">用户名</label>
 			<div class="layui-input-block">
 				<input type="text" name="name" value="{$model['name']}"  placeholder="用户名" autocomplete="off" maxlength="20" class="layui-input">
@@ -19,6 +32,7 @@
 				<input type="text" name="phone"  value="{$model['phone']}" placeholder="手机号码" autocomplete="off" maxlength="20" class="layui-input">
 			</div>
 		</div>
+
 		<div class="layui-form-item">
 			<label class="layui-form-label">密码</label>
 			<div class="layui-input-inline">

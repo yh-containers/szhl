@@ -13,6 +13,14 @@
     	<a href="javascript:;" onclick="$.common.openUrl('{:url("productAdd")}','添加产品')" class="btn btn-primary radius"><i class="icon-plus"></i> 添加产品</a>
 		{/if}
 	</span>
+	<span class="l ml-15">
+		<div class="btn-group">
+		  <a href="{:url('')}" class="btn {:$type?'btn-default':'btn-primary'} radius">全部</a>
+			{volist name="type_label" id="vo"}
+		  	<a href="{:url('',['type'=>$vo['type']])}" class="btn  {:$type==$vo['type']?'btn-primary':'btn-default'} radius">{$vo['name']}</a>
+			{/volist}
+		</div>
+	</span>
     <span class="col-sm-3 r">
 		<form method="get">
 			<div class="col-sm-8 inline	">
@@ -30,6 +38,7 @@
 		<tr class="text-c">
 			<th width="80">序号</th>
 			<th width="100">项目名称</th>
+			<th width="100">项目类型</th>
 			<th width="100">项目佣金</th>
 			<th width="100">项目利息</th>
 			<th width="100">项目额度</th>
@@ -44,6 +53,7 @@
 			<tr class="text-c">
 				<td>{$i}</td>
 				<td>{$vo['name']}</td>
+				<td>{:isset($type_label[$vo['type']])?$type_label[$vo['type']]['name']:''}</td>
 				<td>{$vo['commission']}%</td>
 				<td>{:$vo['per'].'('.$vo::$per_unit[$vo['per_unit']].')'}</td>
 				<td>{:empty($vo['money_start'])?'':$vo['money_start'].($vo['money_end']?'~'.$vo['money_end']:'').'('.$vo::$money_unit[$vo['money_unit']].')'}</td>

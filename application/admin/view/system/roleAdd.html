@@ -14,9 +14,20 @@
 		</div>
 		<input type="hidden" name="id" value="{$model['id']}"/>
 		<div class="layui-form-item">
-			<label class="layui-form-label">角色名</label>
+			<label class="layui-form-label">角色类型</label>
+			<div class="layui-input-inline">
+				<select name="pid">
+					<option value="0">添加部门</option>
+					{volist name="model_top" id="vo"}
+					<option value="{$vo['id']}" {:$vo['id']==$model['pid']?'selected':''}>{$vo['name']}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">名称</label>
 			<div class="layui-input-block">
-				<input type="text" name="name" value="{$model['name']}"  placeholder="用户名" autocomplete="off" maxlength="20" class="layui-input">
+				<input type="text" name="name" value="{$model['name']}"  placeholder="名称" autocomplete="off" maxlength="20" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-form-item">

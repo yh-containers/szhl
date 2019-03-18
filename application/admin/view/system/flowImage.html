@@ -13,7 +13,7 @@
 	</span>
 	</div>
 
-	<table class="table table-border table-bordered table-hover table-bg table-sort">
+	<table class="table table-border table-bordered table-hover table-bg table-sort layer-photos-demo">
 		<thead>
 		<tr class="text-c">
 			<th width="80">序号</th>
@@ -43,4 +43,20 @@
 	{$list|raw}
 </div>
 
+{/block}
+
+{block name="script"}
+<script>
+
+	//Demo
+	layui.use(['layer'], function(){
+		var layer = layui.layer;
+
+		layer.photos({
+			photos: '.layer-photos-demo'
+			,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+		});
+	});
+
+</script>
 {/block}

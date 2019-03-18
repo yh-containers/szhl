@@ -24,9 +24,9 @@ class ProductReq extends Base
     public static $fields_is_accumulation_fund = ['无','有'];
 
     protected $name='product_req';
-    protected $insert = ['status'=>1,'no'];
+    protected $insert = ['status'=>0,'no'];
     protected $auto=['status'];
-    protected $json = ['product_info','content'];
+    protected $json = ['product_info','content','percent_data'];
 
     //状态切换
     public function setStatusAttr($value)
@@ -34,7 +34,7 @@ class ProductReq extends Base
         if($value==2){
             $this->setAttr('complete_time',time()); //完成时间
         }
-        return $value;
+        return $value?$value:0;
     }
 
     //设置申请单号

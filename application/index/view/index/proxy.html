@@ -51,6 +51,9 @@
             {volist name="product_list" id="vo"}
             <div class="row {:$vo['is_hot']?'hot':''}">
                 <a href="{:url('product/detail',['id'=>$vo['id'],'proxy_pro_id'=>isset($vo['link_proxy'])?$vo['link_proxy']['id']:0])}">
+                    <div class="goods-name">
+                        <span class="name">{$vo['name']}</span>
+                    </div>
                     <div class="goods-info">
                         <div class="item">
                             <h4><font><em>{$vo['per']}</em>%</font></h4>
@@ -65,10 +68,7 @@
                             <span>额度高至</span>
                         </div>
                     </div>
-                    <div class="goods-name">
-                        <span class="name">{$vo['name']}</span>
-                        <span class="desc">{$vo['intro']}</span>
-                    </div>
+                    <div class="desc">{$vo['intro']}</div>
                 </a>
             </div>
             {/volist}

@@ -8,7 +8,7 @@ class Sms
     const ACCOUNT = '18123896256';
     const PASSWORD = 'A93D10511AF0F361A1E5B72DFEF2';
     const URL = 'http://web.1xinxi.cn/asmx/smsservice.aspx';
-    const SIGN = '【中翰哲】';
+    const SIGN = '【中瀚哲】';
     public static function send($content,$mobile)
     {
 

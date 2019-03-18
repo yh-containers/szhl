@@ -18,6 +18,7 @@
 		  <a href="{:url('',['status'=>5])}" class="btn {:$status==5?'btn-primary':'btn-default'} radius">已放款</a>
 		  <a href="{:url('',['status'=>6])}" class="btn {:$status==6?'btn-primary':'btn-default'} radius">已指派</a>
 		  <a href="{:url('',['status'=>7])}" class="btn {:$status==7?'btn-primary':'btn-default'} radius">未指派</a>
+		  <a href="{:url('',['status'=>8])}" class="btn {:$status==8?'btn-primary':'btn-default'} radius">已完成</a>
 		</div>
 	</span>
 	<span class="col-sm-3 r">
@@ -38,12 +39,13 @@
 			<th width="20">序号</th>
 			<th width="100">申请编号</th>
 			<th width="100">项目名称</th>
+			<th width="80">项目类型</th>
 			<th width="100">申请用户</th>
 			<th width="100">联系方式</th>
-			<th width="100">申请额度</th>
-			<th width="100">贷款期限</th>
+			<th width="80">申请额度</th>
+			<th width="80">贷款期限</th>
 			<th width="130">申请日期</th>
-			<th width="130">状态</th>
+			<th width="150">状态</th>
 			<th width="100">操作</th>
 		</tr>
 		</thead>
@@ -53,6 +55,7 @@
 				<td>{$i}</td>
 				<td>{$vo['no']}</td>
 				<td>{$vo['product_info']['name']}</td>
+				<td>{:isset($type_label[$vo['p_tid']])?$type_label[$vo['p_tid']]['name']:''}</td>
 				<td>{$vo['name']}</td>
 				<td>{$vo['phone']}</td>
 				<td>{$vo['money']}{:$money_unit[$vo['money_unit']]}</td>

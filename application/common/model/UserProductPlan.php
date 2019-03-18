@@ -31,5 +31,9 @@ class UserProductPlan extends Base
     {
         return $value?date('Y-m-d H:i:s',$value):'';
     }
-
+    //关联用户
+    public function linkUserInfo()
+    {
+        return $this->belongsTo('Users','uid');
+    }
 }

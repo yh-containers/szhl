@@ -32,6 +32,9 @@
 				<select name="rid">
 					{volist name="model_role" id="vo"}
 						<option value="{$vo['id']}">{$vo['name']}</option>
+						{volist name="vo['link_child']" id="item"}
+							<option value="{$item['id']}">&nbsp;&nbsp;&nbsp;{$item['name']}</option>
+						{/volist}
 					{/volist}
 				</select>
 			</div>

@@ -58,7 +58,12 @@
                             <td>更新日期</td>
                             <td>{$model['update_time']}</td>
                             <td>项目状态</td>
-                            <td>{:empty($model['link_proxy'])?'':$model['link_proxy']::$fields_status[$model['link_proxy']['status']]}</td>
+                            {if(!$proxy_id)}
+                                <td>{:empty($model['link_proxy'])?'':($model['link_proxy']::$fields_status[$model['link_proxy']['status']])}</td>
+
+                            {else/}
+                                <td>{:$model::$fields_status[$model['status']]}</td>
+                            {/if}
                         </tr>
 
                         </tbody>
@@ -107,7 +112,6 @@
 <div class=""  id="delegate-page" style="display: none;">
     <form class="layui-form" action="">
 
-
         <div class="layui-form-item">
             <label class="layui-form-label">选择代理商</label>
             <div class="layui-input-inline">
@@ -124,13 +128,15 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">已选代理</label>
+            {volist name="proxy_exists_users" id="vo"}
             <div class="layui-input-block" id="proxy-list">
                 <div class="choose-proxy">
-                    <input type="hidden" name="proxy_id[]"/>
-                    <span>xxxxxxxx</span>
+                    <input type="hidden" name="proxy_id[]" value="{$vo['proxy_id']}"/>
+                    <span>{$vo['link_manage']['name']}-{$vo['link_manage']['account']}</span>
                     <i class="layui-icon layui-icon-close del-proxy"></i>
                 </div>
             </div>
+            {/volist}
         </div>
 
     </form>
