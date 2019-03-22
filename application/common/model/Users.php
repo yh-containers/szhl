@@ -147,6 +147,7 @@ class Users extends Base
             //清空缓存
             session($session_name,null);
         }else{
+            $this->getData('status')!=1 && abort(40000,'帐号已被禁用');
             $user_id = $this->getData('id');
             //保存登录信息
             session($session_name,[

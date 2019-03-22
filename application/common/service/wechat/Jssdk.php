@@ -165,7 +165,7 @@ class Jssdk
             //异常
             return false;
         }
-        return true;
+        return $result;
     }
 
 }

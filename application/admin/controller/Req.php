@@ -49,6 +49,12 @@ class Req extends Common
             //已完成
             $where[] =['status','gt',0];
 
+        }elseif ($status==10){
+            //未放款
+            $where[] =['status','=',1];
+            $where[] = ['auth_status','=',1];
+            $where[] =['send_award_status','=',0];
+
         }
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];

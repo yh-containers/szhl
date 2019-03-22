@@ -11,13 +11,14 @@
     <span class="l">
 		<div class="btn-group">
 		  <a href="{:url('')}" class="btn {:$status?'btn-default':'btn-primary'} radius">全部</a>
-		  <a href="{:url('',['status'=>1])}" class="btn {:$status==1?'btn-primary':'btn-default'} radius">未审核</a>
-		  <a href="{:url('',['status'=>2])}" class="btn {:$status==2?'btn-primary':'btn-default'} radius">未面谈</a>
-		  <a href="{:url('',['status'=>3])}" class="btn {:$status==3?'btn-primary':'btn-default'} radius">审核通过</a>
-		  <a href="{:url('',['status'=>4])}" class="btn {:$status==4?'btn-primary':'btn-default'} radius">审核拒绝</a>
+		  <a href="{:url('',['status'=>1])}" class="btn {:$status==1?'btn-primary':'btn-default'} radius">资料未审核</a>
+          <a href="{:url('',['status'=>3])}" class="btn {:$status==3?'btn-primary':'btn-default'} radius">资料审核通过</a>
+          <a href="{:url('',['status'=>4])}" class="btn {:$status==4?'btn-primary':'btn-default'} radius">资料审核拒绝</a>
+		  <a href="{:url('',['status'=>2])}" class="btn {:$status==2?'btn-primary':'btn-default'} radius">未面谈</a>		  
+		  <a href="{:url('',['status'=>10])}" class="btn {:$status==10?'btn-primary':'btn-default'} radius">审批中</a>
 		  <a href="{:url('',['status'=>5])}" class="btn {:$status==5?'btn-primary':'btn-default'} radius">已放款</a>
-		  <a href="{:url('',['status'=>6])}" class="btn {:$status==6?'btn-primary':'btn-default'} radius">已指派</a>
-		  <a href="{:url('',['status'=>7])}" class="btn {:$status==7?'btn-primary':'btn-default'} radius">未指派</a>
+		  <a href="{:url('',['status'=>6])}" class="btn {:$status==6?'btn-primary':'btn-default'} radius">已分配</a>
+		  <a href="{:url('',['status'=>7])}" class="btn {:$status==7?'btn-primary':'btn-default'} radius">未分配</a>
 		  <a href="{:url('',['status'=>8])}" class="btn {:$status==8?'btn-primary':'btn-default'} radius">已完成</a>
 		</div>
 	</span>
@@ -61,7 +62,7 @@
 				<td>{$vo['money']}{:$money_unit[$vo['money_unit']]}</td>
 				<td>{$vo['auth_time']}{:$auth_unit[$vo['auth_unit']]}</td>
 				<td>{$vo['create_time']}</td>
-				<td>{:$vo::$fields_status[$vo['status']].','.$vo::$fields_face_status[$vo['face_status']].','.$vo::$fields_is_contract[$vo['is_contract']].','.$vo::$fields_auth_status[$vo['auth_status']].','.$vo::$fields_send_award_status[$vo['send_award_status']]}</td>
+				<td>{:$vo::$fields_status[$vo['status']].','.$vo::$fields_auth_status[$vo['auth_status']].','.$vo::$fields_face_status[$vo['face_status']].','.$vo::$fields_is_contract[$vo['is_contract']].','.$vo::$fields_send_award_status[$vo['send_award_status']]}</td>
 				<td>
 					<a href="javascript:;" onclick="$.common.openUrl('{:url("detail",['id'=>$vo['id']])}','申请详情')" class="ml-5"> 详情</a>
 					{if(!session('admin_user_info.proxy_id') && empty($vo['p_auth_mid']))}

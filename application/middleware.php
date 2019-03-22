@@ -1,4 +1,5 @@
 <?php
 return [
-    'WxNotice'	=>	app\middleware\WxNotice::class
+    app\middleware\WxNotice::class,
+    app\middleware\SendNotice::class
 ];

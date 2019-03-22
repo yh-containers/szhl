@@ -7,6 +7,8 @@ class WxNotice extends Base
 
     protected $insert = ['status'=>1];
 
+    protected $json = ['link_cond'];
+
     //微信--生日通知
     public function linkUserBirthday()
     {

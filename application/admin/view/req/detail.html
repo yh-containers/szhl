@@ -68,13 +68,13 @@
 
                     {elseif($model['auth_status']==1 && !$model['face_status'])/}
                         <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="face-info">面谈资料</a>
-
-                    {elseif($model['auth_status']==1 && $model['face_status'] && !$model['send_award_status'])/}
+                    <!--签了合同才出现放款-->
+                    {elseif($model['auth_status']==1 && $model['face_status'] && !$model['send_award_status'] && $model['is_contract'])/}
                         <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="send-award">放款</a>
-
                     {/if}
 
-                    {if($model['auth_status']==1 && !$model['is_contract'])}
+                    <!--放款后才出现合同-->
+                    {if($model['face_status']==1 && !$model['is_contract'])}
                         <a href="javascript:;"  class="layui-btn" data-id="{$model['id']}" id="contract">合同</a>
                     {elseif($model['is_contract']==1)/}
                         <a href="{:url('contract',['id'=>$model['id'],'state'=>1])}"  class="layui-btn" data-id="{$model['id']}" target="_blank">查看合同</a>
@@ -88,7 +88,7 @@
             <div class="panel panel-primary">
                 <div class="panel-header">
                     申请信息
-                    <button type="button"  class="btn btn-warning  size-S radius f-r down-excel">下载excel</button>
+                    <button type="button"  class="btn btn-warning  size-S radius f-r down-excel" data-filename="{$model['no']}">下载excel</button>
                 </div>
                 <div class="panel-body">
                     <table class="layui-table">
@@ -158,7 +158,7 @@
             <div class="panel panel-primary mt-10">
                 <div class="panel-header">
                     客户信息
-                    <button type="button"  class="btn btn-warning  size-S radius f-r down-excel">下载excel</button>
+                    <button type="button"  class="btn btn-warning  size-S radius f-r down-excel" data-filename="{$model['no']}">下载excel</button>
                 </div>
                 <div class="panel-body">
                     <table class="layui-table">
@@ -325,8 +325,38 @@
 {block name="script"}
 <script type="text/javascript" src="/static/admin/table2excel.js"></script>
 <script>
+    Table2Excel.extend(function(cell, cellText) {
+        // {HTMLTableCellElement} cell - The current cell.
+        // {string} cellText - The inner text of the current cell.
+        // 不要给我转乱七八糟的格式，就是文本输出就行，
+        // 转格式转的乱七八糟的
+        // cell should be described by this type handler
+        return {
+            t: 'text',
+            v: cellText,
+        };
+
+        // skip and run next handler
+        return null;
+    });
     $(".down-excel").click(function(){
-        var table2excel = new Table2Excel();
+        var table2excel = new Table2Excel({
+            defaultFileName:$(this).data('filename')
+        });
+        // table2excel.extend(function(cell, cellText) {
+        //     // {HTMLTableCellElement} cell - The current cell.
+        //     // {string} cellText - The inner text of the current cell.
+        //     // 不要给我转乱七八糟的格式，就是文本输出就行，
+        //     // 转格式转的乱七八糟的
+        //     // cell should be described by this type handler
+        //     return {
+        //         t: 'text',
+        //         v: cellText,
+        //     };
+        //
+        //     // skip and run next handler
+        //     return null;
+        // });
         table2excel.export($(this).parent().next().find('table'));
     })
     layui.use(['layer','form'], function(){

@@ -1,11 +1,15 @@
 {extend name="base"/}
 
-{block name="title"}{:$title_info?$title_info['name']:''}{/block}
+{block name="title"}{:$proxy_id?'贷款产品':($title_info?$title_info['name']:'')}{/block}
 
 {block name="content"}
 <div class="header">
     <a class="back" href="{:url('Index/index')}"></a>
-    <h4>{:$title_info?$title_info['name']:''}</h4>
+    {if($proxy_id)}
+        <h4>贷款产品</h4>
+    {else/}
+        <h4>{:$title_info?$title_info['name']:''}</h4>
+    {/if}
 </div>
 <div class="main">
     <div class="search-wrap clearfix">

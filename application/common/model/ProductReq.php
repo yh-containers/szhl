@@ -149,14 +149,6 @@ class ProductReq extends Base
                 //创建提示消息
                 UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
-            }elseif(isset($model['status']) && $model['status']!=$status && $model['status']==2){
-                $title = '交易完成';
-                $intro = '交易已结束，感谢您的使用';
-                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
-
-                //创建提示消息
-                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
-
             }
 
             //面谈
@@ -207,6 +199,16 @@ class ProductReq extends Base
             }elseif(isset($model['status']) && $model['status']==$status){
 //                $title = '更新资料';
 //                $model->linkLogs()->save(['title'=>$title,'intro'=>'更新申请资料']);
+
+            }
+            //最后处理
+            if(isset($model['status']) && $model['status']!=$status && $model['status']==2){
+                $title = '交易完成';
+                $intro = '交易已结束，感谢您的使用';
+                $model->linkLogs()->save(['title'=>$title,'intro'=>$intro]);
+
+                //创建提示消息
+                UserMessage::recordMsg(1,$title,$intro,$model['uid'],0,['id'=>$model['id']]);
 
             }
         });
@@ -361,15 +363,15 @@ class ProductReq extends Base
     //获取产品状态
     public function getStatusInfo()
     {
-        $status_info = [1,'审核中','审核中'];
+        $status_info = [1,'资料已提交','资料已提交，正在审核中'];
         if($this['auth_status']==2){
-            $status_info = [2,'审核被拒',$this['auth_content']?$this['auth_content']:'审核被拒'];
+            $status_info = [2,'已拒绝',$this['auth_content']?$this['auth_content']:'不满足贷款条件'];
 
         }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==0){
-            $status_info = [3,'待放款','待发款'];
+            $status_info = [3,'待放款','贷款正在审批中'];
 
         }elseif ($this['auth_status']==1 && $this['face_status']==1 && $this['send_award_status']==1){
-            $status_info = [4,'已放款','已放款'];
+            $status_info = [4,'已放款','贷款已成功放款'];
 
         }elseif($this['auth_status']>0 && $this['face_status']==0){
             $status_info = [5,'面谈中',$this['auth_content']?$this['auth_content']:'面谈中'];

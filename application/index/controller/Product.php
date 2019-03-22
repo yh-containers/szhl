@@ -10,7 +10,7 @@ class Product extends Common
     public function index()
     {
 
-        $type = $this->request->param('type',1,'intval');
+        $type = $this->request->param('type',0,'intval');
         //产品labels属性
         $lid = $this->request->param('lid');
         //产品labels
@@ -21,6 +21,7 @@ class Product extends Common
             'type' => $type,
             'title_info' => \app\common\model\Product::getTypeInfo($type),
             'lid' => $lid,
+            'proxy_id' => $this->proxy_id,
         ]);
     }
 
@@ -107,7 +108,9 @@ class Product extends Common
         }
         //代理/指定代理商邀请的用户
         if($this->user_type==2 || $this->proxy_id){
-            $model = $model->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
+            $model = $model->withJoin(['linkProxy'],'left')->where('Product.status',1)->where('linkProxy.status',1)->where('linkProxy.proxy_id',$this->proxy_id);
+        }else{
+            $model = $model->where('status',1);
         }
         //按检索条件查询
         if($this->request->has('match_id')){

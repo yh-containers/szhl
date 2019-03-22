@@ -30,6 +30,7 @@ class Wechat extends Common
                 default:
                     break;
             }
+//            trace($return_data,'msg_type'.$type);
             return $return_data?$return_data:'success';
         }
 //        $response_str = $this->handleResponse($data['FromUserName'],$data['ToUserName'],$data['Content']);
@@ -62,11 +63,17 @@ class Wechat extends Common
                         'openid' => $data['FromUserName'],//被邀请者
                         'req_user_id' => $req_user_id,  //邀请者用户id
                     ]);
-                    $model = new \app\common\model\Setting();
-                    $wechat_setting = $model->getContent('wechat_setting');
-                    $content = isset($wechat_setting['follow'])?$wechat_setting['follow']:'';
-                    return $content?$this->handleResponse($data['ToUserName'],$data['FromUserName'], $content):'';
                 }
+                $model = new \app\common\model\Setting();
+                $wechat_setting = $model->getContent('wechat_setting');
+                $wechat_setting = $wechat_setting?json_decode($wechat_setting,true):[];
+                $content = isset($wechat_setting['follow'])?$wechat_setting['follow']:'';
+//                trace(json_encode([
+//                    'content'  => $content,
+//                    'ToUserName'          =>$data['ToUserName'],
+//                    'FromUserName'          =>$data['FromUserName'],
+//                ]),'msg_typesubscribe');
+                return $content?$this->handleResponse($data['ToUserName'],$data['FromUserName'], $content):'';
 
             }
 

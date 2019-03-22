@@ -17,7 +17,7 @@ class User extends Common
         $is_today && $where[] = ['create_time','egt',$today_time];
         //绑定代理商用户
         $this->proxy_id && $where[] =['proxy_id','=',$this->proxy_id];
-        $list = $model->where($where)->paginate();
+        $list = $model->where($where)->order('id','desc')->paginate();
         return view('index',[
             'list' => $list,
             'proxy_id' => $this->proxy_id,
@@ -96,6 +96,7 @@ class User extends Common
         $list = $model->where($where)->where('proxy_id',1)->order('id','desc')->paginate();
         return view('proxy',[
             'list'=>$list,
+            'proxy_id' => $this->proxy_id,
             'keyword' => $keyword,
         ]);
     }
@@ -125,6 +126,7 @@ class User extends Common
         return view('add',[
             'model'=>$model,
             'type'=>$type,
+            'proxy_id' => $this->proxy_id,
             'user_type'=>\app\common\model\Users::$fields_type
         ]);
     }

@@ -3,7 +3,7 @@
     <div class="login_body">
         <div class="login_logo">
             <img src="/static/index/images/logo.png" />
-            <span class="name">短信验证码登录</span>
+            <span class="name">账号密码登录</span>
         </div>
 
         {if(cookie('identity_type')!=2)}
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="login_tab">
-                <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="1">账号密码登录</a>
+                <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="0">短信验证码登录</a>
             </div>
 
             <div class="login_footer">
@@ -62,8 +62,8 @@
                     </div>
                 </div>
             </div>
-            <div class="login_tab" style="display:none">
-                <a href="javascript:;" id="mode" onclick="changeState(this)" data-change="0">账号密码登录</a>
+            <div class="login_tab">
+                <a href="/proxy/req.html">申请成为代理商</a>
             </div>
 
             <div class="login_footer">
@@ -89,18 +89,18 @@
     <script type="text/javascript">
         function changeState(e) {
             var state = $(e).data("change");
-            if (state == 1) {
-                $(e).html("短信验证码登录");
-                $(e).data("change", 0);
-                $("#namelogin").css("display", "block");
-                $("#codelogin").css("display", "none");
-                $('.name').html("账号密码登录");
-            } else {
+            if (state == 0) {
                 $(e).html("账号密码登录");
                 $(e).data("change", 1);
                 $("#namelogin").css("display", "none");
                 $("#codelogin").css("display", "block");
                 $('.name').html("短信验证码登录");
+            } else {
+                $(e).html("短信验证码登录");
+                $(e).data("change", 0);
+                $("#namelogin").css("display", "block");
+                $("#codelogin").css("display", "none");
+                $('.name').html("账号密码登录");
             }
         };
         $('.on_pop').click(function(){

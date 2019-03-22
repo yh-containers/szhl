@@ -18,12 +18,17 @@ class Index extends Common
             //微信直接登录
             $auth_info_wx= session('auth_info_wx');
             if(!empty($auth_info_wx['openid'])){
-                $model =  new \app\common\model\Users();
-                $user_model = $model->where(['openid'=>$auth_info_wx['openid']])->find();
-                if(!empty($user_model)){
-                    $user_model->handleLoginInfo();
-                    $this->redirect(url('index/index'));
+                try{
+                    $model =  new \app\common\model\Users();
+                    $user_model = $model->where(['openid'=>$auth_info_wx['openid']])->find();
+                    if(!empty($user_model)){
+                        $user_model->handleLoginInfo();
+                        $this->redirect(url('index/index'));
+                    }
+                }catch (\Exception $e){
+
                 }
+
 
             }
         }
@@ -75,7 +80,11 @@ class Index extends Common
             $page = 'homeMember';
 
         }
-        $this->proxy_id && $model_product = $model_product->withJoin(['linkProxy'],'left')->where('linkProxy.proxy_id',$this->proxy_id);
+        if($this->proxy_id){
+            $model_product = $model_product->withJoin(['linkProxy'],'left')->where('Product.status',1)->where('linkProxy.status',1)->where('linkProxy.proxy_id',$this->proxy_id);
+        }else{
+            $model_product = $model_product->where('status',1);
+        }
         //轮播图
         $model_flow_image = new \app\common\model\FlowImage();
         $flow_image = $model_flow_image->where('status',1)->order('sort','asc')->select();
